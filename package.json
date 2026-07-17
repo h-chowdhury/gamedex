@@ -17,7 +17,8 @@
     "crypt": "^0.0.2",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
-    "mongoose": "^9.7.3"
+    "mongoose": "^9.7.3",
+    "react-router-dom": "^7.18.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.14"
