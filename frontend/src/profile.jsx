@@ -1,13 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 
-export function Login () {
+export function Profile () {
 
-  return (
-    <div>
-
-      
-    </div>
-  )
+  //return ()
 
 }
