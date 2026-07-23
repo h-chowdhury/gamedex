@@ -6,6 +6,7 @@ import { registerUser } from '../../services/authServices.js'
 export function SignUp (props) {
 
   const [data, setData] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (formData) => {
 
