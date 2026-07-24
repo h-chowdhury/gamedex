@@ -5,20 +5,63 @@ import { registerUser } from '../../services/authServices.js'
 
 export function SignUp (props) {
 
-  const [data, setData] = useState('');
+  const [formData, setFormData] = useState('');
+  const [errors, setErrors] = useState({});
   const navigate = useNavigate();
+
+
+  const handleValidation = (formData) => {
+    const newErrors = {};
+    const emailRegex = /\S+@\S+\.\S+/;
+    const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).+$/;
+
+    if (!formData.username.trim()) {
+      newErrors.username = 'Username is required.';
+    } else if (formData.username.length < 3) {
+      newErrors.username= 'Username must be atleast 3 characters.';
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required.';
+    } else if (!emailRegex.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email address.';
+    }
+
+    if (!formData.password.trim()) {
+      newErrors.password = 'Password is required.';
+    } else if (formData.password.length < 8) {
+      newErrors.password = 'Password must be atleast 8 characters.';
+    } else if (!passwordRegex.test(formData.password)) {
+      newErrors.password = 'Password must contain a mix of letters, numbers, and symbols.';
+    } else if (formData.passwordConfirm != formData.password) {
+      newErrors.password = 'Both passwords must match.';
+    }
+
+    return newErrors;
+  }
+
+
+  const handleChange = (e) => {
+    const {name, value} = e.target;
+    setFormData((prev) => ({...prev, [name]: value}));
+  }
+
 
   const handleSubmit = async (formData) => {
 
-    console.log("Hello 1")
+    const { email, username, password, passwordConfirm } = formData;
 
-    const { email, username, password } = formData;
+    const validationErrors = handleValidation(formData);
+      console.log(validationErrors)
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
 
     try {
       const result = await registerUser(email, username, password);
-      setData(result);
-
-      console.log("Hello 2")
+      setFormData(result);
 
       if (result.token) {
         navigate('/profile');
@@ -27,14 +70,14 @@ export function SignUp (props) {
     } catch (err) {
       console.log(err);
     }
-
   };
+
 
   return (
 
     <div>
 
-      <Form isSignup={true} submitBtnText={"Sign Up"} onSubmit={handleSubmit}/>
+      <Form isSignup={true} submitBtnText={"Sign Up"} onSubmit={handleSubmit} errors={errors}/>
 
     </div>
 
