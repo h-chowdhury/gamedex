@@ -5,7 +5,7 @@ function InputField ({name, type, onChange}) {
   return (
     <input 
       type = {type}
-      placeholder = {name}
+      placeholder = {name == 'passwordConfirm'? "Confirm Password" : (name.charAt(0).toUpperCase())+(name.slice(1))}
       name = {name}
       onChange = {onChange}
       required />
@@ -33,7 +33,7 @@ export function Form ({isSignup, submitBtnText, onSubmit, errors}) {
         <div>
           {/* Email */}
           {isSignup && <InputField name={"email"} type={"text"} onChange={(e) => setEmail(e.target.value)}/>}
-          <p>{errors.email}</p>
+          {isSignup && <p>{errors.email}</p>}
         </div>
 
         <div>

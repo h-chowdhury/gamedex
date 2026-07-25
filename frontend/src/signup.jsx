@@ -41,34 +41,39 @@ export function SignUp (props) {
   }
 
 
-  const handleChange = (e) => {
-    const {name, value} = e.target;
-    setFormData((prev) => ({...prev, [name]: value}));
-  }
-
-
   const handleSubmit = async (formData) => {
+
+    setErrors({});
 
     const { email, username, password, passwordConfirm } = formData;
 
     const validationErrors = handleValidation(formData);
-      console.log(validationErrors)
-
+    console.log(validationErrors)
     if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        ...validationErrors
+      }))
+      // setErrors(validationErrors);
       return;
     }
 
     try {
       const result = await registerUser(email, username, password);
-      setFormData(result);
 
-      if (result.token) {
-        navigate('/profile');
+      if (result?.token) {
+        localStorage.setItem('token', result.token);
         console.log(username, email, password);
+        navigate('/profile');
+      } 
+
+      if (result?.newErrors && Object.keys(result.newErrors).length > 0) {
+        setErrors(result.newErrors);
+      } else if (result?.message) {
+        console.error("Server Error:", result.message);
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 

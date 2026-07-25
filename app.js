@@ -68,26 +68,30 @@ app.post('/signup', async (req, res) => {
 
   try {
     const { email, username, password } = req.body;
+    const newErrors = {};
 
     // check for missing fields
     if (!email || !username || !password) {
       return res.status(400).json({error: "All fields are required."});
     }
 
-    // check if email/username exists
+    // check if email/username exists, return if so
     const existingUsername = await User.findOne({username});
     const existingEmail = await User.findOne({email});
 
     if (existingEmail || existingUsername) {
       if (existingEmail) {
         console.log("Email already registered.");
+        newErrors.email = 'Email already registered.';
       }
       if (existingUsername) {
         console.log("Username is taken.");
+        newErrors.username = 'Username is taken.';
       }
-      return res.status(400).json({
-        error: "Invalid email or username."
-      });
+
+      console.log(newErrors.email);
+      console.log(newErrors.username);
+      return res.status(400).json({ newErrors });
     } 
 
     // otherwise if email/username is unique
