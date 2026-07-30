@@ -24,6 +24,7 @@ const registerUser = async (email, username, password) => {
 
 const loginUser = async (username, password) => {
   try {
+
     const res = await fetch('http://localhost:5000/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -33,8 +34,7 @@ const loginUser = async (username, password) => {
     const data = await res.json();
 
     if (!res.ok) {
-      console.error('Login failed in authServices.');
-      throw new Error(data.error || data.message || "Login failed...")
+      console.error('Login failed');
     }
 
     return data;

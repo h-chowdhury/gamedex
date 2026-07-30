@@ -2,13 +2,14 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Form } from './form.jsx'
 import { registerUser } from '../../services/authServices.js'
+import { useAuth } from '../../services/authContext.jsx';
 
 export function SignUp (props) {
 
   const [formData, setFormData] = useState('');
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
-
+  const {login, logout } = useAuth();
 
   const handleValidation = (formData) => {
     const newErrors = {};
@@ -19,6 +20,8 @@ export function SignUp (props) {
       newErrors.username = 'Username is required.';
     } else if (formData.username.length < 3) {
       newErrors.username= 'Username must be atleast 3 characters.';
+    } else if (formData.username.length > 30) {
+      newErrors.username= 'Username must be at most 30 characters.';
     }
 
     if (!formData.email.trim()) {
@@ -62,15 +65,13 @@ export function SignUp (props) {
       const result = await registerUser(email, username, password);
 
       if (result?.token) {
-        localStorage.setItem('token', result.token);
+        login(result.token)
         console.log(username, email, password);
         navigate('/profile');
       } 
 
       if (result?.newErrors && Object.keys(result.newErrors).length > 0) {
         setErrors(result.newErrors);
-      } else if (result?.message) {
-        console.error("Server Error:", result.message);
       }
     } catch (err) {
       console.error(err);

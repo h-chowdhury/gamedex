@@ -3,8 +3,10 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
 import { db } from "./models/index.js";
 import { User } from "./models/user.model.js";
+import { verifyToken} from "./services/authMiddleware.js";
 
 // load environment variables
 dotenv.config();
@@ -21,7 +23,10 @@ const rawgAPIkey = process.env.RAWG_API_KEY;
 // Database connection
 mongoose.connect(mongoDBURL)
   .then(() => console.log("Connection Successful"))
-  .catch((err) => console.error("Connection Error: ", err));
+  .catch((err) => {
+    console.error("Connection Error: ", err);
+    process.exit(1);
+  });
 
 // Middleware
 app.use(cors());
@@ -62,6 +67,12 @@ app.get('/api/game/:idOrSlug', async (req, res) => {
     console.error("Could not fetch game details:", error);
     res.json(null);
   }
+});
+
+app.get('/users/me', verifyToken, async (req, res) => {
+  const userId = req.user.id || req.user.userId || req.user._id;
+  const user = await User.findById(userId).select('-password');
+  res.json(user);
 });
 
 app.post('/signup', async (req, res) => {
@@ -122,6 +133,54 @@ app.post('/signup', async (req, res) => {
   }
 
 });
+
+
+app.post('/login', async (req, res) => {
+
+  try {
+    const { username, password } = req.body;
+    const newErrors = {};
+
+    // check for missing fields
+    if (!username || !password) {
+      return res.status(400).json({error: "All fields are required."});
+    }
+
+    // check if username exists
+    const user = await User.findOne({username}).select('+password');
+
+    // return if username doesn't exist
+    if (!user) {
+      console.log("Username does not exist.");
+      newErrors.username = 'Username does not exist.'
+      return res.status(400).json({ newErrors });
+    }
+
+    // check if password matches
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (!passwordMatch) {
+      console.log("Password is incorrect.");
+      newErrors.password = 'Password is incorrect'
+      return res.status(400).json({ newErrors });
+    }
+
+    // return status
+    const uid = user._id;
+    const email = user.email;
+    const payload = {userId: uid , username , email};
+    const JWT_SECRET = process.env.JWT_SECRET;
+    const token = jwt.sign(payload, JWT_SECRET, {expiresIn: '1h'});
+
+    res.status(200).json({
+      message: "Login successful.",
+      token: token
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error.' });
+  }
+});
+
 
 app.listen(port, () => {
   console.log(`Server started at port ${port}`);

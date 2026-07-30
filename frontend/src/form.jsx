@@ -45,12 +45,13 @@ export function Form ({isSignup, submitBtnText, onSubmit, errors}) {
         <div>
           {/* Password */}
           <InputField name={"password"} type={"password"} onChange={(e) => setPassword(e.target.value)}/> 
+          {!isSignup && <p>{errors.password}</p>}
         </div>
 
         <div>
           {/* Password confirm */}
           {isSignup && <InputField name={"passwordConfirm"} type={"password"} onChange={(e) => setPasswordConfirm(e.target.value)}/>}
-          <p>{errors.password}</p>
+          {isSignup && <p>{errors.password}</p>}
         </div>
 
         <div>

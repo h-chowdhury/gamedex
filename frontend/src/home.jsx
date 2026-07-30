@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
+import { useAuth, AuthProvider } from '../../services/authContext.jsx';
 
 export function Home() {
 
   const[game, setGame] = useState(null);
   const[loading, setLoading] = useState(true);
+  const {login, logout, isAuthenticated } = useAuth();
 
   useEffect (() => {
     fetch("http://localhost:5000/api/game/final-fantasy-vii")
@@ -41,17 +43,29 @@ export function Home() {
         <img src={game.background_image}/>
       </div>
 
-      <div>
-        <Link to={'/signup'}>
-          <button>Sign up</button>
-        </Link>
-      </div>
+      {isAuthenticated && 
+        <div>
+          <Link to={'/'}>
+            <button onClick={(e) => logout(e)}>Log out</button>
+          </Link>
+        </div>
+      }
 
-      <div>
-        <Link to={'/login'}>
-          <button>Login</button>
-        </Link>
-      </div>
+      {!isAuthenticated && 
+        <div>
+            <div>
+              <Link to={'/signup'}>
+                <button>Sign up</button>
+              </Link>
+            </div>
+
+            <div>
+              <Link to={'/login'}>
+                <button>Login</button>
+              </Link>
+            </div>
+          </div>
+      }
       
     </div>
   );
