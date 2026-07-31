@@ -7,6 +7,8 @@ export function Profile () {
   const {token } = useAuth();
   const[user, setUser] = useState(null);
   const[loading, setLoading] = useState(true)
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
 
   // useEffect(() => {
   //   if (!token) {
@@ -37,36 +39,99 @@ export function Profile () {
     .catch(err => console.error(err));
   }, [token]);
 
-  // if (!isAuthenticated) {
-  //   return <Navigate to="/login" replace />;
-  // }
 
-  if (!loading && user) {
+  // update avatar logic
+  const onFileChange = (event) => {
+    setSelectedFile(event.target.files[0]);
+  }
+
+  const onFileUpload = async () => {
+    if (selectedFile == null) {
+      alert("Please select a file.");
+      return;
+    }
+
+    // format data
+    const formData = new FormData();
+		formData.append(
+			"avatar",
+			selectedFile
+		);
+    console.log(selectedFile);
+
+    setUploading(true);
+
+    // post data
+    try {
+      const res = await fetch('http://localhost:5000/profile/avatar', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}`},
+        body: formData
+      });
+
+      if (!res.ok) {
+        const errorText = await res.text(); 
+        console.error("Server Error:", errorText);
+        alert(`Server error (${res.status}). Check console for details.`);
+        return;
+      }
+
+      const updatedUser = await res.json();
+      setUser(updatedUser);
+
+    } catch (err) {
+      console.error("Upload error:", err);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+
+  // Final renders
+
+  // Loading render
+  if (loading) {
     return (
-      // successful load
-      <div>
-        <p>ID: {user._id}</p>
-        <p>Username: {user.username}</p>
-        <p>Bio: {user.bio}</p>
-        <p>Email: {user.email}</p>
-        <p>Created at: {user.date_joined}</p>
-        <img src={user.avatar}/>
-      </div>
-    );
-  } else if (!loading && !user) {
-    return (
-      // failed load
-      <div>
-        <p>Failed to load profile. Please try again.</p>
-      </div>
-    );
-  } else if (loading) {
-    return (
-      // loading
       <div>
         <p>Loading profile...</p>
       </div>
     );
   }
+
+  // Failed render
+  if (!loading && !user) {
+    return (
+      <div>
+        <p>Failed to load profile. Please try again.</p>
+      </div>
+    );
+  }
+
+  // Successful render
+  return (
+    <div>
+      <p>ID: {user._id}</p>
+      <p>Username: {user.username}</p>
+      <p>Bio: {user.bio}</p>
+      <p>Email: {user.email}</p>
+      <p>Created at: {user.date_joined}</p>
+
+      {user.avatar && (
+        <img
+          src={
+            user.avatar.startsWith('https') ? user.avatar : `http://localhost:5000${user.avatar}?t=${Date.now()}`
+          }
+          alt="Avatar"
+          style={{width: '150px', height:'150px', objectFit:'cover'}}
+        />
+      )}
+
+      <input type="file" accept="image/*" onChange={onFileChange} />
+      <button onClick={onFileUpload} disabled={uploading}>
+        {uploading ? "Uploading..." : "Upload avatar"}
+      </button>
+    </div>
+  );
+
 
 }

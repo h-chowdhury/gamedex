@@ -4,23 +4,48 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
+import multer from 'multer';
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
 import { db } from "./models/index.js";
 import { User } from "./models/user.model.js";
 import { verifyToken} from "./services/authMiddleware.js";
 
-// load environment variables
+
+// Variables  ***************************************************** //
 dotenv.config();
 const app = express();
+const router = express.Router();
 
 const port = process.env.PORT || 5000;
 const mongoDBURL = process.env.DB_URL || 'mongodb://127.0.0.1:27017/gamedex';
 const rawgAPIkey = process.env.RAWG_API_KEY;
-// const JWT_SECRET = process.env.JWT_SECRET;
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const uploadDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+const storage = multer.diskStorage({
+  destination: (req, file, callback) => {
+    callback(null, ("uploads/"));
+  },
+  filename: (req, file, callback) => {
+    callback(null, `${Date.now()}-${file.originalname}`);
+  },  
+});
+
+const upload = multer({storage})
+// const JWT_SECRET = process.env.JWT_SECRET;
 // const gameID = 4200;
 // const gameURL = `https://api.rawg.io/api/games/${gameID}?key=${rawgAPIkey}`;
 
-// Database connection
+
+// Database connection ******************************************** //
 mongoose.connect(mongoDBURL)
   .then(() => console.log("Connection Successful"))
   .catch((err) => {
@@ -28,7 +53,8 @@ mongoose.connect(mongoDBURL)
     process.exit(1);
   });
 
-// Middleware
+
+// Middleware  **************************************************** //
 app.use(cors());
 app.use(express.json());
 app.use(function (req, res, next) {
@@ -36,10 +62,46 @@ app.use(function (req, res, next) {
     next();
 });
 
-// Routes
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// Image storage configuration ************************************ //
+
+router.post('/avatar', verifyToken, upload.single('avatar'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({message: 'No file uploaded.'});
+    }
+
+    const userId = req.user.id || req.user.userId || req.user._id;
+    const avatarUrl = `/uploads/${req.file.filename}`;
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { avatar: avatarUrl },
+      { returnDocument: 'after' },
+      { runValidators: true }
+    ).select('-password');
+
+    console.log(updatedUser);
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+
+    res.json(updatedUser);
+
+  } catch (err) {
+    res.status(500).json({message: err.message});
+  }
+});
+
+app.use('/profile', router);
+
+
+// Routes  ******************************************************** //
 app.get('/', (req, res) => {
   console.log(`Connected to Express & MongoDB Setup!`);
 });
+
 
 app.get('/api/game/:idOrSlug', async (req, res) => {
   // fetch(`https://api.rawg.io/api/games?key=${rawgAPIkey}`)
@@ -69,11 +131,13 @@ app.get('/api/game/:idOrSlug', async (req, res) => {
   }
 });
 
+
 app.get('/users/me', verifyToken, async (req, res) => {
   const userId = req.user.id || req.user.userId || req.user._id;
   const user = await User.findById(userId).select('-password');
   res.json(user);
 });
+
 
 app.post('/signup', async (req, res) => {
 
