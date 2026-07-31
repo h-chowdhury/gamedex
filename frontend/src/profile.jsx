@@ -4,7 +4,7 @@ import { useAuth } from '../../services/authContext.jsx';
 
 export function Profile () {
 
-  const {token } = useAuth();
+  const {token} = useAuth();
   const[user, setUser] = useState(null);
   const[loading, setLoading] = useState(true)
   const [selectedFile, setSelectedFile] = useState(null);
@@ -130,6 +130,13 @@ export function Profile () {
       <button onClick={onFileUpload} disabled={uploading}>
         {uploading ? "Uploading..." : "Upload avatar"}
       </button>
+
+      <div>
+        <Link to={'/'}>
+          <button>Home</button>
+        </Link>
+      </div>
+
     </div>
   );
 

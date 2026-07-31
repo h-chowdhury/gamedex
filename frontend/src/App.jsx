@@ -4,6 +4,7 @@ import { Home } from './home';
 import { SignUp } from './signup';
 import { Login } from './login';
 import { Profile } from './profile';
+import { Discover } from './discover';
 import { AuthProvider, useAuth } from '../../services/authContext.jsx';
 
 function AppContent() {
@@ -17,6 +18,7 @@ function AppContent() {
       <Route path='/signup' element={isAuthenticated ? <Navigate to='/profile' /> : <SignUp /> } />
       <Route path='/login' element={isAuthenticated ? <Navigate to='/profile' replace /> : <Login /> }/>
       <Route path='/profile' element={isAuthenticated ? <Profile /> : <Navigate to="/login" />}/>
+      <Route path='/discover' element={<Discover />} />
     </Routes>
   );
 

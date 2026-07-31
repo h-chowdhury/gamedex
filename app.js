@@ -25,11 +25,13 @@ const rawgAPIkey = process.env.RAWG_API_KEY;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// creates folder for photo uploads if not existing
 const uploadDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
 
+// initiates storage for photo uploads
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
     callback(null, ("uploads/"));
@@ -38,8 +40,9 @@ const storage = multer.diskStorage({
     callback(null, `${Date.now()}-${file.originalname}`);
   },  
 });
-
 const upload = multer({storage})
+
+
 // const JWT_SECRET = process.env.JWT_SECRET;
 // const gameID = 4200;
 // const gameURL = `https://api.rawg.io/api/games/${gameID}?key=${rawgAPIkey}`;
@@ -61,8 +64,8 @@ app.use(function (req, res, next) {
     console.log(`User requested: ${req.method} to ${req.url}`);
     next();
 });
-
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 
 // Image storage configuration ************************************ //
 

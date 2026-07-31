@@ -45,9 +45,17 @@ export function Home() {
 
       {isAuthenticated && 
         <div>
-          <Link to={'/'}>
-            <button onClick={(e) => logout(e)}>Log out</button>
-          </Link>
+          <div>
+            <Link to={'/'}>
+              <button onClick={(e) => logout(e)}>Log out</button>
+            </Link>
+          </div>
+
+          <div>
+            <Link to={'/profile'}>
+              <button>Profile</button>
+            </Link>
+          </div>
         </div>
       }
 
@@ -66,7 +74,13 @@ export function Home() {
             </div>
           </div>
       }
-      
+
+      <div>
+        <Link to={'/discover'}>
+          <button>Search</button>
+        </Link>
+      </div>
+
     </div>
   );
 
