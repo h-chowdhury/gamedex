@@ -1,7 +1,6 @@
+import { Navbar } from './components/navbar.jsx';
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
-
-
 
 function gameCard (gameData) {
   return (
@@ -76,6 +75,8 @@ export function Discover() {
 
   return (
     <div>
+      <Navbar />
+
       <input 
         type='text' 
         placeholder="Search GameDex" 

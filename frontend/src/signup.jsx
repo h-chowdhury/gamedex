@@ -1,3 +1,4 @@
+import { Navbar } from './components/navbar.jsx';
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Form } from './form.jsx'
@@ -36,8 +37,12 @@ export function SignUp (props) {
       newErrors.password = 'Password must be atleast 8 characters.';
     } else if (!passwordRegex.test(formData.password)) {
       newErrors.password = 'Password must contain a mix of letters, numbers, and symbols.';
+    }
+    
+    if (!formData.passwordConfirm.trim()) {
+      newErrors.passwordConfirm = 'Please confirm your password.';
     } else if (formData.passwordConfirm != formData.password) {
-      newErrors.password = 'Both passwords must match.';
+      newErrors.passwordConfirm = 'Both passwords must match.';
     }
 
     return newErrors;
@@ -82,6 +87,8 @@ export function SignUp (props) {
   return (
 
     <div>
+
+      <Navbar />
 
       <Form isSignup={true} submitBtnText={"Sign Up"} onSubmit={handleSubmit} errors={errors}/>
 

@@ -1,0 +1,82 @@
+@import "tailwindcss";
+@import "https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Silkscreen&family=VT323&display=swap";
+
+@layer utilities {
+
+  .font-press-start {
+    font-family: 'Press Start 2P', cursive;
+  }
+
+  .font-silkscreen {
+    font-family: 'Silkscreen', sans-serif;
+  }
+
+  .font-vt323 {
+    font-family: 'VT323', monospace;
+  }
+  
+  .pixel-box {
+    clip-path: polygon(
+      0 8px, 
+      4px 8px, 
+      4px 4px, 
+      8px 4px, 
+      8px 0,
+
+      calc(100% - 8px) 0, 
+      calc(100% - 8px) 4px, 
+      calc(100% - 4px) 4px, 
+      calc(100% - 4px) 8px, 
+      100% 8px,
+
+      100% calc(100% - 8px), 
+      calc(100% - 4px) calc(100% - 8px), 
+      calc(100% - 4px) calc(100% - 4px), 
+      calc(100% - 8px) calc(100% - 4px), 
+      calc(100% - 8px) 100%,
+      8px 100%, 
+      
+      8px calc(100% - 4px), 
+      4px calc(100% - 4px), 
+      4px calc(100% - 8px), 
+      0 calc(100% - 8px)
+    );
+  }
+
+  .pixel-box-lg {
+    clip-path: polygon(
+      0 16px, 
+      8px 16px, 
+      8px 8px, 
+      16px 8px, 
+      16px 0,
+
+      calc(100% - 16px) 0, 
+      calc(100% - 16px) 8px, 
+      calc(100% - 8px) 8px, 
+      calc(100% - 8px) 16px, 
+      100% 16px,
+
+      100% calc(100% - 16px), 
+      calc(100% - 8px) calc(100% - 16px), 
+      calc(100% - 8px) calc(100% - 8px), 
+      calc(100% - 16px) calc(100% - 8px), 
+      calc(100% - 16px) 
+      100%,
+
+      16px 100%, 
+      16px calc(100% - 8px), 
+      8px calc(100% - 8px), 
+      8px calc(100% - 16px), 
+      0 calc(100% - 16px)
+    );
+  }
+
+  .pixel-outline-slate {
+    filter: 
+      drop-shadow(4px 0 0 #334155)
+      drop-shadow(-4px 0 0 #334155)
+      drop-shadow(0 4px 0 #334155)
+      drop-shadow(0 -4px 0 #334155);
+  }
+}

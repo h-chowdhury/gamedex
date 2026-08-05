@@ -1,3 +1,4 @@
+import { Navbar } from './components/navbar.jsx';
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Form } from './form.jsx'
@@ -13,8 +14,12 @@ export function Login () {
 
   const handleValidation = (formData) => {
     const newErrors = {};
-    if (!formData.username.trim()) {newErrors.username = 'Username is required.'}
-    if (!formData.password.trim()) {newErrors.password = 'Password is required.'}
+    if (!formData.username.trim()) {
+      newErrors.username = 'Username is required.'
+    }
+    if (!formData.password.trim()) {
+      newErrors.password = 'Password is required.'
+    }
     return newErrors;
   }
 
@@ -48,6 +53,7 @@ export function Login () {
   return (
     <div>
 
+      <Navbar />
       <Form isSignup={false} submitBtnText={"Login"} onSubmit={handleSubmit} errors={errors}/>
       
     </div>

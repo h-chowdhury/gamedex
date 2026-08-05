@@ -1,3 +1,4 @@
+import { Navbar } from './components/navbar.jsx';
 import { useEffect, useState } from 'react'
 import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '../../services/authContext.jsx';
@@ -93,6 +94,7 @@ export function Profile () {
   if (loading) {
     return (
       <div>
+        <Navbar />
         <p>Loading profile...</p>
       </div>
     );
@@ -102,6 +104,7 @@ export function Profile () {
   if (!loading && !user) {
     return (
       <div>
+        <Navbar />
         <p>Failed to load profile. Please try again.</p>
       </div>
     );
@@ -110,6 +113,8 @@ export function Profile () {
   // Successful render
   return (
     <div>
+      <Navbar />
+      
       <p>ID: {user._id}</p>
       <p>Username: {user.username}</p>
       <p>Bio: {user.bio}</p>
@@ -130,12 +135,6 @@ export function Profile () {
       <button onClick={onFileUpload} disabled={uploading}>
         {uploading ? "Uploading..." : "Upload avatar"}
       </button>
-
-      <div>
-        <Link to={'/'}>
-          <button>Home</button>
-        </Link>
-      </div>
 
     </div>
   );
