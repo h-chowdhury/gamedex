@@ -90,8 +90,8 @@ export function Form ({isSignup, submitBtnText, onSubmit, errors}) {
             {!isSignup && <p className="text-slate-500 font-vt323 text-xl">Not registered?</p>}
 
             <Link to={isSignup ? '/login' : '/signup'}>
-              {isSignup && <p className="text-blue-500 hover:underline font-vt323 text-xl">Login</p>}
-              {!isSignup && <p className="text-indigo-500 hover:underline font-vt323 text-xl">Create an account</p>}
+              {isSignup && <p className="text-indigo-500 hover:text-indigo-400 font-vt323 text-xl">Login</p>}
+              {!isSignup && <p className="text-indigo-500 hover:text-indigo-400 font-vt323 text-xl">Create an account</p>}
             </Link>
           </div>
 
