@@ -80,3 +80,7 @@
       drop-shadow(0 -4px 0 #334155);
   }
 }
+
+body {
+  background-color:#020617;
+}

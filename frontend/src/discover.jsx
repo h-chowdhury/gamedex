@@ -2,7 +2,7 @@ import { Navbar } from './components/navbar.jsx';
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 
-function gameCard (gameData) {
+function GameCard (gameData) {
   return (
     <div className="gameCard">
       <h2>Title: {gameData.name}</h2>
@@ -62,31 +62,61 @@ function gameCard (gameData) {
 
 
 
+function DiscoveryView () {
+  return (
+    <div>
+    <h2>Trending games</h2>
 
+    <h2>Upcoming games</h2>
+
+    <h2>All time popular games</h2>
+
+    <h2>Top 100 games</h2>
+  </div>
+  );
+}
+
+
+function SearchView (query) {
+
+}
 
 
 
 export function Discover() {
 
-
-
-
-
+  const [searchQuery, setSearchQuery] = useState('');
 
   return (
-    <div>
+    <div className="w-full max-w-7xl mx-auto lg:px-8 bg-slate-950 text-white">
       <Navbar />
 
-      <input 
-        type='text' 
-        placeholder="Search GameDex" 
-        name="gameSearch"
-      />
+      <h1>Browse Games</h1>
 
+      <div>
+        <input 
+          type='text' 
+          placeholder="Search games" 
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="text-white bg-slate-500 font-vt323"
+        />
 
+      {searchQuery && 
+        <button
+          onClick={() => setSearchQuery('')}
+          className="pixel-box font-press-start text-xs py-2.5 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold shadow-md transition duration-100 active:scale-[0.98]"
+        >
+          CLEAR
+        </button>
+      }
+      </div>
 
-
-
+      {searchQuery.trim().length > 0 ? (
+        <SearchView query={searchQuery} />
+      ) : (
+        <DiscoveryView />
+      )}
 
     </div>
   );

@@ -112,29 +112,64 @@ export function Profile () {
 
   // Successful render
   return (
-    <div>
+    <div className="min-h-screen w-full mx-w-7xl mx-auto lg:px-8 flex flex-col bg-slate-950 overflow-x-hidden">
       <Navbar />
+
+      <div className="pixel-outline-slate">
+
+        <div className="pixel-box-lg bg-slate-900 m-8 flex flex-row p-5 m-5">
+
+          <div className="flex flex-col gap-3 shrink-0">
+            {user.avatar && (
+              <img
+                src={
+                  user.avatar.startsWith('https') ? user.avatar : `http://localhost:5000${user.avatar}?t=${Date.now()}`
+                }
+                alt="Avatar"
+                className="pixel-box m-1"
+                style={{width: '18em', height:'18em', objectFit:'cover'}}
+              />
+            )}
+
+            <div className="flex flex-col gap-2 items-center">
+
+              <input type="file" accept="image/*" className="hidden" id="avatar-upload" onChange={onFileChange} />
+
+              <label 
+                htmlFor="avatar-upload" 
+                className="pixel-box w-full cursor-pointer bg-slate-800 hover:bg-slate-700 font-vt323 px-3 py-2 text-center text-slate-300">
+                  {selectedFile ? "Change File" : "Choose Image"}
+              </label>
+
+              <button 
+                className="pixel-box bg-indigo-600" 
+                onClick={onFileUpload} 
+                disabled={uploading}
+                className="pixel-box w-full bg-indigo-600 hover:bg-indigo-500 px-3 py-2 disabled:bg-slate-800 disabled:opacity-50 text-white font-vt323">
+                  {uploading ? "Uploading..." : "Upload image"}
+              </button>
+              
+              <p className="text-xl font-vt323 text-slate-400 truncate text-overflow: ellipsis">
+                {selectedFile ? `Selected: ${selectedFile.name}` : "No file selected"}
+              </p>
+            </div>
+          </div>
+
+          <div className="ml-8 font-vt323 text-2xl text-slate-400 py-5 flex flex-col gap-6">
+            <div>
+              <p className="font-press-start">{user.username.charAt(0).toUpperCase() + user.username.slice(1)}</p>
+              <p>{user.bio}</p>
+            </div>
+            
+            <div className="text-slate-600">
+              <p>User ID: {user._id}</p>
+              <p>Joined {new Date(user.date_joined).toLocaleDateString('en-UK', {month:'long', day:'numeric', year:'numeric'})}</p>
+            </div>
+
+          </div>
+        </div>
+      </div>
       
-      <p>ID: {user._id}</p>
-      <p>Username: {user.username}</p>
-      <p>Bio: {user.bio}</p>
-      <p>Email: {user.email}</p>
-      <p>Created at: {user.date_joined}</p>
-
-      {user.avatar && (
-        <img
-          src={
-            user.avatar.startsWith('https') ? user.avatar : `http://localhost:5000${user.avatar}?t=${Date.now()}`
-          }
-          alt="Avatar"
-          style={{width: '150px', height:'150px', objectFit:'cover'}}
-        />
-      )}
-
-      <input type="file" accept="image/*" onChange={onFileChange} />
-      <button onClick={onFileUpload} disabled={uploading}>
-        {uploading ? "Uploading..." : "Upload avatar"}
-      </button>
 
     </div>
   );
