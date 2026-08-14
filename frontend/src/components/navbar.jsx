@@ -12,7 +12,7 @@ function NavbarLink ({name, page}) {
     return (
       <li>
         <Link to={'/'}>
-          <p class={linkStyle} onClick={(e) => logout(e)}>Log out</p>
+          <p className={linkStyle} onClick={(e) => logout(e)}>Log out</p>
         </Link>
       </li>
     );
@@ -21,7 +21,7 @@ function NavbarLink ({name, page}) {
   return (
     <li>
       <Link to={`/${page}`}>
-        <p class={linkStyle}>{name}</p>
+        <p className={linkStyle}>{name}</p>
       </Link>
     </li>
   );

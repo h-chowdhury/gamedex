@@ -11,9 +11,12 @@ import { fileURLToPath } from 'url';
 import { db } from "./models/index.js";
 import { User } from "./models/user.model.js";
 import { verifyToken} from "./services/authMiddleware.js";
+import games from './mockGames.json' with {type:'json'};
 
 
 // Variables  ***************************************************** //
+const USE_MOCK_DATA = true;
+
 dotenv.config();
 const app = express();
 const router = express.Router();
@@ -107,13 +110,40 @@ app.get('/', (req, res) => {
 
 
 app.get('/api/game/:idOrSlug', async (req, res) => {
-  // fetch(`https://api.rawg.io/api/games?key=${rawgAPIkey}`)
-  // .then(response => response.json())
-  // .then(data => console.log(data))
-  // .catch(error => console.error(error));
 
+  console.log("Test point 1");
+
+  const idOrSlug = req.params.idOrSlug;
+
+  // Local data fetch (if API is down)
+  if (USE_MOCK_DATA) {
+    console.log("Test point 2");
+
+    const game = games.games.find(
+      (g) => g.id.toString() === idOrSlug || g.slug === idOrSlug.toLowerCase()
+    );
+
+    if (!game) {
+      return res.status(404).json({ detail: "Game not found." });
+    }
+
+    // if (idOrSlug) {
+    //   results = results.filter(
+    //     (game) => (
+    //       game.name.toLowerCase().includes(idOrSlug.toLowerCase()) || 
+    //       game.slug.toLowerCase().includes(idOrSlug.toLowerCase()) || 
+    //       game.id.includes(idOrSlug)
+    //     )
+    //   )
+    // }
+
+    console.log("Test point 3");
+
+    return res.json(game);
+  }
+
+  // Live API fetch
   try {
-    const idOrSlug = req.params.idOrSlug;
     const response = await fetch(`https://api.rawg.io/api/games/${idOrSlug}?key=${rawgAPIkey}`);
 
     if (!response.ok) {
