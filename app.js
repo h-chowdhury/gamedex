@@ -15,7 +15,7 @@ import games from './mockGames.json' with {type:'json'};
 
 
 // Variables  ***************************************************** //
-const USE_MOCK_DATA = true;
+const USE_MOCK_DATA = false;
 
 dotenv.config();
 const app = express();
@@ -109,16 +109,13 @@ app.get('/', (req, res) => {
 });
 
 
+// Return singular match 
 app.get('/api/game/:idOrSlug', async (req, res) => {
-
-  console.log("Test point 1");
 
   const idOrSlug = req.params.idOrSlug;
 
   // Local data fetch (if API is down)
   if (USE_MOCK_DATA) {
-    console.log("Test point 2");
-
     const game = games.games.find(
       (g) => g.id.toString() === idOrSlug || g.slug === idOrSlug.toLowerCase()
     );
@@ -136,8 +133,6 @@ app.get('/api/game/:idOrSlug', async (req, res) => {
     //     )
     //   )
     // }
-
-    console.log("Test point 3");
 
     return res.json(game);
   }
@@ -161,6 +156,59 @@ app.get('/api/game/:idOrSlug', async (req, res) => {
   } catch (error) {
     console.error("Could not fetch game details:", error);
     res.json(null);
+  }
+});
+
+
+// Return several matches
+app.get('/api/games', async (req, res) => {
+
+  const { search } = req.query;
+
+  // Local data fetch (if API is down)
+  if (USE_MOCK_DATA) {
+    let results = mockDatabase.games;
+    
+    if (search) {
+      results = results.filter((game) =>
+        game.name.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+
+    return res.json({
+      count: results.length,
+      next: null,
+      previous: null,
+      results: results
+    });
+  }
+
+  // Live API fetch
+  try {
+    const { search, page, genre } = req.query;
+
+    const url = new URL('https://api.rawg.io/api/games');
+    url.searchParams.append('key', rawgAPIkey);
+
+    if (search) url.searchParams.append('search', search);
+    if (page) url.searchParams.append('page', page);
+    if (genre) url.searchParams.append('genres', genre);
+
+    const response = await fetch(url.toString());
+
+    if (!response.ok) {
+      return res.status(response.status).json({ 
+        error: `RAWG API error: ${response.statusText}` 
+      });
+    }
+
+    const data = await response.json();
+
+    return res.json(data);
+
+  } catch (error) {
+    console.error("Error fetching games:", error);
+    return res.status(500).json({ error: "Failed to fetch games." });
   }
 });
 

@@ -5,7 +5,7 @@
       "slug": "elden-ring",
       "name": "Elden Ring",
       "released": "2022-02-25",
-      "background_image": "https://media.rawg.io/media/games/b29/b294fdd866dcdb643e7baa37e0ac6610.jpg",
+      "background_image": "public/game-covers/elden-ring.png",
       "rating": 4.8,
       "metacritic": 96,
       "description_raw": "THE NEW FANTASY ACTION RPG. Rise, Tarnished, and be guided by grace to brandish the power of the Elden Ring and become an Elden Lord in the Lands Between.",
@@ -20,8 +20,7 @@
         { "platform": { "id": 186, "name": "Xbox Series S/X" } }
       ],
       "screenshots": [
-        { "id": 1, "image": "https://media.rawg.io/media/screenshots/001/0010996d9f58e4e7e60124a919f2d1e2.jpg" },
-        { "id": 2, "image": "https://media.rawg.io/media/screenshots/0e3/0e3371a39f607a72d738f6580e0c900d.jpg" }
+        { "id": 1, "image": "public/game-covers/elden-ring.jpg" }
       ]
     },
     {
@@ -29,7 +28,7 @@
       "slug": "god-of-war-ragnarok",
       "name": "God of War Ragnarök",
       "released": "2022-11-09",
-      "background_image": "https://media.rawg.io/media/games/909/909970d413813c9a0715364303b62452.jpg",
+      "background_image": "public/game-covers/god-of-war-ragnarok.png",
       "rating": 4.7,
       "metacritic": 94,
       "description_raw": "Kratos and Atreus must journey to each of the Nine Realms in search of answers as Asgardian forces prepare for a prophesied battle that will end the world.",
@@ -43,7 +42,7 @@
         { "platform": { "id": 18, "name": "PlayStation 4" } }
       ],
       "screenshots": [
-        { "id": 1, "image": "https://media.rawg.io/media/screenshots/2f1/2f11ecf3306634730999516805828f73.jpg" }
+        { "id": 1, "image": "public/game-covers/god-of-war-ragnarok.png" }
       ]
     },
     {
@@ -51,7 +50,7 @@
       "slug": "the-witcher-3-wild-hunt",
       "name": "The Witcher 3: Wild Hunt",
       "released": "2015-05-18",
-      "background_image": "https://media.rawg.io/media/games/618/618c47b8e3693242f224d4826d089a5b.jpg",
+      "background_image": "public/game-covers/the-witcher-3-wild-hunt.png",
       "rating": 4.66,
       "metacritic": 92,
       "description_raw": "You are Geralt of Rivia, mercenary monster slayer. Before you stands a war-torn, monster-infested continent you can explore at will. Your current contract? Locating Ciri — the Child of Prophecy, a living weapon that can alter the shape of the world.",
@@ -66,7 +65,7 @@
         { "platform": { "id": 7, "name": "Nintendo Switch" } }
       ],
       "screenshots": [
-        { "id": 1, "image": "https://media.rawg.io/media/screenshots/1ac/1ac2da1713f09131c43557062232ef4d.jpg" }
+        { "id": 1, "image": "public/game-covers/the-witcher-3-wild-hunt.png" }
       ]
     },
     {
@@ -74,7 +73,7 @@
       "slug": "cyberpunk-2077",
       "name": "Cyberpunk 2077",
       "released": "2020-12-10",
-      "background_image": "https://media.rawg.io/media/games/26d/26d4437715bee60138dab4a7c4c59c92.jpg",
+      "background_image": "public/game-covers/cyberpunk-2077.png",
       "rating": 4.14,
       "metacritic": 86,
       "description_raw": "Cyberpunk 2077 is an open-world, action-adventure RPG set in Night City, a megalopolis obsessed with power, glamour, and body modification. Step into the shoes of V, a mercenary outlaw going after a one-of-a-kind implant.",
@@ -89,7 +88,7 @@
         { "platform": { "id": 186, "name": "Xbox Series S/X" } }
       ],
       "screenshots": [
-        { "id": 1, "image": "https://media.rawg.io/media/screenshots/a7c/a7c43e63e9b9d69230513d79b29135a7.jpg" }
+        { "id": 1, "image": "public/game-covers/cyberpunk-2077.jpg" }
       ]
     },
     {
@@ -97,7 +96,7 @@
       "slug": "red-dead-redemption-2",
       "name": "Red Dead Redemption 2",
       "released": "2018-10-26",
-      "background_image": "https://media.rawg.io/media/games/511/511821865521670f036f2f2be335a938.jpg",
+      "background_image": "public/game-covers/red-dead-redemption-2.png",
       "rating": 4.59,
       "metacritic": 97,
       "description_raw": "America, 1899. Arthur Morgan and the Van der Linde gang are outlaws on the run. With federal agents and the best bounty hunters in the nation massing on their heels, the gang must rob, steal and fight their way across the rugged heartland of America.",
@@ -112,7 +111,7 @@
         { "platform": { "id": 1, "name": "Xbox One" } }
       ],
       "screenshots": [
-        { "id": 1, "image": "https://media.rawg.io/media/screenshots/881/8814526d51620a59a72186f9f30b9122.jpg" }
+        { "id": 1, "image": "public/game-covers/red-dead-redemption-2.png" }
       ]
     },
     {
@@ -120,7 +119,7 @@
       "slug": "hollow-knight",
       "name": "Hollow Knight",
       "released": "2017-02-24",
-      "background_image": "https://media.rawg.io/media/games/4cf/4cf7723000770f83aa5e0034f820334f.jpg",
+      "background_image": "public/game-covers/hollow-knight.png",
       "rating": 4.4,
       "metacritic": 90,
       "description_raw": "Forge your own path in Hollow Knight! An epic action adventure through a vast ruined kingdom of insects and heroes. Explore twisting caverns, battle tainted creatures and befriend bizarre bugs, all in a classic, hand-drawn 2D style.",
@@ -136,7 +135,7 @@
         { "platform": { "id": 18, "name": "PlayStation 4" } }
       ],
       "screenshots": [
-        { "id": 1, "image": "https://media.rawg.io/media/screenshots/0f0/0f0477e77a6411516e88942b0c169213.jpg" }
+        { "id": 1, "image": "public/game-covers/hollow-knight.png" }
       ]
     },
     {
@@ -144,7 +143,7 @@
       "slug": "baldurs-gate-3",
       "name": "Baldur's Gate 3",
       "released": "2023-08-03",
-      "background_image": "https://media.rawg.io/media/games/618/618c47b8e3693242f224d4826d089a5b.jpg",
+      "background_image": "public/game-covers/baldurs-gate-3.png",
       "rating": 4.75,
       "metacritic": 96,
       "description_raw": "Gather your party and return to the Forgotten Realms in a tale of fellowship and betrayal, sacrifice and survival, and the lure of absolute power. Mysterious abilities are awakening inside you, drawn from a mind flayer parasite implanted in your brain.",
@@ -159,7 +158,7 @@
         { "platform": { "id": 186, "name": "Xbox Series S/X" } }
       ],
       "screenshots": [
-        { "id": 1, "image": "https://media.rawg.io/media/screenshots/11d/11d0e12d12d08a55639f20dd330f81d1.jpg" }
+        { "id": 1, "image": "public/game-covers/baldurs-gate-3.png" }
       ]
     },
     {
@@ -167,7 +166,7 @@
       "slug": "hades",
       "name": "Hades",
       "released": "2020-09-17",
-      "background_image": "https://media.rawg.io/media/games/1f4/1f47a55a4931f616117b565d0e25d3da.jpg",
+      "background_image": "public/game-covers/hades.png",
       "rating": 4.52,
       "metacritic": 93,
       "description_raw": "Defy the god of the dead as you hack and slash your way out of the Underworld in this rogue-like dungeon crawler from the creators of Bastion, Transistor, and Pyre.",
@@ -183,7 +182,7 @@
         { "platform": { "id": 187, "name": "PlayStation 5" } }
       ],
       "screenshots": [
-        { "id": 1, "image": "https://media.rawg.io/media/screenshots/0bc/0bc22756d10c0e3e2300b8ef4ec5c0d1.jpg" }
+        { "id": 1, "image": "public/game-covers/hades.png" }
       ]
     },
     {
@@ -191,7 +190,7 @@
       "slug": "grand-theft-auto-v",
       "name": "Grand Theft Auto V",
       "released": "2013-09-17",
-      "background_image": "https://media.rawg.io/media/games/20a/20a72657b2b0ed3a0884072ed36816da.jpg",
+      "background_image": "public/game-covers/grand-theft-auto-v.png",
       "rating": 4.47,
       "metacritic": 92,
       "description_raw": "When a young street hustler, a retired bank robber and a terrifying psychopath find themselves entangled with some of the most frightening and deranged elements of the criminal underworld, the U.S. government and the entertainment industry, they must pull off a series of dangerous heists to survive.",
@@ -205,7 +204,7 @@
         { "platform": { "id": 186, "name": "Xbox Series S/X" } }
       ],
       "screenshots": [
-        { "id": 1, "image": "https://media.rawg.io/media/screenshots/a7c/a7c43e63e9b9d69230513d79b29135a7.jpg" }
+        { "id": 1, "image": "public/game-covers/grand-theft-auto-v.png" }
       ]
     },
     {
@@ -213,7 +212,7 @@
       "slug": "the-legend-of-zelda-tears-of-the-kingdom",
       "name": "The Legend of Zelda: Tears of the Kingdom",
       "released": "2023-05-12",
-      "background_image": "https://media.rawg.io/media/games/cc1/cc196a5ad763955d6532802a22d30ec0.jpg",
+      "background_image": "public/game-covers/the-legend-of-zelda-tears-of-the-kingdom.png",
       "rating": 4.82,
       "metacritic": 96,
       "description_raw": "An epic adventure awaits across the land and skies of Hyrule in The Legend of Zelda: Tears of the Kingdom for Nintendo Switch. The adventure is yours to create in a world fueled by your imagination.",
@@ -226,7 +225,7 @@
         { "platform": { "id": 7, "name": "Nintendo Switch" } }
       ],
       "screenshots": [
-        { "id": 1, "image": "https://media.rawg.io/media/screenshots/112/1120e8b15d9c2a6321262d04a796e679.jpg" }
+        { "id": 1, "image": "public/game-covers/the-legend-of-zelda-tears-of-the-kingdom.jpg" }
       ]
     },
     {
@@ -234,7 +233,7 @@
       "slug": "portal-2",
       "name": "Portal 2",
       "released": "2011-04-18",
-      "background_image": "https://media.rawg.io/media/games/2ba/2bac0e87cf45e5b508f227d281c9252a.jpg",
+      "background_image": "public/game-covers/portal-2.png",
       "rating": 4.61,
       "metacritic": 95,
       "description_raw": "Portal 2 draws from the award-winning formula of innovative gameplay, story, and music that earned the original Portal over 70 industry accolades and created a passionate following.",
@@ -248,7 +247,7 @@
         { "platform": { "id": 7, "name": "Nintendo Switch" } }
       ],
       "screenshots": [
-        { "id": 1, "image": "https://media.rawg.io/media/screenshots/221/221e0334812306718d727b140cc5362a.jpg" }
+        { "id": 1, "image": "public/game-covers/portal-2.jpg" }
       ]
     },
     {
@@ -256,7 +255,7 @@
       "slug": "persona-5-royal",
       "name": "Persona 5 Royal",
       "released": "2019-10-31",
-      "background_image": "https://media.rawg.io/media/games/a9c/a9c33e884e87d1e372e8111953a9926d.jpg",
+      "background_image": "public/game-covers/persona-5-royal.png",
       "rating": 4.68,
       "metacritic": 95,
       "description_raw": "Don the mask of Joker and join the Phantom Thieves of Hearts. Break free from the chains of modern society and stage grand heists to infiltrate the minds of the corrupt and make them change their ways!",
@@ -270,7 +269,7 @@
         { "platform": { "id": 7, "name": "Nintendo Switch" } }
       ],
       "screenshots": [
-        { "id": 1, "image": "https://media.rawg.io/media/screenshots/001/0010996d9f58e4e7e60124a919f2d1e2.jpg" }
+        { "id": 1, "image": "public/game-covers/persona-5-royal.png" }
       ]
     },
     {
@@ -278,7 +277,7 @@
       "slug": "minecraft",
       "name": "Minecraft",
       "released": "2011-11-18",
-      "background_image": "https://media.rawg.io/media/games/b4e/b4e4c73d5aa4ec66bbf753e82647a95b.jpg",
+      "background_image": "public/game-covers/minecraft.png",
       "rating": 4.43,
       "metacritic": 93,
       "description_raw": "Explore infinite worlds and build everything from the simplest of homes to the grandest of castles. Play in creative mode with unlimited resources or mine deep into the world in survival mode.",
@@ -295,7 +294,7 @@
         { "platform": { "id": 7, "name": "Nintendo Switch" } }
       ],
       "screenshots": [
-        { "id": 1, "image": "https://media.rawg.io/media/screenshots/cca/cca096efaf5e12f6b3cf7c0303112b32.jpg" }
+        { "id": 1, "image": "public/game-covers/minecraft.png" }
       ]
     },
     {
@@ -303,7 +302,7 @@
       "slug": "the-elder-scrolls-v-skyrim",
       "name": "The Elder Scrolls V: Skyrim",
       "released": "2011-11-11",
-      "background_image": "https://media.rawg.io/media/games/7cf/7cfc92f8f3042e7a364ee15402aed6b5.jpg",
+      "background_image": "public/game-covers/the-elder-scrolls-v-skyrim.png",
       "rating": 4.42,
       "metacritic": 94,
       "description_raw": "The next chapter in the highly anticipated Elder Scrolls saga arrives from the makers of the 2006 Game of the Year, The Elder Scrolls IV: Oblivion. Skyrim reimagines and revolutionizes the open-world fantasy epic.",
@@ -319,7 +318,7 @@
         { "platform": { "id": 7, "name": "Nintendo Switch" } }
       ],
       "screenshots": [
-        { "id": 1, "image": "https://media.rawg.io/media/screenshots/00f/00f91a5f4c4054a72d3f7528e100e470.jpg" }
+        { "id": 1, "image": "public/game-covers/the-elder-scrolls-v-skyrim.jpg" }
       ]
     },
     {
@@ -327,7 +326,7 @@
       "slug": "the-last-of-us-part-i",
       "name": "The Last of Us Part I",
       "released": "2022-09-02",
-      "background_image": "https://media.rawg.io/media/games/709/709e04543d2da27f282eaf13e003d7ed.jpg",
+      "background_image": "public/game-covers/the-last-of-us-part-i.png",
       "rating": 4.65,
       "metacritic": 88,
       "description_raw": "In a ravaged civilization, where infected and hardened survivors run rampant, Joel, a weary protagonist, is hired to smuggle 14-year-old Ellie out of a military quarantine zone.",
@@ -341,7 +340,7 @@
         { "platform": { "id": 187, "name": "PlayStation 5" } }
       ],
       "screenshots": [
-        { "id": 1, "image": "https://media.rawg.io/media/screenshots/92d/92d9d1b09d3b10ec947ef35a82fa2096.jpg" }
+        { "id": 1, "image": "public/game-covers/the-last-of-us-part-i.png" }
       ]
     },
     {
@@ -349,7 +348,7 @@
       "slug": "stardew-valley",
       "name": "Stardew Valley",
       "released": "2016-02-26",
-      "background_image": "https://media.rawg.io/media/games/713/713277060e334635832b37157b28292f.jpg",
+      "background_image": "public/game-covers/stardew-valley.png",
       "rating": 4.39,
       "metacritic": 89,
       "description_raw": "You've inherited your grandfather's old farm plot in Stardew Valley. Armed with hand-me-down tools and a few coins, you set out to begin your new life.",
@@ -366,7 +365,7 @@
         { "platform": { "id": 1, "name": "Xbox One" } }
       ],
       "screenshots": [
-        { "id": 1, "image": "https://media.rawg.io/media/screenshots/1dc/1dc219ed053c8c7c9a9d20c5d263a23a.jpg" }
+        { "id": 1, "image": "public/game-covers/stardew-valley.png" }
       ]
     },
     {
@@ -374,7 +373,7 @@
       "slug": "dark-souls-iii",
       "name": "Dark Souls III",
       "released": "2016-03-24",
-      "background_image": "https://media.rawg.io/media/games/da1/da155767066b164824dbe7ed923d0a70.jpg",
+      "background_image": "public/game-covers/dark-souls-iii.png",
       "rating": 4.4,
       "metacritic": 89,
       "description_raw": "Dark Souls III continues to push the boundaries with the latest, ambitious chapter in the critically-acclaimed and genre-defining series.",
@@ -389,7 +388,7 @@
         { "platform": { "id": 1, "name": "Xbox One" } }
       ],
       "screenshots": [
-        { "id": 1, "image": "https://media.rawg.io/media/screenshots/3fa/3fa0b18ec4958f276f5b72e51921c5f3.jpg" }
+        { "id": 1, "image": "public/game-covers/dark-souls-iii.png" }
       ]
     },
     {
@@ -397,7 +396,7 @@
       "slug": "horizon-zero-dawn",
       "name": "Horizon Zero Dawn",
       "released": "2017-02-28",
-      "background_image": "https://media.rawg.io/media/games/b7d/b7d3f1715fa8381a4e780173a197a615.jpg",
+      "background_image": "public/game-covers/horizon-zero-dawn.png",
       "rating": 4.31,
       "metacritic": 89,
       "description_raw": "Experience Aloy's legendary quest to unravel the mysteries of a future Earth ruled by Machines. Use devastating tactical attacks against your prey and explore a majestic open world.",
@@ -411,7 +410,7 @@
         { "platform": { "id": 18, "name": "PlayStation 4" } }
       ],
       "screenshots": [
-        { "id": 1, "image": "https://media.rawg.io/media/screenshots/030/03080e7222f73752c03387c2b3d84381.jpg" }
+        { "id": 1, "image": "public/game-covers/horizon-zero-dawn.png" }
       ]
     },
     {
@@ -419,7 +418,7 @@
       "slug": "marvels-spider-man-remastered",
       "name": "Marvel's Spider-Man Remastered",
       "released": "2018-09-07",
-      "background_image": "https://media.rawg.io/media/games/9aa/9aa42d16d42532ed018d3847425770f6.jpg",
+      "background_image": "public/game-covers/marvels-spider-man-remastered.png",
       "rating": 4.46,
       "metacritic": 87,
       "description_raw": "In Marvel's Spider-Man Remastered, the worlds of Peter Parker and Spider-Man meander in an action-packed original story. Play as an experienced Peter Parker, fighting big crime and iconic villains in Marvel’s New York.",
@@ -432,7 +431,7 @@
         { "platform": { "id": 187, "name": "PlayStation 5" } }
       ],
       "screenshots": [
-        { "id": 1, "image": "https://media.rawg.io/media/screenshots/0d2/0d2b78a9c2b4e54452033c4ebcfdd5e1.jpg" }
+        { "id": 1, "image": "public/game-covers/marvels-spider-man-remastered.png" }
       ]
     },
     {
@@ -440,7 +439,7 @@
       "slug": "monster-hunter-world",
       "name": "Monster Hunter: World",
       "released": "2018-01-26",
-      "background_image": "https://media.rawg.io/media/games/214/214b582a1136b6e457b14d33448342b6.jpg",
+      "background_image": "public/game-covers/monster-hunter-world.png",
       "rating": 4.02,
       "metacritic": 90,
       "description_raw": "Welcome to a new world! In Monster Hunter: World, the latest installment in the series, you can enjoy the ultimate hunting experience, using everything at your disposal to hunt monsters in a new world teeming with surprises and excitement.",
@@ -455,7 +454,7 @@
         { "platform": { "id": 1, "name": "Xbox One" } }
       ],
       "screenshots": [
-        { "id": 1, "image": "https://media.rawg.io/media/screenshots/112/112f45f7f3a8b4f17df0b0744e2ef3f5.jpg" }
+        { "id": 1, "image": "public/game-covers/monster-hunter-world.png" }
       ]
     },
     {
@@ -463,7 +462,7 @@
       "slug": "celeste",
       "name": "Celeste",
       "released": "2018-01-25",
-      "background_image": "https://media.rawg.io/media/games/50c/50c7117228f3860b14de3b2ae9e80231.jpg",
+      "background_image": "public/game-covers/celeste.png",
       "rating": 4.39,
       "metacritic": 92,
       "description_raw": "Help Madeline survive her inner demons on her journey to the top of Celeste Mountain, in this super-tight, hand-crafted platformer from the creators of TowerFall.",
@@ -478,7 +477,7 @@
         { "platform": { "id": 18, "name": "PlayStation 4" } }
       ],
       "screenshots": [
-        { "id": 1, "image": "https://media.rawg.io/media/screenshots/92d/92d9d1b09d3b10ec947ef35a82fa2096.jpg" }
+        { "id": 1, "image": "public/game-covers/celeste.png" }
       ]
     },
     {
@@ -486,7 +485,7 @@
       "slug": "final-fantasy-vii-remake",
       "name": "Final Fantasy VII Remake",
       "released": "2020-04-10",
-      "background_image": "https://media.rawg.io/media/games/511/511821865521670f036f2f2be335a938.jpg",
+      "background_image": "public/game-covers/final-fantasy-vii-remake.png",
       "rating": 4.41,
       "metacritic": 87,
       "description_raw": "The world has fallen under the control of the Shinra Electric Power Company. Cloud Strife, a former member of Shinra's elite SOLDIER unit now turned mercenary, lends his aid to an anti-Shinra organization calling themselves Avalanche.",
@@ -501,7 +500,7 @@
         { "platform": { "id": 18, "name": "PlayStation 4" } }
       ],
       "screenshots": [
-        { "id": 1, "image": "https://media.rawg.io/media/screenshots/001/0010996d9f58e4e7e60124a919f2d1e2.jpg" }
+        { "id": 1, "image": "public/game-covers/final-fantasy-vii-remake.jpg" }
       ]
     },
     {
@@ -509,10 +508,10 @@
       "slug": "fallout-4",
       "name": "Fallout 4",
       "released": "2015-11-09",
-      "background_image": "https://media.rawg.io/media/games/d82/d8236db7a6e38e0e0a3676fc4e49f58b.jpg",
+      "background_image": "public/game-covers/fallout-4.png",
       "rating": 3.8,
       "metacritic": 87,
-      "description_raw": "Bethesda Game Studios, the award-winning creators of Fallout 3 and The Elder Scrolls V: Skyrim, welcome you to the world of Fallout 4 – their most ambitious game ever, and the next generation of open-world gaming.",
+      "description_raw": "Bethesda Game Studios, the award-winning creators of Fallout 3 and The Elder Scrolls V: Skyrim, welcome you to the world of Fallout 4 – their most ambitious game ever and the next generation of open-world gaming.",
       "website": "https://fallout.bethesda.net/games/fallout-4",
       "genres": [
         { "id": 4, "name": "Action" },
@@ -524,7 +523,7 @@
         { "platform": { "id": 186, "name": "Xbox Series S/X" } }
       ],
       "screenshots": [
-        { "id": 1, "image": "https://media.rawg.io/media/screenshots/881/8814526d51620a59a72186f9f30b9122.jpg" }
+        { "id": 1, "image": "public/game-covers/fallout-4.png" }
       ]
     },
     {
@@ -532,7 +531,7 @@
       "slug": "resident-evil-4-2023",
       "name": "Resident Evil 4",
       "released": "2023-03-24",
-      "background_image": "https://media.rawg.io/media/games/20a/20a72657b2b0ed3a0884072ed36816da.jpg",
+      "background_image": "public/game-covers/resident-evil-4-2023.png",
       "rating": 4.62,
       "metacritic": 93,
       "description_raw": "Survival is only the beginning. Six years have passed since the biological disaster in Raccoon City. Agent Leon S. Kennedy is sent to rescue the president's kidnapped daughter from a secluded European village.",
@@ -546,7 +545,7 @@
         { "platform": { "id": 186, "name": "Xbox Series S/X" } }
       ],
       "screenshots": [
-        { "id": 1, "image": "https://media.rawg.io/media/screenshots/a7c/a7c43e63e9b9d69230513d79b29135a7.jpg" }
+        { "id": 1, "image": "public/game-covers/resident-evil-4-2023.png" }
       ]
     },
     {
@@ -554,7 +553,7 @@
       "slug": "dead-cells",
       "name": "Dead Cells",
       "released": "2018-08-07",
-      "background_image": "https://media.rawg.io/media/games/0be/0bea0a08a4d9543d76a6e94947128e6d.jpg",
+      "background_image": "public/game-covers/dead-cells.png",
       "rating": 4.31,
       "metacritic": 89,
       "description_raw": "Dead Cells is a rogue-lite, castlevania-inspired action-platformer. You'll explore a sprawling, ever-changing castle... assuming you're able to fight your way past its keepers in 2D soulslike combat.",
@@ -569,7 +568,7 @@
         { "platform": { "id": 18, "name": "PlayStation 4" } }
       ],
       "screenshots": [
-        { "id": 1, "image": "https://media.rawg.io/media/screenshots/001/0010996d9f58e4e7e60124a919f2d1e2.jpg" }
+        { "id": 1, "image": "public/game-covers/dead-cells.png" }
       ]
     },
     {
@@ -577,7 +576,7 @@
       "slug": "doom-eternal",
       "name": "DOOM Eternal",
       "released": "2020-03-20",
-      "background_image": "https://media.rawg.io/media/games/3ac/3ac231011326beedc3c2b2a6f195d8ee.jpg",
+      "background_image": "public/game-covers/doom-eternal.png",
       "rating": 4.38,
       "metacritic": 88,
       "description_raw": "Hell’s armies have invaded Earth. Become the Slayer in an epic single-player campaign to conquer demons across dimensions and stop the ultimate destruction of humanity.",
@@ -592,7 +591,7 @@
         { "platform": { "id": 7, "name": "Nintendo Switch" } }
       ],
       "screenshots": [
-        { "id": 1, "image": "https://media.rawg.io/media/screenshots/0e3/0e3371a39f607a72d738f6580e0c900d.jpg" }
+        { "id": 1, "image": "public/game-covers/doom-eternal.png" }
       ]
     },
     {
@@ -600,7 +599,7 @@
       "slug": "mass-effect-legendary-edition",
       "name": "Mass Effect Legendary Edition",
       "released": "2021-05-14",
-      "background_image": "https://media.rawg.io/media/games/8a0/8a02d32a391e7695046113700122d5d4.jpg",
+      "background_image": "public/game-covers/mass-effect-legendary-edition.png",
       "rating": 4.58,
       "metacritic": 90,
       "description_raw": "Relive the cinematic saga in Mass Effect Legendary Edition. Includes single-player base content and over 40 DLC from Mass Effect, Mass Effect 2, and Mass Effect 3 games.",
@@ -615,8 +614,8 @@
         { "platform": { "id": 1, "name": "Xbox One" } }
       ],
       "screenshots": [
-        { "id": 1, "image": "https://media.rawg.io/media/screenshots/2f1/2f11ecf3306634730999516805828f73.jpg" }
+        { "id": 1, "image": "public/game-covers/mass-effect-legendary-edition.jpg" }
       ]
-    }    
+    }
   ]
 }

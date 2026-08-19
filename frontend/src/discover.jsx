@@ -1,14 +1,10 @@
 import { Navbar } from './components/navbar.jsx';
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useMemo } from 'react'
 import { Link } from 'react-router-dom';
 
-// Style variables ******************************************************************** //
-
+// Styles
 const h1style = 'text-slate-200 font-vt323 text-4xl';
 const h2style = 'text-slate-200 font-vt323 text-2xl uppercase';
-
-
-// Searching logic with debouncing **************************************************** //
 
 function debounce(func, delay) {
   let timeout;
@@ -18,48 +14,26 @@ function debounce(func, delay) {
   };
 }
 
-const search = async (query) => {
-  try {
-    const res = await fetch(`http://localhost:5000/api/game/${query}`);
-    const data = await res.json();
-    return data.results;
-  } catch (err) {
-    console.error("Failed to fetch games:", err);
-  }
-}
-
-const searchGame = debounce(search, 500);
-
-
-// function debounce(func, delay) {
-//   let timeout;
-//   return function (...args) {
-//     clearTimeout(timeout);
-//     timeout = setTimeout(() => func.apply(this, args), delay)
-//   };
+// const search = async (query) => {
+//   try {
+//     const res = await fetch(`http://localhost:5000/api/games?search=${encodeURIComponent(query)}`);
+//     const data = await res.json();
+//     return data.results;
+//   } catch (err) {
+//     console.error("Failed to fetch games:", err);
+//     return [];
+//   }
 // }
 
-// function search(query) {
-//   console.log("Searching for...", query);
-// }
-
-// const debouncedSearch = debounce(search, 300);
-
-// debouncedSearch("H");
-// debouncedSearch("He");
-// debouncedSearch("Hel");
-// debouncedSearch("Hell");
-// debouncedSearch("Hello");
+// const searchGame = debounce(search, 500);
 
 
-
-
-function GameCard (gameData) {
+function GameCard ({gameData}) {
   return (
     <div className="pixel-box bg-red-400">
-      <h2>Title: {gameData.name}</h2>
-      <p>Released: {gameData.released}</p>
-      <p>Description: {gameData.description_raw}</p>
+      <h2 className="text-white">Title: {gameData.name}</h2>
+      <p className="text-white">Released: {gameData.released}</p>
+      <p className="text-white">Description: {gameData.description_raw}</p>
       
       {gameData.background_image && (
         <img 
@@ -69,7 +43,7 @@ function GameCard (gameData) {
         />
       )}
 
-      <p>
+      <p className="text-white">
         Genre: {
           Array.isArray(gameData.genres)
             ? gameData.genres.map(g => g.name).join(', ')
@@ -77,7 +51,7 @@ function GameCard (gameData) {
         }
       </p>
 
-      <p>
+      {/* <p>
         Platform: {
           Array.isArray(gameData.platforms)
           ? gameData.platforms.map(p => p.platform?.name || p.name).join(', ')
@@ -98,20 +72,18 @@ function GameCard (gameData) {
             ? `${gameData.player_activity?.current_players || 0} current players`
             : gameData.player_activity || 'N/A'
         }
-      </p>
+      </p> */}
 
-      <p>Metacritic score: {gameData.metacritic || 'N/A'}</p>
-      <p>Developer: {gameData.developer}</p>
-      <p>Publisher: {gameData.publisher}</p>
-      <p>Creator: {gameData.creator}</p>
-      
-      <p>Website: {gameData.website ? <a href={gameData.website}>{gameData.website}</a> : 'N/A'}</p>
+      {/* <p className="text-white">Metacritic score: {gameData.metacritic || 'N/A'}</p>
+      <p className="text-white">Developer: {gameData.developer}</p>
+      <p className="text-white">Publisher: {gameData.publisher}</p>
+      <p className="text-white">Creator: {gameData.creator}</p>
+      <p className="text-white">Website: {gameData.website ? <a href={gameData.website}>{gameData.website}</a> : 'N/A'}</p> */}
 
     </div>
   )
 
 }
-
 
 
 function DiscoveryView () {
@@ -129,38 +101,65 @@ function DiscoveryView () {
 }
 
 
-function SearchView ({query}) {
+function SearchView ({query, results, loading}) {
 
-  // const[game, setGame] = useState(null);
-
-  const searchResults = searchGame(query);
+  if (loading) return <p className="text-white">Searching for "{query}"...</p>
 
   return (
     <div>
       <h2>Search: {query.charAt(0).toUpperCase() + query.slice(1)}</h2>
 
-      {searchResults == null && (
+      {results == null || results == [] && (
         <div>
-          <h2>No Results</h2>
+          <h2 className="text-white">No games found for "{query}".</h2>
         </div>
       )}
 
-      {searchResults != null && 
-        (Array.isArray(searchResults)
-          ? searchResults.map((game) => {return <GameCard key={game.id} gameData={game} />})
-          : <GameCard gameData={searchResults} />
+      {results != null && 
+        (Array.isArray(results)
+          ? results.map((game) => {return <GameCard key={game.id} gameData={game} />})
+          : <GameCard gameData={results} />
       )}
-
     </div>
-
   );
-
 }
 
 
 export function Discover() {
 
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const fetchGames = async (searchQuery) => {
+    if (!searchQuery.trim()) {
+      setSearchResults([]);
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const res = await fetch(`http://localhost:5000/api/games?search=${encodeURIComponent(searchQuery)}`);
+      const data = await res.json();
+      setSearchResults(data.results || []);
+    } catch (err) {
+      console.error("Failed to fetch games:", err);
+      setSearchResults([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const debouncedSearch = useMemo(() => debounce((q) => fetchGames(q), 500), []);
+
+  useEffect(() => {
+    if (searchQuery.trim().length > 0) {
+      debouncedSearch(searchQuery);
+    } else {
+      setSearchResults([]);   
+    }
+  }, [searchQuery, debouncedSearch]);
 
   return (
     <div className="w-full max-w-7xl mx-auto lg:px-8 bg-slate-950 text-white">
@@ -171,7 +170,7 @@ export function Discover() {
       <div>
         <input 
           type='text' 
-          placeholder="Search games" 
+          placeholder="Search games..." 
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="text-white bg-slate-500 font-vt323"
@@ -188,7 +187,7 @@ export function Discover() {
       </div>
 
       {searchQuery.trim().length > 0 ? (
-        <SearchView query={searchQuery} />
+        <SearchView query={searchQuery} results={searchResults} loading={loading}/>
       ) : (
         <DiscoveryView />
       )}
