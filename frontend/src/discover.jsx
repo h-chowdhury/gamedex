@@ -29,27 +29,43 @@ function debounce(func, delay) {
 
 
 function GameCard ({gameData}) {
+
+  if (!gameData) return null;
+
   return (
-    <div className="pixel-box bg-red-400">
-      <h2 className="text-white">Title: {gameData.name}</h2>
-      <p className="text-white">Released: {gameData.released}</p>
-      <p className="text-white">Description: {gameData.description_raw}</p>
-      
-      {gameData.background_image && (
+    <div className="relative pixel-box h-[290px] w-[210px] bg-red-400 flex-shrink-0 transition-all duration-200 hover:-translate-y-1.5">
+
+      <img
+        src="../public/cartridge.png"
+        alt="Cartridge base"
+        className="h-full w-full inset-0 object-contain pointer-events-none z-0"
+      />
+
+      <div className="absolute top-[25%] left-[8%] h-[68%] w-[85%] overflow-hidden z-10">
+        {gameData.background_image && (
         <img 
-          src={gameData.background_image} 
+          src={gameData.background_image || 'https://via.placeholder.com/300x200'} 
           alt={gameData.name} 
-          style={{ width: '100%', maxHeight: '300px', objectFit: 'cover' }}
+          // style={{ width: '100%', maxHeight: '300px', objectFit: 'cover' }}
+          className="h-full w-full object-cover"
         />
       )}
 
-      <p className="text-white">
+    </div>
+
+    <div className="absolute bottom-[80%] left-[12%] w-[76%] z-20 font-vt323 flex flex-col">
+      <h2 className="text-2xl p-0 m-0">{gameData.name}</h2>
+      <p className="p-0 m-0">{gameData.released}</p>
+    </div>
+
+
+      {/* <p className="text-white">
         Genre: {
           Array.isArray(gameData.genres)
             ? gameData.genres.map(g => g.name).join(', ')
             : gameData.genre || 'N/A'
         }
-      </p>
+      </p> */}
 
       {/* <p>
         Platform: {
@@ -87,15 +103,93 @@ function GameCard ({gameData}) {
 
 
 function DiscoveryView () {
+  const [trending, setTrending] = useState([]);
+  const [upcoming, setUpcoming] = useState([]);
+  const [popular, setPopular] = useState([]);
+  const [top40, setTop40] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const scrollboxStyle = "flex flex-row gap-4 overflow-x-scroll pt-3";
+
+  useEffect(() => {
+    async function fetchAllCategories() {
+      try {
+        setLoading(true);
+
+        const [trendingRes, upcomingRes, popularRes, top40Res] = await Promise.all([
+          fetch('http://localhost:5000/api/games/trending').then(res => res.json()),
+          fetch('http://localhost:5000/api/games/upcoming').then(res => res.json()),
+          fetch('http://localhost:5000/api/games/popular').then(res => res.json()),
+          fetch('http://localhost:5000/api/games/top-40').then(res => res.json()),
+        ]);
+
+        setTrending(trendingRes.results || trendingRes);
+        setUpcoming(upcomingRes.results || upcomingRes);
+        setPopular(popularRes.results || popularRes);
+        setTop40(top40Res.results || top40Res);
+
+      } catch (error) {
+        console.error("Failed to load discovery sections: ", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchAllCategories();
+
+  }, []);
+
+  if (loading) return <div className="p-8 text-white">Loading cartridges...</div>;
+
   return (
-    <div>
-      <h2 className={h2style}>Trending games</h2>
 
-      <h2 className={h2style}>Upcoming games</h2>
+    <div className="flex flex-col gap-12 p-8">
 
-      <h2 className={h2style}>All time popular games</h2>
+      {/*Trending games */}
+      <section>
+        <h2 className={h2style}>Trending games</h2>
+        <div className={scrollboxStyle}>
+          {trending && trending?.length > 0
+            ? (trending.map((game) => (<GameCard key={game.id} gameData={game} />)))
+            : (<p className="text-white">No Results</p>)
+          }
+        </div>
+      </section>
 
-      <h2 className={h2style}>Top 100 games</h2>
+
+      {/*Upcoming games */}
+      <section>
+        <h2 className={h2style}>Upcoming games</h2>
+        <div className={scrollboxStyle}>
+          {upcoming && upcoming?.length > 0
+            ? (upcoming.map((game) => (<GameCard key={game.id} gameData={game} />)))
+            : (<p className="text-white">No Results</p>)
+          }
+        </div>
+      </section>
+
+
+      {/*All time popular games */}
+      <section>
+        <h2 className={h2style}>All time popular games</h2>
+        <div className={scrollboxStyle}>
+          {popular && popular?.length > 0
+            ? (popular.map((game) => (<GameCard key={game.id} gameData={game} />)))
+            : (<p className="text-white">No Results</p>)
+          }
+        </div>
+      </section>
+
+
+      {/*Top 40 games */}
+      <section>
+        <h2 className={h2style}>Top 40 games</h2>
+        <div className={scrollboxStyle}>
+          {top40 && top40?.length > 0
+            ? (top40.map((game) => (<GameCard key={game.id} gameData={game} />)))
+            : (<p className="text-white">No Results</p>)
+          }
+        </div>
+      </section>
     </div>
   );
 }
@@ -106,7 +200,7 @@ function SearchView ({query, results, loading}) {
   if (loading) return <p className="text-white">Searching for "{query}"...</p>
 
   return (
-    <div>
+    <div className="">
       <h2>Search: {query.charAt(0).toUpperCase() + query.slice(1)}</h2>
 
       {results == null || results == [] && (
@@ -115,11 +209,12 @@ function SearchView ({query, results, loading}) {
         </div>
       )}
 
-      {results != null && 
-        (Array.isArray(results)
-          ? results.map((game) => {return <GameCard key={game.id} gameData={game} />})
-          : <GameCard gameData={results} />
-      )}
+      <div className="grid grid-cols-5 gap-4">
+        {results != null && (Array.isArray(results)
+            ? results.map((game) => {return <GameCard key={game.id} gameData={game} />})
+            : <GameCard gameData={results} />
+        )}
+      </div>
     </div>
   );
 }
@@ -162,36 +257,42 @@ export function Discover() {
   }, [searchQuery, debouncedSearch]);
 
   return (
-    <div className="w-full max-w-7xl mx-auto lg:px-8 bg-slate-950 text-white">
+    <div className="w-full bg-slate-950 text-white">
+
       <Navbar />
 
-      <h1 className={h1style}>Browse Games</h1>
+      <div className="px-20 py-5">
 
-      <div>
-        <input 
-          type='text' 
-          placeholder="Search games..." 
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="text-white bg-slate-500 font-vt323"
-        />
+        <div className="flex flex-col gap-3">
+          <h1 className={h1style}>Browse Games</h1>
 
-      {searchQuery && 
-        <button
-          onClick={() => setSearchQuery('')}
-          className="pixel-box font-press-start text-xs py-2.5 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold shadow-md transition duration-100 active:scale-[0.98]"
-        >
-          CLEAR
-        </button>
-      }
+          <div >
+            <input 
+              type='text' 
+              placeholder="Search games..." 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="text-white bg-slate-500 font-vt323"
+            />
+
+            {searchQuery && 
+              <button
+                onClick={() => setSearchQuery('')}
+                className="pixel-box font-press-start text-xs py-2.5 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold shadow-md transition duration-100 active:scale-[0.98]"
+              >
+                CLEAR
+              </button>
+            }
+          </div>
+        </div>
+
+        {searchQuery.trim().length > 0 ? (
+          <SearchView query={searchQuery} results={searchResults} loading={loading}/>
+        ) : (
+          <DiscoveryView />
+        )}
+
       </div>
-
-      {searchQuery.trim().length > 0 ? (
-        <SearchView query={searchQuery} results={searchResults} loading={loading}/>
-      ) : (
-        <DiscoveryView />
-      )}
-
     </div>
   );
 }

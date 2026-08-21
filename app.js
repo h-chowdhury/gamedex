@@ -14,7 +14,7 @@ import { verifyToken} from "./services/authMiddleware.js";
 import games from './mockGames.json' with {type:'json'};
 
 
-// Variables  ***************************************************** //
+// Variables  ************************************************************ //
 const USE_MOCK_DATA = false;
 
 dotenv.config();
@@ -51,7 +51,7 @@ const upload = multer({storage})
 // const gameURL = `https://api.rawg.io/api/games/${gameID}?key=${rawgAPIkey}`;
 
 
-// Database connection ******************************************** //
+// Database connection *************************************************** //
 mongoose.connect(mongoDBURL)
   .then(() => console.log("Connection Successful"))
   .catch((err) => {
@@ -60,7 +60,7 @@ mongoose.connect(mongoDBURL)
   });
 
 
-// Middleware  **************************************************** //
+// Middleware  *********************************************************** //
 app.use(cors());
 app.use(express.json());
 app.use(function (req, res, next) {
@@ -70,7 +70,7 @@ app.use(function (req, res, next) {
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
-// Image storage configuration ************************************ //
+// Image storage configuration ******************************************* //
 
 router.post('/avatar', verifyToken, upload.single('avatar'), async (req, res) => {
   try {
@@ -103,13 +103,13 @@ router.post('/avatar', verifyToken, upload.single('avatar'), async (req, res) =>
 app.use('/profile', router);
 
 
-// Routes  ******************************************************** //
+// Routes **************************************************************** //
 app.get('/', (req, res) => {
   console.log(`Connected to Express & MongoDB Setup!`);
 });
 
 
-// Return singular match 
+// Return singular game match ******************************************** //
 app.get('/api/game/:idOrSlug', async (req, res) => {
 
   const idOrSlug = req.params.idOrSlug;
@@ -160,7 +160,7 @@ app.get('/api/game/:idOrSlug', async (req, res) => {
 });
 
 
-// Return several matches
+// Return several game matches ******************************************* //
 app.get('/api/games', async (req, res) => {
 
   const { search } = req.query;
@@ -213,6 +213,129 @@ app.get('/api/games', async (req, res) => {
 });
 
 
+// Return trending, upcoming and popular games *************************** //
+
+// trending
+app.get('/api/games/trending', async (req, res) => {
+
+  // local data fetch
+  if (USE_MOCK_DATA) {
+    return [];
+  }
+
+  // live API fetch
+  try {
+    const today = new Date().toISOString().split('T')[0];
+    const pastDate = new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]; // 60 days ago
+
+    const url = `https://api.rawg.io/api/games?key=${rawgAPIkey}&dates=${pastDate},${today}&ordering=-added&page_size=25`;
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      return res.status(response.status).json({ error: 'Failed to fetch trending games from RAWG' });
+    }
+
+    const data = await response.json();
+    console.log(data);
+    res.json(data.results);
+
+  } catch (error) {
+    console.error("Error fetching trending games:", error)
+    return res.status(500).json({ error: "Failed to fetch trending games." });
+  }
+});
+
+
+// upcoming
+app.get('/api/games/upcoming', async (req, res) => {
+
+  // local data fetch
+  if (USE_MOCK_DATA) {
+    return [];
+  }
+
+  // live API fetch
+  try {
+    const today = new Date().toISOString().split('T')[0];
+    const futureDate = new Date(Date.now() + 180 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]; // 180 days in future
+
+    const url = `https://api.rawg.io/api/games?key=${rawgAPIkey}&dates=${today},${futureDate}&ordering=released&page_size=25`;
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      return res.status(response.status).json({ error: 'Failed to fetch upcoming games from RAWG' });
+    }
+
+    const data = await response.json();
+    res.json(data.results);
+
+  } catch (error) {
+    console.error("Error fetching upcoming games:", error)
+    return res.status(500).json({ error: "Failed to fetch upcoming games." });
+  }
+});
+
+
+// popular
+app.get('/api/games/popular', async (req, res) => {
+
+  // local data fetch
+  if (USE_MOCK_DATA) {
+    return [];
+  }
+
+  // live API fetch
+  try {
+    const url = `https://api.rawg.io/api/games?key=${rawgAPIkey}&ordering=-added&page_size=25`;
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      return res.status(response.status).json({ error: 'Failed to fetch popular games from RAWG' });
+    }
+
+    const data = await response.json();
+    res.json(data.results);
+
+  } catch (error) {
+    console.error("Error fetching popular games:", error)
+    return res.status(500).json({ error: "Failed to fetch popular games." });
+  }
+});
+
+
+// top 40
+app.get('/api/games/top-40', async (req, res) => {
+
+  // local data fetch
+  if (USE_MOCK_DATA) {
+    return [];
+  }
+
+  // live API fetch
+  try {
+    const url = `https://api.rawg.io/api/games?key=${rawgAPIkey}&ordering=-rating&page_size=40`;
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      return res.status(response.status).json({ error: 'Failed to fetch top games from RAWG' });
+    }
+
+    const data = await response.json();
+    res.json(data.results);
+
+  } catch (error) {
+    console.error("Error fetching top games:", error)
+    return res.status(500).json({ error: "Failed to fetch top games." });
+  }
+});
+
+
+
+
+
+
+
+// Return user data ****************************************************** //
 app.get('/users/me', verifyToken, async (req, res) => {
   const userId = req.user.id || req.user.userId || req.user._id;
   const user = await User.findById(userId).select('-password');
@@ -220,6 +343,7 @@ app.get('/users/me', verifyToken, async (req, res) => {
 });
 
 
+// Manage user registration ********************************************** //
 app.post('/signup', async (req, res) => {
 
   try {
@@ -280,6 +404,7 @@ app.post('/signup', async (req, res) => {
 });
 
 
+// Manage user login ***************************************************** //
 app.post('/login', async (req, res) => {
 
   try {
