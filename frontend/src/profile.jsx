@@ -34,7 +34,6 @@ export function Profile () {
     })
     .then(data => {
       setUser(data);
-      console.log("DATA: ", data);
       setLoading(false);
     })
     .catch(err => console.error(err));
@@ -58,7 +57,6 @@ export function Profile () {
 			"avatar",
 			selectedFile
 		);
-    console.log(selectedFile);
 
     setUploading(true);
 

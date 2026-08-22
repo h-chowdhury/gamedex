@@ -330,11 +330,6 @@ app.get('/api/games/top-40', async (req, res) => {
 });
 
 
-
-
-
-
-
 // Return user data ****************************************************** //
 app.get('/users/me', verifyToken, async (req, res) => {
   const userId = req.user.id || req.user.userId || req.user._id;
@@ -361,16 +356,12 @@ app.post('/signup', async (req, res) => {
 
     if (existingEmail || existingUsername) {
       if (existingEmail) {
-        console.log("Email already registered.");
         newErrors.email = 'Email already registered.';
       }
       if (existingUsername) {
-        console.log("Username is taken.");
         newErrors.username = 'Username is taken.';
       }
 
-      console.log(newErrors.email);
-      console.log(newErrors.username);
       return res.status(400).json({ newErrors });
     } 
 
@@ -429,7 +420,6 @@ app.post('/login', async (req, res) => {
     // check if password matches
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) {
-      console.log("Password is incorrect.");
       newErrors.password = 'Password is incorrect'
       return res.status(400).json({ newErrors });
     }

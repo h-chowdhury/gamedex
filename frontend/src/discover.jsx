@@ -1,6 +1,6 @@
 import { Navbar } from './components/navbar.jsx';
 import { useEffect, useState, useCallback, useMemo } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 // Styles
 const h1style = 'text-slate-200 font-vt323 text-4xl';
@@ -33,70 +33,35 @@ function GameCard ({gameData}) {
   if (!gameData) return null;
 
   return (
-    <div className="relative pixel-box h-[290px] w-[210px] bg-red-400 flex-shrink-0 transition-all duration-200 hover:-translate-y-1.5">
-
-      <img
-        src="../public/cartridge.png"
-        alt="Cartridge base"
-        className="h-full w-full inset-0 object-contain pointer-events-none z-0"
-      />
-
-      <div className="absolute top-[25%] left-[8%] h-[68%] w-[85%] overflow-hidden z-10">
-        {gameData.background_image && (
-        <img 
-          src={gameData.background_image || 'https://via.placeholder.com/300x200'} 
-          alt={gameData.name} 
-          // style={{ width: '100%', maxHeight: '300px', objectFit: 'cover' }}
-          className="h-full w-full object-cover"
+    <Link
+      to={`/game/${gameData.id}`}
+      state={{ game: gameData }}
+      className="cursor-pointer"
+    >
+      <div className="relative pixel-box h-[290px] w-[210px] bg-red-400 flex-shrink-0 transition-all duration-200 hover:-translate-y-1.5">
+        <img
+          src="../public/cartridge.png"
+          alt="Cartridge base"
+          className="h-full w-full inset-0 object-contain pointer-events-none z-0"
         />
-      )}
 
-    </div>
+        <div className="absolute top-[25%] left-[8%] h-[68%] w-[85%] overflow-hidden z-10">
+          {gameData.background_image && (
+          <img 
+            src={gameData.background_image || 'https://via.placeholder.com/290x210'} 
+            alt={gameData.name} 
+            // style={{ width: '100%', maxHeight: '300px', objectFit: 'cover' }}
+            className="h-full w-full object-cover"
+          />
+        )}
+        </div>
 
-    <div className="absolute bottom-[80%] left-[12%] w-[76%] z-20 font-vt323 flex flex-col">
-      <h2 className="text-2xl p-0 m-0">{gameData.name}</h2>
-      <p className="p-0 m-0">{gameData.released}</p>
-    </div>
-
-
-      {/* <p className="text-white">
-        Genre: {
-          Array.isArray(gameData.genres)
-            ? gameData.genres.map(g => g.name).join(', ')
-            : gameData.genre || 'N/A'
-        }
-      </p> */}
-
-      {/* <p>
-        Platform: {
-          Array.isArray(gameData.platforms)
-          ? gameData.platforms.map(p => p.platform?.name || p.name).join(', ')
-          : gameData.platform || 'N/A'
-        }
-      </p>
-
-      <p>Similar games: {
-        gameData.similar_games?.length > 0
-          ? gameData.similar_games.map(g => g.name).join(', ')
-          : 'None listed'
-        }
-      </p>
-
-      <p>
-        Player activity: {
-          typeof gameData.player_activity === 'object'
-            ? `${gameData.player_activity?.current_players || 0} current players`
-            : gameData.player_activity || 'N/A'
-        }
-      </p> */}
-
-      {/* <p className="text-white">Metacritic score: {gameData.metacritic || 'N/A'}</p>
-      <p className="text-white">Developer: {gameData.developer}</p>
-      <p className="text-white">Publisher: {gameData.publisher}</p>
-      <p className="text-white">Creator: {gameData.creator}</p>
-      <p className="text-white">Website: {gameData.website ? <a href={gameData.website}>{gameData.website}</a> : 'N/A'}</p> */}
-
-    </div>
+        <div className="absolute bottom-[80%] left-[12%] w-[76%] z-20 font-vt323 flex flex-col">
+          <h2 className="text-2xl p-0 m-0">{gameData.name}</h2>
+          <p className="p-0 m-0">{gameData.released}</p>
+        </div>
+      </div>
+    </Link>
   )
 
 }

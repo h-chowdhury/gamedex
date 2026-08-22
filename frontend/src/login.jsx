@@ -28,7 +28,6 @@ export function Login () {
     const { username, password } = newFormData;
 
     const validationErrors = handleValidation(newFormData);
-    console.log(validationErrors)
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
@@ -39,7 +38,6 @@ export function Login () {
 
       if (result?.token) {
         login(result.token)
-        console.log(username, password);
         //navigate('/profile');
       } 
       if (result?.newErrors && Object.keys(result.newErrors).length > 0) {

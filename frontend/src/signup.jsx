@@ -56,7 +56,6 @@ export function SignUp (props) {
     const { email, username, password, passwordConfirm } = formData;
 
     const validationErrors = handleValidation(formData);
-    console.log(validationErrors)
     if (Object.keys(validationErrors).length > 0) {
       setErrors((prevErrors) => ({
         ...prevErrors,
@@ -71,7 +70,6 @@ export function SignUp (props) {
 
       if (result?.token) {
         login(result.token)
-        console.log(username, email, password);
         navigate('/profile');
       } 
 
