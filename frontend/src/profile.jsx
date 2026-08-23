@@ -140,7 +140,6 @@ export function Profile () {
               </label>
 
               <button 
-                className="pixel-box bg-indigo-600" 
                 onClick={onFileUpload} 
                 disabled={uploading}
                 className="pixel-box w-full bg-indigo-600 hover:bg-indigo-500 px-3 py-2 disabled:bg-slate-800 disabled:opacity-50 text-white font-vt323">
