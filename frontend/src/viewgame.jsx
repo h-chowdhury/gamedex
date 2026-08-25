@@ -271,16 +271,19 @@ function ViewEntry({ game, close }) {
 export function ViewGame() {
 
   const { id } = useParams();
+  const { isAuthenticated } = useAuth();
   const location = useLocation();
+  
   const[game, setGame] = useState(location.state?.game || null);
   const[loading, setLoading] = useState(!game);
   const[popupActive, setPopupActive] = useState(false);
-  const {login, logout, isAuthenticated } = useAuth();
+  const [hasEntry, setHasEntry] = useState(false);
 
   const handlePopupActive = useCallback(() => {
     setPopupActive(!popupActive);
   }, [popupActive]);
 
+  // fetch game info
   useEffect (() => {
     if (!game && id) {
       fetch(`http://localhost:5000/api/games/${id}`)
@@ -295,6 +298,38 @@ export function ViewGame() {
       })
     }
   }, [id, game]);
+
+  // fetch game status 
+  const checkEntry = useCallback( async () => {
+    const userId = getUserIdFromToken();
+    if (!userId|| !game?.id) return;
+
+    try {
+      const res = await fetch (`http://localhost:5000/fetch-entry?userId=${userId}&gameId=${game.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        }
+      );
+
+      if (res.ok) {
+        const result = await res.json();
+        if (result.data) { setHasEntry(true); }
+        else { setHasEntry(false); }
+      }
+    } catch (err) {
+        console.error("Error checking user entry status:", err)
+    }
+  }, [game?.id]);
+
+  useEffect(() => {
+    if (isAuthenticated && game?.id) {
+      checkEntry();
+    }
+  }, [isAuthenticated, game?.id, checkEntry]);
+
+  
 
   if (loading === true) {
     return (
@@ -347,7 +382,7 @@ export function ViewGame() {
                   className="pixel-box font-press-start text-xs py-2.5 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold shadow-md transition duration-100 active:scale-[0.98]"
                   onClick={() => setPopupActive(true)}
                 >
-                  Edit entry
+                  {hasEntry ? 'Edit entry' : 'Add to library'}
                 </button>}
             </div>
 
