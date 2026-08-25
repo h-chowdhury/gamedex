@@ -3,82 +3,264 @@ import { useCallback, useEffect, useState } from 'react'
 import { Link, useParams, useLocation } from 'react-router-dom';
 import { useAuth, AuthProvider } from '../../services/authContext.jsx';
 import { GAME_STATUS } from '../../services/constants.js';
+import { getUserIdFromToken } from '../../services/authServices.js'
 
 
 function ViewEntry({ game, close }) {
 
-  const [status, setStatus] = useState("");
-  const [score, setScore] = useState(0);
-  const [hours, setHours] = useState(0);
-  const [startDate, setStartDate] = useState('');
-  const [finishDate, setFinishDate] = useState('');
-  const [replays, setReplays] = useState(0);
-  const [favourite, setFavourite] = useState(false);
-  const [notes, setNotes] = useState("");
+  // const [status, setStatus] = useState("");
+  // const [score, setScore] = useState(0);
+  // const [hours, setHours] = useState(0);
+  // const [startDate, setStartDate] = useState('');
+  // const [finishDate, setFinishDate] = useState('');
+  // const [replays, setReplays] = useState(0);
+  // const [favourite, setFavourite] = useState(false);
+  // const [notes, setNotes] = useState("");
+
+
+  const [formData, setFormData] = useState({
+    status: '',
+    score: 0,
+    hours_played: 0,
+    start_date: '',
+    finish_date: '',
+    total_replays: 0,
+    favourite: false,
+    notes: '',
+  });
+
+  const [loading, setLoading] = useState(true);
+
+
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, []);
+
+
+  useEffect(() => {
+    const fetchEntry = async () => {
+      const userId = getUserIdFromToken();
+      if (!userId || !game?.id) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const res = await fetch(`http://localhost:5000/fetch-entry?userId=${userId}&gameId=${game.id}`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+
+        if (!res.ok) {
+          throw new Error('Error fetching game entry. Server status:', res.status)
+        }
+
+        const data = await res.json();
+        const entry = data.data;
+
+        if (entry) {
+          setFormData({
+            status: entry.status || 'plan_to_play',
+            score: entry.score ?? 0,
+            hours_played: entry.hours_played ?? 0,
+            start_date: entry.start_date || '',
+            finish_date: entry.finish_date || '',
+            total_replays: entry.total_replays || 0,
+            favourite: Boolean(entry.favourite) || false,
+            notes: entry.notes || '',
+          });
+        }
+
+      } catch (err) {
+        console.error("Failed to fetch game entry:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEntry();
+
+  }, [game?.id]);
+
+
+  const handleChange = (e) => {
+    const { name, type, checked, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    const userId = getUserIdFromToken();
+    if (!userId) {
+      alert("Session expired. Please login again.");
+      return;
+    }
+
+    try {
+      const res = await fetch('http://localhost:5000/save-entry', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId,
+          gameId: game.id,
+          gameTitle: game.name,
+          formData,
+        }),
+      });
+
+      close();
+
+    } catch (err) {
+      alert("Failed to save game entry. Please try again.")
+      console.error("Failed to save game entry:", err)
+    }
+  
+  };
+
+  const handleDelete = async () => {
+
+    const confirmDelete = window.confirm("Are you sure you want to delete this entry?");
+    if (!confirmDelete) return;
+
+    const userId = getUserIdFromToken();
+    if (!userId) {
+      alert("Session expired. Please login again.");
+      return;
+    }
+    
+    try {
+      const res = await fetch(`http://localhost:5000/delete-entry`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          userId,
+          gameId: game.id,
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to delete entry on server.");
+      }
+
+      setFormData({
+        status: 'plan_to_play',
+        score: 0,
+        hours_played: 0,
+        start_date: '',
+        finish_date: '',
+        total_replays: 0,
+        favourite: false,
+        notes: '',
+      });
+
+    close();
+
+    } catch (err) {
+      alert("Failed to delete game entry. Please try again.")
+      console.error("Failed to delete game entry:", err)
+    }
+  }
+
+
+
+  if (loading) {
+    return (
+      <div className="text-white font-vt323 text-2xl fixed inset-0  z-50 overflow-y-auto bg-black/30 backdrop-blur-sm p-15 md:p-25">
+        <div className="pixel-box-lg flex flex-col gap-3 bg-slate-800 p-5 md:p-10">
+          <p className="font-press-start">Loading entry...</p>
+
+        </div>
+      </div>
+    );
+  }
+
 
   return (
-    <div className="bg-white">
+    <div className="text-white font-vt323 text-2xl fixed inset-0  z-50 overflow-y-auto bg-black/30 backdrop-blur-sm p-15 md:p-25">
 
-      <div>
-        <p>{game.name}</p>
-        <img src={game.background_image}/>
-      </div>
+      <form 
+        onSubmit={handleSubmit}
+        className="pixel-box-lg flex flex-col gap-3 bg-slate-800 p-5 md:p-10"
+      >
+        <div>
+          <div className="flex flex-row">
+            <p className="font-press-start">{game.name}</p>
+            <button className="text-4xl" onClick={close}>X</button>
+          </div>
+          <img src={game.background_image}/>
+        </div>
 
-      <div>
-        <label for="status">Status</label>
-        <select name="status" id="status">
-          <option value={GAME_STATUS.WANT_TO_PLAY}>Plan to Play</option>
-          <option value={GAME_STATUS.PLAYING}>Playing</option>
-          <option value={GAME_STATUS.COMPLETED}>Completed</option>
-          <option value={GAME_STATUS.DROPPED}>Dropped</option>
-        </select>
-      </div>
+        <div>
+          <label htmlFor="status">Status</label>
+          <select 
+            name="status" 
+            id="status" 
+            className="text-black" 
+            onChange={handleChange}
+            value={formData.status || 'plan_to_play'}
+          >
+            <option value={GAME_STATUS.PLAYING}>Playing</option>
+            <option value={GAME_STATUS.WANT_TO_PLAY}>Plan to Play</option>
+            <option value={GAME_STATUS.COMPLETED}>Completed</option>
+            <option value={GAME_STATUS.REPLAYING}>Replaying</option>
+            <option value={GAME_STATUS.PAUSED}>Paused</option>
+            <option value={GAME_STATUS.DROPPED}>Dropped</option>
+          </select>
+        </div>
 
-      <div>
-        <label for="score">Score</label>
-        <input type="range" name="score" id="score" min="0" max="10" />
-      </div>
+        <div>
+          <label htmlFor="score">Score</label>
+          <input type="range" name="score" id="score" min="0" max="10" value={formData.score} onChange={handleChange} />
+        </div>
 
-      <div>
-        <label for="hours_played">Hours Played</label>
-        <input type="number" name="hours_played" id="hours_played" />
-      </div>
+        <div>
+          <label htmlFor="hours_played">Hours Played</label>
+          <input type="number" name="hours_played" id="hours_played" min="0" value={formData.hours_played} onChange={handleChange} />
+        </div>
 
-      <div>
-        <label for="started_at">Start Date</label>
-        <input type="date" name="started_at" id="started_at" />
-      </div>
+        <div>
+          <label htmlFor="started_at">Start Date</label>
+          <input type="date" name="start_date" id="start_date" value={formData.start_date?.split('T')[0] || ''} onChange={handleChange} />
+        </div>
 
-      <div>
-        <label for="finished_at">Finish Date</label>
-        <input type="date" name="finished_at" id="finished_at" />
-      </div>
+        <div>
+          <label htmlFor="finished_at">Finish Date</label>
+          <input type="date" name="finish_date" id="finish_date" value={formData.finish_date?.split('T')[0] || ''} onChange={handleChange} />
+        </div>
 
-      <div>
-        <label for="total_replays">Total Replays</label>
-        <input type="number" name="total_replays" id="total_replays" />
-      </div>
+        <div>
+          <label htmlFor="total_replays">Total Replays</label>
+          <input type="number" name="total_replays" id="total_replays" min="0" value={formData.total_replays} onChange={handleChange} />
+        </div>
 
-      <div>
-        <label for="favourite_status">Set as Favourite</label>
-        <button>{`<3`}</button>
-      </div>
+        <div>
+          <label htmlFor="favourite">Set as Favourite</label>
+          {/* <button onClick={toggleFavourite} name="favourite" id="favourite">{`<3`}</button> */}
+          <input type="checkbox" name="favourite" id="favourite" onChange={handleChange} checked={formData.favourite}/>
+        </div>
 
-      <div>
-        <label for="notes">Notes</label>
-        <textarea name="notes" id="notes" rows="8" cols="50" />
-      </div>
+        <div className="flex flex-col">
+          <label htmlFor="notes">Notes</label>
+          <textarea name="notes" id="notes" rows="4" cols="50" value={formData.notes} onChange={handleChange} />
+        </div>
 
-      <div>
-        <button
-          onClick={close}
-        >
-          Close
-        </button>
+        <div className="flex gap-5">
+          <button type="submit">Save Entry</button>
+          <button type="button" onClick={handleDelete}>Delete Entry</button>
+        </div>
 
-        <button>Save Entry</button>
-        <button>Delete Entry</button>
-      </div>
+      </form>
 
     </div>
   );

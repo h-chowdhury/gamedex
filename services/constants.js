@@ -1,6 +1,8 @@
 export const GAME_STATUS = Object.freeze({
   WANT_TO_PLAY: 'plan_to_play',
   PLAYING: 'playing',
+  REPLAYING: 'replaying',
+  PAUSED: 'paused',
   COMPLETED: 'completed',
   DROPPED: 'dropped',
 });

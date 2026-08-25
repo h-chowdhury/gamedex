@@ -45,5 +45,20 @@ const loginUser = async (username, password) => {
 
 }
 
+const getUserIdFromToken = () => {
+  const token = localStorage.getItem('token');
+  if (!token) return null;
 
-export {registerUser, loginUser};
+  try {
+    const payload = token.split('.')[1];
+    const decodedPayload = atob(payload);
+    const parsed = JSON.parse(decodedPayload);
+    return parsed.userId || null;
+
+  } catch (err) {
+    console.error("Failed to decode token:", error);
+    return null;
+  }
+}
+
+export {registerUser, loginUser, getUserIdFromToken};

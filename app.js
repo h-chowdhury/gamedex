@@ -8,8 +8,8 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
-import { db } from "./models/index.js";
 import { User } from "./models/user.model.js";
+import { UserGame } from "./models/usergame.model.js";
 import { verifyToken} from "./services/authMiddleware.js";
 import games from './mockGames.json' with {type:'json'};
 
@@ -326,6 +326,84 @@ app.get('/api/games/top-40', async (req, res) => {
   } catch (error) {
     console.error("Error fetching top games:", error)
     return res.status(500).json({ error: "Failed to fetch top games." });
+  }
+});
+
+
+// Save game entry info ************************************************** //
+app.post('/save-entry', async (req, res) => {
+  try {
+    const { userId, gameId, gameTitle, formData } = req.body;
+
+    const sanitisedData = {
+      ...formData,
+      status: formData?.status || 'plan_to_play', 
+    };
+
+    const savedEntry = await UserGame.findOneAndUpdate(
+      { user: userId, game_id: gameId },
+      {
+        user: userId,
+        game_id: gameId,
+        game_title: gameTitle,
+        ...sanitisedData
+      },
+      {
+        returnDocument: 'after',
+        upsert: true,
+        runValidators: true
+      }
+    );
+
+    res.status(200).json({data: savedEntry });
+
+  } catch (err) {
+    console.error("Error saving game entry:", err);
+    res.status(500).json({ message: err.message });
+  }
+});
+
+
+// delete game entry info ************************************************** //
+app.delete('/delete-entry', async (req, res) => {
+  try {
+    const { userId, gameId } = req.body;
+
+    if (!userId || !gameId) {
+      return res.status(400).json({ message: "Missing userId or gameId" });
+    }
+
+    await UserGame.findOneAndDelete({ user: userId, game_id: gameId });
+
+    res.status(200).json({message: "Entry deleted successfully" });
+  } catch (err) {
+    console.error("Error deleting entry:", err);
+    res.status(500).json({ message: err.message });
+  }
+});
+
+
+// Fetch game entry info ************************************************** //
+app.get('/fetch-entry', async (req, res) => {
+  try {
+    const { userId, gameId } = req.query;
+
+    if (!userId) {
+      return res.status(400).json({ message: "userId is required." });
+    }
+
+    if (gameId) {
+      const game = await UserGame.findOne({ user: userId, game_id: String(gameId) });
+      return res.status(200).json({ data: game }); // Returns single object or null
+    }
+
+    const games = await UserGame.find({ user: userId });
+    return res.status(200).json({ data: games });
+
+    res.status(200).json({data: games});
+  } catch (err) {
+    console.error("Server error in /fetch-entry:", err);
+    res.status(500).json({ message: err.message });
   }
 });
 
