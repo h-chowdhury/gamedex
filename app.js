@@ -333,7 +333,7 @@ app.get('/api/games/top-40', async (req, res) => {
 // Save game entry info ************************************************** //
 app.post('/save-entry', async (req, res) => {
   try {
-    const { userId, gameId, gameTitle, formData } = req.body;
+    const { userId, gameId, gameTitle, gameImage, gameReleased, formData } = req.body;
 
     const sanitisedData = {
       ...formData,
@@ -346,6 +346,8 @@ app.post('/save-entry', async (req, res) => {
         user: userId,
         game_id: gameId,
         game_title: gameTitle,
+        background_image: gameImage,
+        released: gameReleased,
         ...sanitisedData
       },
       {
@@ -394,7 +396,7 @@ app.get('/fetch-entry', async (req, res) => {
 
     if (gameId) {
       const game = await UserGame.findOne({ user: userId, game_id: String(gameId) });
-      return res.status(200).json({ data: game }); // Returns single object or null
+      return res.status(200).json({ data: game });
     }
 
     const games = await UserGame.find({ user: userId });

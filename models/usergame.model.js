@@ -21,6 +21,16 @@ const userGameSchema = new mongoose.Schema (
       required: true,
     },
 
+    background_image: { 
+      type: String, 
+      default: '' 
+    },
+
+    released: { 
+      type: String, 
+      default: '' 
+    },
+
     status: {
       type: String,
       enum: ['plan_to_play', 'playing', 'completed', 'replaying', 'paused', 'dropped'],

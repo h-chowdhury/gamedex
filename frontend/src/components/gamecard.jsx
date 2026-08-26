@@ -4,9 +4,14 @@ export function GameCard ({gameData}) {
 
   if (!gameData) return null;
 
+  const gameId = gameData.id || gameData.game_id;
+  const title = gameData.name || gameData.game_title;
+  const releaseDate = gameData.released || "";
+  const coverImage = gameData.background_image || null;
+
   return (
     <Link
-      to={`/game/${gameData.id}`}
+      to={`/game/${gameId}`}
       state={{ game: gameData }}
       className="cursor-pointer"
     >
@@ -18,19 +23,17 @@ export function GameCard ({gameData}) {
         />
 
         <div className="absolute top-[25%] left-[8%] h-[68%] w-[85%] overflow-hidden z-10">
-          {gameData.background_image && (
           <img 
-            src={gameData.background_image || 'https://via.placeholder.com/290x210'} 
-            alt={gameData.name} 
+            src={coverImage || 'https://via.placeholder.com/290x210'} 
+            alt={title} 
             // style={{ width: '100%', maxHeight: '300px', objectFit: 'cover' }}
             className="h-full w-full object-cover"
           />
-        )}
         </div>
 
         <div className="absolute bottom-[80%] left-[12%] w-[76%] z-20 font-vt323 flex flex-col">
-          <h2 className="text-2xl p-0 m-0">{gameData.name}</h2>
-          <p className="p-0 m-0">{gameData.released}</p>
+          <h2 className="text-2xl p-0 m-0">{title}</h2>
+          <p className="p-0 m-0">{releaseDate}</p>
         </div>
       </div>
     </Link>

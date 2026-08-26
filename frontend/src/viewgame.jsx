@@ -112,6 +112,8 @@ function ViewEntry({ game, close, onEntryUpdated }) {
           userId,
           gameId: game.id,
           gameTitle: game.name,
+          gameImage: game.background_image,
+          gameReleased: game.released,
           formData,
         }),
       });
@@ -165,6 +167,12 @@ function ViewEntry({ game, close, onEntryUpdated }) {
         total_replays: 0,
         favourite: false,
         notes: '',
+        gameData: {
+          id: null,
+          name: '',
+          background_image: '',
+          released: ''
+        }
       });
 
       await onEntryUpdated();
@@ -183,7 +191,6 @@ function ViewEntry({ game, close, onEntryUpdated }) {
       <div className="text-white font-vt323 text-2xl fixed inset-0  z-50 overflow-y-auto bg-black/30 backdrop-blur-sm p-15 md:p-25">
         <div className="pixel-box-lg flex flex-col gap-3 bg-slate-800 p-5 md:p-10">
           <p className="font-press-start">Loading entry...</p>
-
         </div>
       </div>
     );
