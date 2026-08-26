@@ -8,6 +8,41 @@ import { useAuth, AuthProvider } from '../../services/authContext.jsx';
 import { getUserIdFromToken } from '../../services/authServices.js';
 
 
+function ActivityRow () {
+
+  return (
+    <div className="w-full bg-slate-500 text-white m-5">
+      <p>IMAGE</p>
+      <p>Username</p>
+      <p>Added game to library</p>
+      <p>Today</p>
+    </div>
+  );
+}
+
+function ActivityFeed () {
+  return (
+    <div>
+
+      <div className="flex flex-row justify-between">
+        <h2 className="text-xl text-white">Activity</h2>
+
+        <div className="flex flex-row gap-5">
+          <button className="bg-slate-300 text-black">My Activity</button>
+          <button className="bg-slate-300 text-black">Global Activity</button>
+        </div>
+      </div>
+
+      <ActivityRow />
+      <ActivityRow />
+      <ActivityRow />
+      <ActivityRow />
+      <ActivityRow />
+
+    </div>
+  );
+}
+
 function UserView () {
 
   const [userGames, setUserGames] = useState([]);
@@ -58,7 +93,6 @@ function UserView () {
     fetchDashboard();
   }, []);
 
-
   const gamesInProgress = userGames.filter((g) => g.status === "playing");
   const gamesPlanned = userGames.filter((g) => g.status === "plan_to_play")
 
@@ -77,6 +111,7 @@ function UserView () {
       <GameRow title={"Games to play Next"} games={gamesPlanned} />
 
       {/* Recent activity feed -- global + local */}
+      <ActivityFeed />
 
     </div>
 
