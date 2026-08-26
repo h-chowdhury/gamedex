@@ -1,6 +1,9 @@
 import { Navbar } from './components/navbar.jsx';
+import { GameCard } from './components/gamecard.jsx'
+import { GameRow } from './components/gamerow.jsx'
+import { GameGrid } from './components/gamegrid.jsx'
 import { useEffect, useState, useCallback, useMemo } from 'react'
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom'; 
 
 // Styles
 const h1style = 'text-slate-200 font-vt323 text-4xl';
@@ -14,66 +17,12 @@ function debounce(func, delay) {
   };
 }
 
-// const search = async (query) => {
-//   try {
-//     const res = await fetch(`http://localhost:5000/api/games?search=${encodeURIComponent(query)}`);
-//     const data = await res.json();
-//     return data.results;
-//   } catch (err) {
-//     console.error("Failed to fetch games:", err);
-//     return [];
-//   }
-// }
-
-// const searchGame = debounce(search, 500);
-
-
-function GameCard ({gameData}) {
-
-  if (!gameData) return null;
-
-  return (
-    <Link
-      to={`/game/${gameData.id}`}
-      state={{ game: gameData }}
-      className="cursor-pointer"
-    >
-      <div className="relative pixel-box h-[290px] w-[210px] bg-red-400 flex-shrink-0 transition-all duration-200 hover:-translate-y-1.5">
-        <img
-          src="../public/cartridge.png"
-          alt="Cartridge base"
-          className="h-full w-full inset-0 object-contain pointer-events-none z-0"
-        />
-
-        <div className="absolute top-[25%] left-[8%] h-[68%] w-[85%] overflow-hidden z-10">
-          {gameData.background_image && (
-          <img 
-            src={gameData.background_image || 'https://via.placeholder.com/290x210'} 
-            alt={gameData.name} 
-            // style={{ width: '100%', maxHeight: '300px', objectFit: 'cover' }}
-            className="h-full w-full object-cover"
-          />
-        )}
-        </div>
-
-        <div className="absolute bottom-[80%] left-[12%] w-[76%] z-20 font-vt323 flex flex-col">
-          <h2 className="text-2xl p-0 m-0">{gameData.name}</h2>
-          <p className="p-0 m-0">{gameData.released}</p>
-        </div>
-      </div>
-    </Link>
-  )
-
-}
-
-
 function DiscoveryView () {
   const [trending, setTrending] = useState([]);
   const [upcoming, setUpcoming] = useState([]);
   const [popular, setPopular] = useState([]);
   const [top40, setTop40] = useState([]);
   const [loading, setLoading] = useState(true);
-  const scrollboxStyle = "flex flex-row gap-4 overflow-x-scroll pt-3";
 
   useEffect(() => {
     async function fetchAllCategories() {
@@ -109,56 +58,14 @@ function DiscoveryView () {
 
     <div className="flex flex-col gap-12 p-8">
 
-      {/*Trending games */}
-      <section>
-        <h2 className={h2style}>Trending games</h2>
-        <div className={scrollboxStyle}>
-          {trending && trending?.length > 0
-            ? (trending.map((game) => (<GameCard key={game.id} gameData={game} />)))
-            : (<p className="text-white">No Results</p>)
-          }
-        </div>
-      </section>
+      <GameRow title="Trending Games" games={trending} />
+      <GameRow title="Upcoming Games" games={upcoming} />
+      <GameRow title="All Time Popular Games" games={popular} />
+      <GameRow title="Top 40 Games" games={top40} />
 
-
-      {/*Upcoming games */}
-      <section>
-        <h2 className={h2style}>Upcoming games</h2>
-        <div className={scrollboxStyle}>
-          {upcoming && upcoming?.length > 0
-            ? (upcoming.map((game) => (<GameCard key={game.id} gameData={game} />)))
-            : (<p className="text-white">No Results</p>)
-          }
-        </div>
-      </section>
-
-
-      {/*All time popular games */}
-      <section>
-        <h2 className={h2style}>All time popular games</h2>
-        <div className={scrollboxStyle}>
-          {popular && popular?.length > 0
-            ? (popular.map((game) => (<GameCard key={game.id} gameData={game} />)))
-            : (<p className="text-white">No Results</p>)
-          }
-        </div>
-      </section>
-
-
-      {/*Top 40 games */}
-      <section>
-        <h2 className={h2style}>Top 40 games</h2>
-        <div className={scrollboxStyle}>
-          {top40 && top40?.length > 0
-            ? (top40.map((game) => (<GameCard key={game.id} gameData={game} />)))
-            : (<p className="text-white">No Results</p>)
-          }
-        </div>
-      </section>
     </div>
   );
 }
-
 
 function SearchView ({query, results, loading}) {
 
@@ -174,12 +81,8 @@ function SearchView ({query, results, loading}) {
         </div>
       )}
 
-      <div className="grid grid-cols-5 gap-4">
-        {results != null && (Array.isArray(results)
-            ? results.map((game) => {return <GameCard key={game.id} gameData={game} />})
-            : <GameCard gameData={results} />
-        )}
-      </div>
+      <GameGrid games={results} cols='5' />
+
     </div>
   );
 }
