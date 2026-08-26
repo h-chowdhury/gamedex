@@ -6,7 +6,7 @@ import { GAME_STATUS } from '../../services/constants.js';
 import { getUserIdFromToken } from '../../services/authServices.js'
 
 
-function ViewEntry({ game, close }) {
+function ViewEntry({ game, close, onEntryUpdated }) {
 
   // const [status, setStatus] = useState("");
   // const [score, setScore] = useState(0);
@@ -116,7 +116,10 @@ function ViewEntry({ game, close }) {
         }),
       });
 
-      close();
+      if (res.ok) {
+        await onEntryUpdated();
+        close();
+      }
 
     } catch (err) {
       alert("Failed to save game entry. Please try again.")
@@ -164,7 +167,8 @@ function ViewEntry({ game, close }) {
         notes: '',
       });
 
-    close();
+      await onEntryUpdated();
+      close();
 
     } catch (err) {
       alert("Failed to delete game entry. Please try again.")
@@ -444,7 +448,7 @@ export function ViewGame() {
           </div>
         </div>
 
-        {popupActive && <ViewEntry game={game} close={handlePopupActive} />}
+        {popupActive && <ViewEntry game={game} close={handlePopupActive} onEntryUpdated={checkEntry} />}
 
     </div>
   );
