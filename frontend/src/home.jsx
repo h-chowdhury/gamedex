@@ -8,8 +8,8 @@ import { useAuth, AuthProvider } from '../../services/authContext.jsx';
 import { getUserIdFromToken } from '../../services/authServices.js';
 
 
-function ActivityRow () {
-
+function ActivityRow ( gameData, username, action, date) {
+  
   return (
     <div className="w-full bg-slate-500 text-white m-5">
       <p>IMAGE</p>
@@ -19,6 +19,18 @@ function ActivityRow () {
     </div>
   );
 }
+
+function GlobalFeed () {
+
+
+}
+
+
+function PersonalFeed () {
+
+
+}
+
 
 function ActivityFeed () {
   return (
@@ -33,11 +45,13 @@ function ActivityFeed () {
         </div>
       </div>
 
-      <ActivityRow />
-      <ActivityRow />
-      <ActivityRow />
-      <ActivityRow />
-      <ActivityRow />
+      <ActivityRow gameData={""} username={""} action={""} date={""}/>
+      <ActivityRow gameData={""} username={""} action={""} date={""}/>
+      <ActivityRow gameData={""} username={""} action={""} date={""}/>
+      <ActivityRow gameData={""} username={""} action={""} date={""}/>
+      <ActivityRow gameData={""} username={""} action={""} date={""}/>
+      <ActivityRow gameData={""} username={""} action={""} date={""}/>
+      <ActivityRow gameData={""} username={""} action={""} date={""}/>
 
     </div>
   );
@@ -121,6 +135,48 @@ function UserView () {
 
 
 function GuestView () {
+
+  const features = [
+    {
+      title: "Discover your obsessions",
+      desc: "Track what you're playing, rate your backlog, and analyze your favorite gaming genres with personalised shelf stats."
+    },
+    {
+      title: "Build your digital shelf",
+      desc: "Sort games into Currently Playing, Completed, Paused, or Plan to Play so you never forget what's next in your queue."
+    },
+    {
+      title: "Keep track of your journey",
+      desc: "Add personal notes, update your current play status, and record when you beat each title in your collection."
+    },
+    {
+      title: "Explore powered by RAWG",
+      desc: "Instantly search tens of thousands of games across modern consoles and retro systems with rich metadata and artwork."
+    }
+  ];
+
+  return (
+    <div className="text-white flex flex-col gap-10 m-10">
+      <h1 className="text-center font-press-start text-3xl">The next-generation gaming platform</h1>
+      <p className="text-center font-press-start text-xl">Track, rate, and organize your favorite video games.</p>
+
+      <div className="grid grid-cols-2 gap-10">
+        {features.map((feature, index) => (
+          <div key={index} className="flex flex-col">
+            <h3 className="text-xl font-press-start">{feature.title}</h3>
+            <p className=" text-xl font-vt323">{feature.desc}</p>
+          </div>
+        ))}
+      </div>
+
+      <div>
+        <Link to="/signup" className="bg-slate-700 text-white">
+          Join Now
+        </Link>
+      </div>
+    </div>
+
+  );
 
 }
 
