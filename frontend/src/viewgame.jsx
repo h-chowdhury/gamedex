@@ -185,7 +185,6 @@ function ViewEntry({ game, close, onEntryUpdated }) {
   }
 
 
-
   if (loading) {
     return (
       <div className="text-white font-vt323 text-2xl fixed inset-0  z-50 overflow-y-auto bg-black/30 backdrop-blur-sm p-15 md:p-25">
@@ -284,36 +283,41 @@ export function ViewGame() {
   const { id } = useParams();
   const { isAuthenticated } = useAuth();
   const location = useLocation();
+
+  const previewData = location.state?.game;
   
-  const[game, setGame] = useState(location.state?.game || null);
-  const[loading, setLoading] = useState(!game);
+  const[game, setGame] = useState(null);
+  const[loading, setLoading] = useState(true);
   const[popupActive, setPopupActive] = useState(false);
   const [hasEntry, setHasEntry] = useState(false);
 
   const handlePopupActive = useCallback(() => {
-    setPopupActive(!popupActive);
-  }, [popupActive]);
+    setPopupActive((prev) => !prev);
+  }, []);
 
   // fetch game info
   useEffect (() => {
-    if (!game && id) {
-      fetch(`http://localhost:5000/api/games/${id}`)
-        .then((res) => res.json())
-        .then((data) => {
-          setGame(data);
-          setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Error loading game:", err);
-        setLoading(false);
-      })
-    }
-  }, [id, game]);
+    if (!id) return;
 
-  // fetch game status 
+    setLoading(true);
+
+    fetch(`http://localhost:5000/api/game/${id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setGame(data);
+        setLoading(false);
+    })
+    .catch((err) => {
+      console.error("Error loading game:", err);
+      setLoading(false);
+    })
+
+  }, [id]);
+
+  // fetch user entry status 
   const checkEntry = useCallback( async () => {
     const userId = getUserIdFromToken();
-    if (!userId|| !game?.id) return;
+    if (!userId || !id) return;
 
     try {
       const res = await fetch (`http://localhost:5000/fetch-entry?userId=${userId}&gameId=${game.id}`,
@@ -332,17 +336,17 @@ export function ViewGame() {
     } catch (err) {
         console.error("Error checking user entry status:", err)
     }
-  }, [game?.id]);
+  }, [id]);
 
   useEffect(() => {
-    if (isAuthenticated && game?.id) {
+    if (isAuthenticated && id) {
       checkEntry();
     }
-  }, [isAuthenticated, game?.id, checkEntry]);
+  }, [isAuthenticated, id, checkEntry]);
 
   
 
-  if (loading === true) {
+  if (loading) {
     return (
       <div className="bg-[#0f1216] text-white">
         <Navbar />
@@ -360,6 +364,8 @@ export function ViewGame() {
     );
   }
 
+  console.log("CHECKING: ", game);
+
   return (
     <div className="bg-[#0f1216]">
       <Navbar />
@@ -373,7 +379,9 @@ export function ViewGame() {
           <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#0f1216] via-[#0f1216]/60 to-transparent" />
 
           <div className="">
-            <h2 className="absolute bottom-6 text-white font-press-start font-bold text-3xl uppercase drop-shadow-md px-10">{game.name}</h2>
+            <h2 className="absolute bottom-6 text-white font-press-start font-bold text-3xl uppercase drop-shadow-md px-10">
+              {game.name}
+            </h2>
           </div>
         </div>
 

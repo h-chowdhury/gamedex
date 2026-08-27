@@ -7,7 +7,7 @@ export function GameCard ({gameData}) {
   const gameId = gameData.id || gameData.game_id;
   const title = gameData.name || gameData.game_title;
   const releaseDate = gameData.released || "";
-  const coverImage = gameData.background_image || null;
+  const coverImage = gameData.background_image || gameData.gameData?.background_image || null;
 
   return (
     <Link
