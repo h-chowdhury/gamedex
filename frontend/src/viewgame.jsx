@@ -19,7 +19,7 @@ function ViewEntry({ game, close, onEntryUpdated }) {
 
 
   const [formData, setFormData] = useState({
-    status: '',
+    status: GAME_STATUS.WANT_TO_PLAY,
     score: 0,
     hours_played: 0,
     start_date: '',
@@ -65,7 +65,7 @@ function ViewEntry({ game, close, onEntryUpdated }) {
 
         if (entry) {
           setFormData({
-            status: entry.status || 'plan_to_play',
+            status: entry.status || GAME_STATUS.WANT_TO_PLAY,
             score: entry.score ?? 0,
             hours_played: entry.hours_played ?? 0,
             start_date: entry.start_date || '',
@@ -218,7 +218,7 @@ function ViewEntry({ game, close, onEntryUpdated }) {
             id="status" 
             className="text-black" 
             onChange={handleChange}
-            value={formData.status || 'plan_to_play'}
+            value={formData.status || GAME_STATUS.WANT_TO_PLAY}
           >
             <option value={GAME_STATUS.PLAYING}>Playing</option>
             <option value={GAME_STATUS.WANT_TO_PLAY}>Plan to Play</option>
@@ -284,8 +284,6 @@ export function ViewGame() {
   const { isAuthenticated } = useAuth();
   const location = useLocation();
 
-  const previewData = location.state?.game;
-  
   const[game, setGame] = useState(null);
   const[loading, setLoading] = useState(true);
   const[popupActive, setPopupActive] = useState(false);
@@ -320,7 +318,7 @@ export function ViewGame() {
     if (!userId || !id) return;
 
     try {
-      const res = await fetch (`http://localhost:5000/fetch-entry?userId=${userId}&gameId=${game.id}`,
+      const res = await fetch (`http://localhost:5000/fetch-entry?userId=${userId}&gameId=${id}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,

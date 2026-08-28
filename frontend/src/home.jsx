@@ -8,14 +8,27 @@ import { useAuth, AuthProvider } from '../../services/authContext.jsx';
 import { getUserIdFromToken } from '../../services/authServices.js';
 
 
-function ActivityRow ( gameData, username, action, date) {
+function ActivityRow ({ data }) {
+
+  if (!data) return null;
+
+  const username = data.user?.username || Anon;
+  const avatar = data.user?.avatar;
+  const game = data.gameData?.name || data.game_title || 'Unknown Game';
+  const gameImg = data.gameData?.background_image || data.background_image || '';
+  const action = data.action;
+  const date = data.createdAt || ''; // change so that it says today / yesterday / 1 day ago... 6 days ago... 1 week ago etc.
   
   return (
-    <div className="w-full bg-slate-500 text-white m-5">
-      <p>IMAGE</p>
-      <p>Username</p>
-      <p>Added game to library</p>
-      <p>Today</p>
+    <div className="w-full bg-slate-500 text-white flex flex-row">
+      <p>{username}</p>
+      <img src={avatar.startsWith('https') ? avatar : `http://localhost:5000${avatar}?t=${Date.now()}`} className="pixel-box m-1 w-[4em] h-[4em] object-cover" alt="avatar" />
+
+      <p>{game}</p>
+      <p>{action}</p>
+      <img src={gameImg} className="pixel-box m-1 w-[4em] h-[4em] object-cover" alt="bg"/>
+
+      <p>{date}</p>
     </div>
   );
 }
@@ -33,6 +46,35 @@ function PersonalFeed () {
 
 
 function ActivityFeed () {
+
+  const [activities, setActivities] = useState([]);
+  const [loading, setLoading] = useState(true)
+
+  useEffect (() => {
+    const fetchActivities = async () => {
+      try {
+        const res = await fetch ('http://localhost:5000/activity-feed/global');
+        if (res.ok) {
+          const data = await res.json();
+          setActivities(data);
+        }
+      } catch (err) {
+        console.error("Failed to load activities:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchActivities();
+  }, []);
+
+  console.log(activities)
+
+
+
+  if (loading) return <div>Loading activity feed...</div>
+
+
   return (
     <div>
 
@@ -45,13 +87,21 @@ function ActivityFeed () {
         </div>
       </div>
 
+      {/* <ActivityRow gameData={""} username={""} action={""} date={""}/>
       <ActivityRow gameData={""} username={""} action={""} date={""}/>
       <ActivityRow gameData={""} username={""} action={""} date={""}/>
       <ActivityRow gameData={""} username={""} action={""} date={""}/>
       <ActivityRow gameData={""} username={""} action={""} date={""}/>
       <ActivityRow gameData={""} username={""} action={""} date={""}/>
-      <ActivityRow gameData={""} username={""} action={""} date={""}/>
-      <ActivityRow gameData={""} username={""} action={""} date={""}/>
+      <ActivityRow gameData={""} username={""} action={""} date={""}/> */}
+
+      <div className="flex flex-col gap-3">
+        {activities.map((item) => (
+          <div key={item._id} className="">
+            <ActivityRow data={item} />
+          </div>
+        ))}
+      </div>
 
     </div>
   );
@@ -76,11 +126,18 @@ function UserView () {
       }
 
       try {
-        const headers = { Authorization: `Bearer ${token}`};
-
         const [resGames, resUser] = await Promise.all([
-          fetch(`http://localhost:5000/fetch-entry?userId=${userId}`, { headers}),
-          fetch('http://localhost:5000/users/me', { headers })
+          fetch(`http://localhost:5000/fetch-entry?userId=${userId}`, { 
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          }),
+          fetch('http://localhost:5000/users/me', {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            }
+          })
         ]);
 
         if (resGames.ok) {

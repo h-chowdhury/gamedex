@@ -10,7 +10,7 @@ const activitySchema = new mongoose.Schema (
 
     action: {
       type: String,
-      enum: ['PLANS_TO_PLAY_GAME', 'PLAYING_GAME', 'COMPLETED_GAME', 'REPLAYING_GAME', 'PAUSED_GAME', 'DROPPED_GAME'],
+      enum: ['plan_to_play', 'playing', 'replaying', 'paused', 'completed', 'dropped'],
       required: true
     },
 
@@ -19,7 +19,7 @@ const activitySchema = new mongoose.Schema (
       required: true
     },
 
-    game_data: {
+    gameData: {
       name: {type: String},
       background_image: {type: String}
     },

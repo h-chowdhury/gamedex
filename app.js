@@ -10,6 +10,7 @@ import fs from 'fs';
 import { fileURLToPath } from 'url';
 import { User } from "./models/user.model.js";
 import { UserGame } from "./models/usergame.model.js";
+import { Activity } from "./models/activity.model.js";
 import { verifyToken} from "./services/authMiddleware.js";
 import games from './mockGames.json' with {type:'json'};
 
@@ -124,16 +125,6 @@ app.get('/api/game/:idOrSlug', async (req, res) => {
       return res.status(404).json({ detail: "Game not found." });
     }
 
-    // if (idOrSlug) {
-    //   results = results.filter(
-    //     (game) => (
-    //       game.name.toLowerCase().includes(idOrSlug.toLowerCase()) || 
-    //       game.slug.toLowerCase().includes(idOrSlug.toLowerCase()) || 
-    //       game.id.includes(idOrSlug)
-    //     )
-    //   )
-    // }
-
     return res.json(game);
   }
 
@@ -142,20 +133,17 @@ app.get('/api/game/:idOrSlug', async (req, res) => {
     const response = await fetch(`https://api.rawg.io/api/games/${idOrSlug}?key=${rawgAPIkey}`);
 
     if (!response.ok) {
-      throw new Error(`HTTP Error! Status: ${response.status}`);
+      return res.status(response.status).json({ 
+        error: `RAWG API returned status ${response.status}` 
+      });
     }
 
     const gameData = await response.json();
-    // console.log("Name:", gameData.name);
-    // console.log("Description:", gameData.description_raw);
-    // console.log("Released:", gameData.released);
-    // console.log("Image:", gameData.background_image);
-    // return gameData;
     res.json(gameData);
 
   } catch (error) {
     console.error("Could not fetch game details:", error);
-    res.json(null);
+    return res.status(500).json({ error: "Internal server error fetching game details." });
   }
 });
 
@@ -335,11 +323,20 @@ app.post('/save-entry', async (req, res) => {
   try {
     const { userId, gameId, gameTitle, gameImage, gameReleased, formData } = req.body;
 
+    if (!userId || !gameId) {
+      return res.status(400).json({ message: "Missing required fields: userId and gameId." });
+    }
+
+    const existingEntry = await UserGame.findOne({ user: userId, game_id: gameId });
+    const oldStatus = existingEntry ? existingEntry.status : null;
+    const newStatus = formData?.status || 'plan_to_play';
+
     const sanitisedData = {
       ...formData,
       status: formData?.status || 'plan_to_play', 
     };
 
+    // save UserGame entry
     const savedEntry = await UserGame.findOneAndUpdate(
       { user: userId, game_id: gameId },
       {
@@ -356,6 +353,17 @@ app.post('/save-entry', async (req, res) => {
         runValidators: true
       }
     );
+
+    // log activity event
+    if (!existingEntry || oldStatus !== newStatus) {
+      await Activity.create({
+        user: userId,
+        action: newStatus,
+        game_id: gameId,
+        gameData: { name: gameTitle || 'Unknown Game', background_image: gameImage || '' },
+        details: { oldStatus, newStatus }
+      });
+    }
 
     res.status(200).json({data: savedEntry });
 
@@ -416,6 +424,25 @@ app.get('/users/me', verifyToken, async (req, res) => {
   const user = await User.findById(userId).select('-password');
   res.json(user);
 });
+
+
+// Return activity feed ************************************************** // 
+app.get("/activity-feed/global", async (req, res) => {
+  try {
+    const activities = await Activity.find()
+      .populate('user', 'username avatar')
+      .sort({ createdAt: -1 })
+      .limit(20)
+      .lean();
+
+    res.json(activities);
+    
+  } catch (err) {
+    console.error("CRASH inside /activity-feed/global:", err);
+    res.status(500).json({ error: err.message });
+  }
+})
+
 
 
 // Manage user registration ********************************************** //

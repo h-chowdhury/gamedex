@@ -1,24 +1,215 @@
 import { Navbar } from './components/navbar.jsx';
 import { useEffect, useState } from 'react'
 import { Link, Navigate } from 'react-router-dom';
+import { GameCard } from './components/gamecard.jsx'
+import { GameRow } from './components/gamerow.jsx'
+import { GameGrid } from './components/gamegrid.jsx'
 import { useAuth } from '../../services/authContext.jsx';
+import { getUserIdFromToken } from '../../services/authServices.js';
+import { GAME_STATUS } from '../../services/constants.js';
 
-export function Profile () {
 
-  const {token} = useAuth();
-  const[user, setUser] = useState(null);
-  const[loading, setLoading] = useState(true)
+function ProfileCard ( { user, onAvatarUpdate }) {
+
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploading, setUploading] = useState(false);
 
-  // useEffect(() => {
-  //   if (!token) {
-  //     setLoading(false);
-  //     return;
-  //   }
-  // })
+  // update avatar logic
+  const onFileChange = (e) => {
+    setSelectedFile(e.target.files[0]);
+  }
 
+  const onFileUpload = async () => {
+    if (!selectedFile) {
+      alert("Please select a file.");
+      return;
+    }
+
+    // format data
+    const formData = new FormData();
+		formData.append("avatar", selectedFile);
+
+    setUploading(true);
+
+    // post data
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch('http://localhost:5000/profile/avatar', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}`},
+        body: formData
+      });
+
+      if (!res.ok) {
+        const errorText = await res.text(); 
+        console.error("Server Error:", errorText);
+        return;
+      }
+
+      const updatedUser = await res.json();
+
+      if (onAvatarUpdate) {
+        onAvatarUpdate(updatedUser);
+      }
+
+      setSelectedFile(null);
+
+    } catch (err) {
+      alert('Failed to upload avatar. Please try again.');
+      console.error("Upload error:", err);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  // Avatar + edit -> similar layout to view game
+  // Username, date joined
+  // bio
+
+  return (
+    <div className="text-white">
+
+      {/* User avatar */}
+      <div>
+        {user.avatar && (
+          <img
+            src={user.avatar.startsWith('https') ? user.avatar : `http://localhost:5000${user.avatar}?t=${Date.now()}`}
+            alt="Avatar"
+            className="pixel-box m-1 w-[18em] h-[18em] object-cover"
+          />
+        )}
+      </div>
+
+      {/* Editing user avatar */}
+      <div className="flex flex-col gap-2 items-center">
+        <input type="file" accept="image/*" className="hidden" id="avatar-upload" onChange={onFileChange} />
+
+        <label 
+          htmlFor="avatar-upload" 
+          className="pixel-box w-full cursor-pointer bg-slate-800 hover:bg-slate-700 font-vt323 px-3 py-2 text-center text-slate-300">
+            {selectedFile ? "Change File" : "Choose Image"}
+        </label>
+
+        <button 
+          onClick={onFileUpload} 
+          disabled={uploading}
+          className="pixel-box w-full bg-indigo-600 hover:bg-indigo-500 px-3 py-2 disabled:bg-slate-800 disabled:opacity-50 text-white font-vt323">
+            {uploading ? "Uploading..." : "Upload image"}
+        </button>
+        
+        <p className="text-xl font-vt323 text-slate-400 truncate text-overflow: ellipsis">
+          {selectedFile ? `Selected: ${selectedFile.name}` : "No file selected"}
+        </p>
+      </div>
+
+      {/* Username, bio, etc. */}
+      <div className="ml-8 font-vt323 text-2xl text-slate-400 py-5 flex flex-col gap-6">
+        <div>
+          <p className="font-press-start">{user.username.charAt(0).toUpperCase() + user.username.slice(1)}</p>
+          <p>{user.bio}</p>
+        </div>
+      
+        <div className="text-slate-600">
+          <p>User ID: {user._id}</p>
+          <p>Joined {new Date(user.date_joined).toLocaleDateString('en-UK', {month:'long', day:'numeric', year:'numeric'})}</p>
+        </div>
+      </div>
+
+    </div>
+  );
+}
+
+
+
+function Stats () {
+
+  return (
+    <div>
+      <p>TODO STATS</p>
+    </div>
+  );
+
+  // total games in library
+  
+  // count games by state -> progress bar?
+
+  // top genre
+
+  // total hours logged
+
+}
+
+
+function Library ({ userGames }) {
+
+  const [filterStatus, setFilterStatus] = useState('all');
+
+  const displayedGames = filterStatus === 'all'
+    ? userGames
+    : userGames.filter((g) => g.status === filterStatus);
+
+  const handleSelect = (e) => {
+    setFilterStatus(e.target.value);
+  } 
+
+  // loading render
+  // if (loading) {
+  //   return (
+  //     <div>
+  //       <p>Loading library...</p>
+  //     </div>
+  //   );
+  // }
+
+  return (
+    <div>
+      <div>
+        <select
+          name="filter" 
+          id="filter" 
+          className="text-black bg-white" 
+          onChange={handleSelect}
+          value={filterStatus}
+        >
+          <option value={'all'}>All</option>
+          <option value={GAME_STATUS.PLAYING}>Playing</option>
+          <option value={GAME_STATUS.WANT_TO_PLAY}>Plan to Play</option>
+          <option value={GAME_STATUS.COMPLETED}>Completed</option>
+          <option value={GAME_STATUS.REPLAYING}>Replaying</option>
+          <option value={GAME_STATUS.PAUSED}>Paused</option>
+          <option value={GAME_STATUS.DROPPED}>Dropped</option>
+        </select>
+
+      </div>
+      <div>
+        <GameGrid games={displayedGames} cols='5' />
+      </div>
+
+    </div>
+  );
+}
+
+
+
+export function Profile () {
+
+  const token = localStorage.getItem('token');
+  const[user, setUser] = useState(null);
+  const[loading, setLoading] = useState(true)
+  const [userGames, setUserGames] = useState([]);
+
+  const handleAvatarUpdate = (updatedUser) => {
+    setUser(updatedUser);
+  };
+
+  // fetch profile info
   useEffect(() => {
+    if (!token) {
+      console.error("No token found in localStorage!");
+      setLoading(false);
+      return;
+    }
+
     fetch("http://localhost:5000/users/me", {
       method: "GET",
       headers: {
@@ -34,61 +225,47 @@ export function Profile () {
     })
     .then(data => {
       setUser(data);
-      setLoading(false);
     })
-    .catch(err => console.error(err));
+    .catch((err) => console.error(err))
+    .finally(() => setLoading(false));
+
   }, [token]);
 
-
-  // update avatar logic
-  const onFileChange = (event) => {
-    setSelectedFile(event.target.files[0]);
-  }
-
-  const onFileUpload = async () => {
-    if (selectedFile == null) {
-      alert("Please select a file.");
-      return;
-    }
-
-    // format data
-    const formData = new FormData();
-		formData.append(
-			"avatar",
-			selectedFile
-		);
-
-    setUploading(true);
-
-    // post data
-    try {
-      const res = await fetch('http://localhost:5000/profile/avatar', {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${token}`},
-        body: formData
-      });
-
-      if (!res.ok) {
-        const errorText = await res.text(); 
-        console.error("Server Error:", errorText);
-        alert(`Server error (${res.status}). Check console for details.`);
+  // fetch library
+  useEffect(() => {
+    const fetchGames = async () => {
+      const userId = getUserIdFromToken();
+      const token = localStorage.getItem('token');
+      
+      if (!token || !userId) {
+        console.warn("No token or userId found in storage.");
+        setLoading(false);
         return;
       }
 
-      const updatedUser = await res.json();
-      setUser(updatedUser);
+      try {
+        const resGames = await fetch(`http://localhost:5000/fetch-entry?userId=${userId}`, { 
+          headers: { 'Authorization': `Bearer ${token}`}
+        });
 
-    } catch (err) {
-      console.error("Upload error:", err);
-    } finally {
-      setUploading(false);
+        if (resGames.ok) {
+          const resultGames = await resGames.json();
+          setUserGames(resultGames.data || resultGames || []);
+        } else {
+          console.error("Games fetch failed with status:", resGames.status);
+        }
+      } catch (err) {
+        console.error("Error fetching user shelf:", err);
+      } finally {
+        setLoading(false);
+      }
     }
-  };
 
+    fetchGames();
 
-  // Final renders
+  }, []);
 
-  // Loading render
+  // loading render
   if (loading) {
     return (
       <div>
@@ -99,77 +276,31 @@ export function Profile () {
   }
 
   // Failed render
-  if (!loading && !user) {
+  if (!user) {
     return (
       <div>
         <Navbar />
-        <p>Failed to load profile. Please try again.</p>
+        <p>Failed to load profile. Please login or try again.</p>
       </div>
     );
   }
 
-  // Successful render
   return (
-    <div className="min-h-screen w-full mx-w-7xl mx-auto lg:px-8 flex flex-col bg-slate-950 overflow-x-hidden">
+    <div>
       <Navbar />
 
-      <div className="pixel-outline-slate">
-
-        <div className="pixel-box-lg bg-slate-900 m-8 flex flex-row p-5 m-5">
-
-          <div className="flex flex-col gap-3 shrink-0">
-            {user.avatar && (
-              <img
-                src={
-                  user.avatar.startsWith('https') ? user.avatar : `http://localhost:5000${user.avatar}?t=${Date.now()}`
-                }
-                alt="Avatar"
-                className="pixel-box m-1"
-                style={{width: '18em', height:'18em', objectFit:'cover'}}
-              />
-            )}
-
-            <div className="flex flex-col gap-2 items-center">
-
-              <input type="file" accept="image/*" className="hidden" id="avatar-upload" onChange={onFileChange} />
-
-              <label 
-                htmlFor="avatar-upload" 
-                className="pixel-box w-full cursor-pointer bg-slate-800 hover:bg-slate-700 font-vt323 px-3 py-2 text-center text-slate-300">
-                  {selectedFile ? "Change File" : "Choose Image"}
-              </label>
-
-              <button 
-                onClick={onFileUpload} 
-                disabled={uploading}
-                className="pixel-box w-full bg-indigo-600 hover:bg-indigo-500 px-3 py-2 disabled:bg-slate-800 disabled:opacity-50 text-white font-vt323">
-                  {uploading ? "Uploading..." : "Upload image"}
-              </button>
-              
-              <p className="text-xl font-vt323 text-slate-400 truncate text-overflow: ellipsis">
-                {selectedFile ? `Selected: ${selectedFile.name}` : "No file selected"}
-              </p>
-            </div>
-          </div>
-
-          <div className="ml-8 font-vt323 text-2xl text-slate-400 py-5 flex flex-col gap-6">
-            <div>
-              <p className="font-press-start">{user.username.charAt(0).toUpperCase() + user.username.slice(1)}</p>
-              <p>{user.bio}</p>
-            </div>
-            
-            <div className="text-slate-600">
-              <p>User ID: {user._id}</p>
-              <p>Joined {new Date(user.date_joined).toLocaleDateString('en-UK', {month:'long', day:'numeric', year:'numeric'})}</p>
-            </div>
-
-          </div>
-        </div>
+      <div>
+        <ProfileCard user={user} onAvatarUpdate={handleAvatarUpdate}/>
       </div>
-      
+
+      <div>
+        <Stats />
+      </div>
+
+      <div>
+        <Library userGames={userGames} />
+      </div>
 
     </div>
   );
-
-
 }
