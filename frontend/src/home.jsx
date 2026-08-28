@@ -20,16 +20,22 @@ function ActivityRow ({ data }) {
   const date = data.createdAt || ''; // change so that it says today / yesterday / 1 day ago... 6 days ago... 1 week ago etc.
   
   return (
-    <div className="w-full bg-slate-500 text-white flex flex-row">
-      <p>{username}</p>
-      <img src={avatar.startsWith('https') ? avatar : `http://localhost:5000${avatar}?t=${Date.now()}`} className="pixel-box m-1 w-[4em] h-[4em] object-cover" alt="avatar" />
+    <Link
+      to={`/game/${data.game_id}`}
+      state={{ game: data.gameData }}
+      className="cursor-pointer"
+    >
+      <div className="w-full bg-slate-500 text-white flex flex-row">
+        <p>{username}</p>
+        <img src={avatar.startsWith('https') ? avatar : `http://localhost:5000${avatar}?t=${Date.now()}`} className="pixel-box m-1 w-[4em] h-[4em] object-cover" alt="avatar" />
 
-      <p>{game}</p>
-      <p>{action}</p>
-      <img src={gameImg} className="pixel-box m-1 w-[4em] h-[4em] object-cover" alt="bg"/>
+        <p>{game}</p>
+        <p>{action}</p>
+        <img src={gameImg} className="pixel-box m-1 w-[4em] h-[4em] object-cover" alt="bg"/>
 
-      <p>{date}</p>
-    </div>
+        <p>{date}</p>
+      </div>
+    </Link>
   );
 }
 
@@ -68,12 +74,7 @@ function ActivityFeed () {
     fetchActivities();
   }, []);
 
-  console.log(activities)
-
-
-
   if (loading) return <div>Loading activity feed...</div>
-
 
   return (
     <div>
