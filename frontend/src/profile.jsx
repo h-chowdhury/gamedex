@@ -305,6 +305,15 @@ function Library ({ userGames }) {
           onChange={(e) => setSearchQuery(e.target.value)}
           className="text-black bg-white font-vt323"
         />
+
+        {searchQuery && 
+              <button
+                onClick={() => setSearchQuery('')}
+                className="pixel-box font-press-start text-xs py-2.5 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold shadow-md transition duration-100 active:scale-[0.98]"
+              >
+                CLEAR
+              </button>
+            }
       </div>
 
       <div>
