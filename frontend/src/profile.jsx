@@ -277,6 +277,8 @@ function Library ({ userGames }) {
     return matchesStatus && matchesSearch;
   })
 
+  const favouriteGames = userGames.filter((game) => game.favourite === true );
+
 
   return (
     <div>
@@ -307,7 +309,11 @@ function Library ({ userGames }) {
       </div>
 
       <div>
-        <GameGrid games={displayedGames} cols='5' />
+        <GameRow title={"Favourite Games"} games={favouriteGames}/>
+      </div>
+
+      <div>
+        <GameGrid title={`${filterStatus} games`} games={displayedGames} cols='5' />
       </div>
 
     </div>
