@@ -143,23 +143,22 @@ function Stats () {
 function Library ({ userGames }) {
 
   const [filterStatus, setFilterStatus] = useState('all');
-
-  const displayedGames = filterStatus === 'all'
-    ? userGames
-    : userGames.filter((g) => g.status === filterStatus);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const handleSelect = (e) => {
     setFilterStatus(e.target.value);
   } 
 
-  // loading render
-  // if (loading) {
-  //   return (
-  //     <div>
-  //       <p>Loading library...</p>
-  //     </div>
-  //   );
-  // }
+  const displayedGames = userGames.filter((game) => {
+    const matchesStatus = filterStatus === 'all' || game.status === filterStatus;
+
+    const title = (game.game_title || '').toLowerCase();
+    const query = searchQuery.toLowerCase().trim();
+    const matchesSearch = query === '' || title.includes(query);
+
+    return matchesStatus && matchesSearch;
+  })
+
 
   return (
     <div>
@@ -180,7 +179,15 @@ function Library ({ userGames }) {
           <option value={GAME_STATUS.DROPPED}>Dropped</option>
         </select>
 
+        <input 
+          type='text' 
+          placeholder="Search games..." 
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="text-black bg-white font-vt323"
+        />
       </div>
+
       <div>
         <GameGrid games={displayedGames} cols='5' />
       </div>
