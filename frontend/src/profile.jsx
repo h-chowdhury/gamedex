@@ -120,23 +120,125 @@ function ProfileCard ( { user, onAvatarUpdate }) {
 }
 
 
+function StatsProgressBar ({ counts, totalGames }) {
 
-function Stats () {
+  if (!totalGames || totalGames === 0) {
+    return (
+      <div>
+        <span className="text-xs text-slate-500 font-vt323">No games in library</span>
+      </div>
+    );
+  }
+
+  const statusColors = {
+    [GAME_STATUS.PLAYING]: 'bg-emerald-500',
+    [GAME_STATUS.WANT_TO_PLAY]: 'bg-sky-500',
+    [GAME_STATUS.COMPLETED]: 'bg-indigo-500',
+    [GAME_STATUS.REPLAYING]: 'bg-amber-500',
+    [GAME_STATUS.PAUSED]: 'bg-orange-500',
+    [GAME_STATUS.DROPPED]: 'bg-rose-500',
+  };
 
   return (
+
     <div>
-      <p>TODO STATS</p>
+      <div className="w-full h-6 overflow-hidden flex">
+        {Object.entries(counts).map(([status, count]) => {
+          if (count === 0) return null;
+          const percentage = (count / totalGames) * 100;
+
+          return (
+            <div 
+              key={status}
+              style={{ width: `${percentage}%`}}
+              className={`${statusColors[status] || 'bg-slate-600'}`}
+              title={`${status}: ${count} (${Math.round(percentage)}%)`}
+            />
+          );
+        })}
+      </div>
+
+      <div className="flex flex-wrap">
+        {Object.entries(counts).map(([status, count]) => {
+          if (count === 0) return null;
+          const percentage = Math.round((count / totalGames) * 100);
+
+          return (
+            <div key={status} className="flex items-center gap-1.5">
+              <span className={`w-3 h-3 inline-block ${statusColors[status]}`}/>
+              <span>{status}: {count} ({percentage}%)</span>
+            </div>
+          );
+        })}
+      </div>
+
+
+
+
     </div>
   );
+}
 
-  // total games in library
-  
-  // count games by state -> progress bar?
 
-  // top genre
+function Stats ( { userGames } ) {
 
-  // total hours logged
+  const totalGames = userGames.length;
+  let totalHours = 0;
+  let topGenre = '';
 
+  let counts = {
+    [GAME_STATUS.PLAYING]: 0,
+    [GAME_STATUS.WANT_TO_PLAY]: 0,
+    [GAME_STATUS.COMPLETED]: 0,
+    [GAME_STATUS.REPLAYING]: 0,
+    [GAME_STATUS.PAUSED]: 0,
+    [GAME_STATUS.DROPPED]: 0,
+  }
+
+  userGames.forEach((game) => {
+    if (game.status in counts) { 
+      counts[game.status] += 1; 
+    }
+    totalHours += game.hours_played;
+  })
+
+  // const gamesPlaying = userGames.filter((g) => g.status === GAME_STATUS.PLAYING).length;
+  // const gamesPlanning = userGames.filter((g) => g.status === GAME_STATUS.WANT_TO_PLAY).length;
+  // const gamesCompleted = userGames.filter((g) => g.status === GAME_STATUS.COMPLETED).length;
+  // const gamesReplaying = userGames.filter((g) => g.status === GAME_STATUS.REPLAYING).length;
+  // const gamesPaused = userGames.filter((g) => g.status === GAME_STATUS.PAUSED).length;
+  // const gamesDropped = userGames.filter((g) => g.status === GAME_STATUS.DROPPED).length;
+
+  return (
+    <div className="text-white">
+      
+      <div>
+        <p>Total games: {totalGames}</p>
+      </div>
+
+      <div>
+        <p>Total hours: {totalHours}</p>
+      </div>
+
+      <div>
+        <p>Top genre: {topGenre}</p>
+      </div>
+
+      <div>
+        <p>Games playing: {counts[GAME_STATUS.PLAYING]}</p>
+        <p>Games planning: {counts[GAME_STATUS.WANT_TO_PLAY]}</p>
+        <p>Games completed: {counts[GAME_STATUS.COMPLETED]}</p>
+        <p>Games replaying: {counts[GAME_STATUS.REPLAYING]}</p>
+        <p>Games paused: {counts[GAME_STATUS.PAUSED]}</p>
+        <p>Games dropped: {counts[GAME_STATUS.DROPPED]}</p>
+
+        <StatsProgressBar counts={counts} totalGames={totalGames} />
+ 
+      </div>
+
+
+    </div>
+  );
 }
 
 
@@ -195,7 +297,6 @@ function Library ({ userGames }) {
     </div>
   );
 }
-
 
 
 export function Profile () {
@@ -301,7 +402,7 @@ export function Profile () {
       </div>
 
       <div>
-        <Stats />
+        <Stats userGames={userGames} />
       </div>
 
       <div>
