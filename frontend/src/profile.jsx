@@ -198,10 +198,10 @@ function Stats ( { userGames } ) {
 
   // get top genre
   userGames.forEach((game) => {
-    console.log('Game object:', game);
-    const genre = game.genre;
-    if (genre) {
-      genreCounts[genre] = (genreCounts[genre] || 0) + 1
+    if (Array.isArray(game.genres)) {
+      game.genres.forEach((g) => {
+        if (g) { genreCounts[g] = (genreCounts[g] || 0) + 1; }
+      });
     }
   });
 
