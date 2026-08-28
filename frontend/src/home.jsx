@@ -39,13 +39,34 @@ function ActivityRow ({ data }) {
   );
 }
 
-function GlobalFeed () {
+function FeedEntries ( { data }) {
 
+  return (
+    <div>
 
-}
+      {data.length > 0
+        ?  <div className="flex flex-col gap-3">
+            {data.map((item) => (
+              <div key={item._id} className="">
+                <ActivityRow data={item} />
+              </div>
+            ))}
+          </div>
+        : <div className="text-white">
+            <p>No activity to display.</p>
+          </div>
+      }
 
+      <div className="flex flex-col gap-3">
+        {data.map((item) => (
+          <div key={item._id} className="">
+            <ActivityRow data={item} />
+          </div>
+        ))}
+      </div>
 
-function PersonalFeed () {
+    </div>
+  );
 
 
 }
@@ -54,7 +75,8 @@ function PersonalFeed () {
 function ActivityFeed () {
 
   const [activities, setActivities] = useState([]);
-  const [loading, setLoading] = useState(true)
+  const [isGlobal, setIsGlobal] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect (() => {
     const fetchActivities = async () => {
@@ -74,38 +96,33 @@ function ActivityFeed () {
     fetchActivities();
   }, []);
 
+  console.log("CHECKING::: ", activities[0])
+
+  const displayedLogs = isGlobal 
+    ? activities
+    : activities.filter((log) => String(log.user?._id) === String(getUserIdFromToken()));
+
   if (loading) return <div>Loading activity feed...</div>
 
-  return (
+  return(
     <div>
-
       <div className="flex flex-row justify-between">
-        <h2 className="text-xl text-white">Activity</h2>
+        <h2 className="text-xl text-white">{isGlobal ? 'Global Activity' : 'My Activity' }</h2>
 
         <div className="flex flex-row gap-5">
-          <button className="bg-slate-300 text-black">My Activity</button>
-          <button className="bg-slate-300 text-black">Global Activity</button>
+          <button 
+            className="bg-slate-300 text-black"
+            onClick={() => setIsGlobal(!isGlobal)}
+          >
+            {isGlobal ? 'View My Activity' : 'View Global Activity' }
+          </button>
         </div>
       </div>
 
-      {/* <ActivityRow gameData={""} username={""} action={""} date={""}/>
-      <ActivityRow gameData={""} username={""} action={""} date={""}/>
-      <ActivityRow gameData={""} username={""} action={""} date={""}/>
-      <ActivityRow gameData={""} username={""} action={""} date={""}/>
-      <ActivityRow gameData={""} username={""} action={""} date={""}/>
-      <ActivityRow gameData={""} username={""} action={""} date={""}/>
-      <ActivityRow gameData={""} username={""} action={""} date={""}/> */}
-
-      <div className="flex flex-col gap-3">
-        {activities.map((item) => (
-          <div key={item._id} className="">
-            <ActivityRow data={item} />
-          </div>
-        ))}
-      </div>
-
+      <FeedEntries data={displayedLogs}/>
     </div>
   );
+
 }
 
 function UserView () {
