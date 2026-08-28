@@ -31,6 +31,11 @@ const userGameSchema = new mongoose.Schema (
       default: '' 
     },
 
+    genres: {
+      type: [String],
+      default: []
+    },
+
     status: {
       type: String,
       enum: ['plan_to_play', 'playing', 'completed', 'replaying', 'paused', 'dropped'],

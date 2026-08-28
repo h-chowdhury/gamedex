@@ -321,7 +321,7 @@ app.get('/api/games/top-40', async (req, res) => {
 // Save game entry info ************************************************** //
 app.post('/save-entry', async (req, res) => {
   try {
-    const { userId, gameId, gameTitle, gameImage, gameReleased, formData } = req.body;
+    const { userId, gameId, gameTitle, gameImage, gameReleased, gameGenres, formData } = req.body;
 
     if (!userId || !gameId) {
       return res.status(400).json({ message: "Missing required fields: userId and gameId." });
@@ -336,6 +336,8 @@ app.post('/save-entry', async (req, res) => {
       status: formData?.status || 'plan_to_play', 
     };
 
+    const formattedGenres = gameGenres.map(g => (typeof g === 'object' ? g.name : g));
+
     // save UserGame entry
     const savedEntry = await UserGame.findOneAndUpdate(
       { user: userId, game_id: gameId },
@@ -345,6 +347,7 @@ app.post('/save-entry', async (req, res) => {
         game_title: gameTitle,
         background_image: gameImage,
         released: gameReleased,
+        genres: formattedGenres || [],
         ...sanitisedData
       },
       {
@@ -377,13 +380,34 @@ app.post('/save-entry', async (req, res) => {
 // delete game entry info ************************************************** //
 app.delete('/delete-entry', async (req, res) => {
   try {
-    const { userId, gameId } = req.body;
+    const { userId, gameId, gameTitle, gameImage } = req.body;
 
     if (!userId || !gameId) {
       return res.status(400).json({ message: "Missing userId or gameId" });
     }
 
+    const existingEntry = await UserGame.findOne({ user: userId, game_id: gameId });
+
+    if (!existingEntry) {
+      return res.status(404).json({ message: "Game entry not found" });
+    }
+
     await UserGame.findOneAndDelete({ user: userId, game_id: gameId });
+
+    // log activity event
+    await Activity.create({
+      user: userId,
+      action: 'removed',
+      game_id: gameId,
+      gameData: { 
+        name: gameTitle || existingEntry.gameData?.name || 'Unknown Game', 
+        background_image: gameImage || existingEntry.gameData?.background_image || '' 
+      },
+      details: { 
+        oldStatus: existingEntry.status, 
+        newStatus: null }
+    });
+  
 
     res.status(200).json({message: "Entry deleted successfully" });
   } catch (err) {

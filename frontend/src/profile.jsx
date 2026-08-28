@@ -184,9 +184,10 @@ function Stats ( { userGames } ) {
 
   const totalGames = userGames.length;
   let totalHours = 0;
-  let topGenre = '';
+  let topGenre = 'None';
 
-  let counts = {
+  let genreCounts = {};
+  let statusCounts = {
     [GAME_STATUS.PLAYING]: 0,
     [GAME_STATUS.WANT_TO_PLAY]: 0,
     [GAME_STATUS.COMPLETED]: 0,
@@ -195,12 +196,27 @@ function Stats ( { userGames } ) {
     [GAME_STATUS.DROPPED]: 0,
   }
 
+  // get top genre
   userGames.forEach((game) => {
-    if (game.status in counts) { 
-      counts[game.status] += 1; 
+    console.log('Game object:', game);
+    const genre = game.genre;
+    if (genre) {
+      genreCounts[genre] = (genreCounts[genre] || 0) + 1
+    }
+  });
+
+  const keys = Object.keys(genreCounts);
+  if (keys.length != 0) {
+    topGenre = keys.reduce((a, b) => genreCounts[a] > genreCounts[b] ? a : b);
+  }
+
+  // get status counts
+  userGames.forEach((game) => {
+    if (game.status in statusCounts) { 
+      statusCounts[game.status] += 1; 
     }
     totalHours += game.hours_played;
-  })
+  });
 
   // const gamesPlaying = userGames.filter((g) => g.status === GAME_STATUS.PLAYING).length;
   // const gamesPlanning = userGames.filter((g) => g.status === GAME_STATUS.WANT_TO_PLAY).length;
@@ -225,14 +241,14 @@ function Stats ( { userGames } ) {
       </div>
 
       <div>
-        <p>Games playing: {counts[GAME_STATUS.PLAYING]}</p>
-        <p>Games planning: {counts[GAME_STATUS.WANT_TO_PLAY]}</p>
-        <p>Games completed: {counts[GAME_STATUS.COMPLETED]}</p>
-        <p>Games replaying: {counts[GAME_STATUS.REPLAYING]}</p>
-        <p>Games paused: {counts[GAME_STATUS.PAUSED]}</p>
-        <p>Games dropped: {counts[GAME_STATUS.DROPPED]}</p>
+        <p>Games playing: {statusCounts[GAME_STATUS.PLAYING]}</p>
+        <p>Games planning: {statusCounts[GAME_STATUS.WANT_TO_PLAY]}</p>
+        <p>Games completed: {statusCounts[GAME_STATUS.COMPLETED]}</p>
+        <p>Games replaying: {statusCounts[GAME_STATUS.REPLAYING]}</p>
+        <p>Games paused: {statusCounts[GAME_STATUS.PAUSED]}</p>
+        <p>Games dropped: {statusCounts[GAME_STATUS.DROPPED]}</p>
 
-        <StatsProgressBar counts={counts} totalGames={totalGames} />
+        <StatsProgressBar counts={statusCounts} totalGames={totalGames} />
  
       </div>
 

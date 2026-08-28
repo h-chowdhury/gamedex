@@ -105,6 +105,7 @@ function ViewEntry({ game, close, onEntryUpdated }) {
     }
 
     try {
+      console.log("CHECKING:", game);
       const res = await fetch('http://localhost:5000/save-entry', {
         method: 'POST',
         headers: {'Content-Type': 'application/json' },
@@ -114,6 +115,7 @@ function ViewEntry({ game, close, onEntryUpdated }) {
           gameTitle: game.name,
           gameImage: game.background_image,
           gameReleased: game.released,
+          gameGenres: game.genres,
           formData,
         }),
       });
@@ -151,6 +153,8 @@ function ViewEntry({ game, close, onEntryUpdated }) {
         body: JSON.stringify({
           userId,
           gameId: game.id,
+          gameTitle: game.name,
+          gameImage: game.background_image
         }),
       });
 
@@ -167,12 +171,13 @@ function ViewEntry({ game, close, onEntryUpdated }) {
         total_replays: 0,
         favourite: false,
         notes: '',
-        gameData: {
-          id: null,
-          name: '',
-          background_image: '',
-          released: ''
-        }
+        // gameData: {
+        //   id: null,
+        //   name: '',
+        //   background_image: '',
+        //   released: '',
+        //   genres: []
+        // }
       });
 
       await onEntryUpdated();
