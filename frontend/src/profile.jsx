@@ -184,7 +184,6 @@ function Stats ( { userGames } ) {
 
   const totalGames = userGames.length;
   let totalHours = 0;
-  let topGenre = 'None';
 
   let genreCounts = {};
   let statusCounts = {
@@ -198,17 +197,17 @@ function Stats ( { userGames } ) {
 
   // get top genre
   userGames.forEach((game) => {
-    if (Array.isArray(game.genres)) {
+    if (Array.isArray(game?.genres)) {
       game.genres.forEach((g) => {
         if (g) { genreCounts[g] = (genreCounts[g] || 0) + 1; }
       });
     }
   });
 
-  const keys = Object.keys(genreCounts);
-  if (keys.length != 0) {
-    topGenre = keys.reduce((a, b) => genreCounts[a] > genreCounts[b] ? a : b);
-  }
+  const top3Genres = Object.entries(genreCounts)
+  .sort((a, b) => b[1] - a[1])
+  .slice(0, 3)               
+  .map(([genre]) => genre);   
 
   // get status counts
   userGames.forEach((game) => {
@@ -237,7 +236,7 @@ function Stats ( { userGames } ) {
       </div>
 
       <div>
-        <p>Top genre: {topGenre}</p>
+        <p>Top genres: {top3Genres.length === 0 ? "None" : top3Genres.join(', ')}</p>
       </div>
 
       <div>
