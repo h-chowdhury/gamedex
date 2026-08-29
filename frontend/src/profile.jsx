@@ -1,4 +1,5 @@
 import { Navbar } from './components/navbar.jsx';
+import { Footer } from './components/footer.jsx';
 import { useEffect, useState } from 'react'
 import { Link, Navigate } from 'react-router-dom';
 import { GameCard } from './components/gamecard.jsx'
@@ -307,13 +308,13 @@ function Library ({ userGames }) {
         />
 
         {searchQuery && 
-              <button
-                onClick={() => setSearchQuery('')}
-                className="pixel-box font-press-start text-xs py-2.5 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold shadow-md transition duration-100 active:scale-[0.98]"
-              >
-                CLEAR
-              </button>
-            }
+          <button
+            onClick={() => setSearchQuery('')}
+            className="pixel-box font-press-start text-xs py-2.5 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold shadow-md transition duration-100 active:scale-[0.98]"
+          >
+            CLEAR
+          </button>
+        }
       </div>
 
       <div>
@@ -438,6 +439,8 @@ export function Profile () {
       <div>
         <Library userGames={userGames} />
       </div>
+
+      <Footer />
 
     </div>
   );

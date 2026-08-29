@@ -1,4 +1,5 @@
 import { Navbar } from './components/navbar.jsx';
+import { Footer } from './components/footer.jsx';
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Form } from './form.jsx'
@@ -90,6 +91,8 @@ export function SignUp (props) {
 
       <Form isSignup={true} submitBtnText={"Sign Up"} onSubmit={handleSubmit} errors={errors}/>
 
+      <Footer />
+      
     </div>
 
   )

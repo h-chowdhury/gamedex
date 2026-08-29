@@ -173,14 +173,12 @@ app.get('/api/games', async (req, res) => {
 
   // Live API fetch
   try {
-    const { search, page, genre } = req.query;
+    const { search } = req.query;
 
     const url = new URL('https://api.rawg.io/api/games');
     url.searchParams.append('key', rawgAPIkey);
 
     if (search) url.searchParams.append('search', search);
-    if (page) url.searchParams.append('page', page);
-    if (genre) url.searchParams.append('genres', genre);
 
     const response = await fetch(url.toString());
 

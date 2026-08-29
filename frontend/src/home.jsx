@@ -1,4 +1,5 @@
 import { Navbar } from './components/navbar.jsx';
+import { Footer } from './components/footer.jsx';
 import { GameCard } from './components/gamecard.jsx'
 import { GameRow } from './components/gamerow.jsx'
 import { GameGrid } from './components/gamegrid.jsx'
@@ -57,20 +58,11 @@ function FeedEntries ( { data }) {
           </div>
       }
 
-      <div className="flex flex-col gap-3">
-        {data.map((item) => (
-          <div key={item._id} className="">
-            <ActivityRow data={item} />
-          </div>
-        ))}
-      </div>
-
     </div>
   );
 
 
 }
-
 
 function ActivityFeed () {
 
@@ -122,6 +114,11 @@ function ActivityFeed () {
       <FeedEntries data={displayedLogs}/>
     </div>
   );
+
+}
+
+function StatsCard () {
+
 
 }
 
@@ -193,6 +190,9 @@ function UserView () {
         <h1 className="text-white text-3xl font-press-start">Welcome Back {(user.username.charAt(0).toUpperCase() + user.username.slice(1)) || null}!</h1>
       </div>
 
+      {/* Stats card */}
+      <StatsCard />
+
       {/* Games in progress */}
       <GameRow title={"Games you're currently playing"} games={gamesInProgress} />
 
@@ -256,9 +256,6 @@ function GuestView () {
 }
 
 
-
-
-
 export function Home() {
 
   const {isAuthenticated } = useAuth();
@@ -269,6 +266,7 @@ export function Home() {
 
       {isAuthenticated ? <UserView /> : <GuestView />}
 
+      <Footer />
     </div>
   );
 

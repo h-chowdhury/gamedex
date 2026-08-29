@@ -1,8 +1,10 @@
 import { Navbar } from './components/navbar.jsx';
-import { GameCard } from './components/gamecard.jsx'
-import { GameRow } from './components/gamerow.jsx'
-import { GameGrid } from './components/gamegrid.jsx'
-import { useEffect, useState, useCallback, useMemo } from 'react'
+import { Footer } from './components/footer.jsx';
+import { GameCard } from './components/gamecard.jsx';
+import { GameRow } from './components/gamerow.jsx';
+import { GameGrid } from './components/gamegrid.jsx';
+import { GENRES } from '../../services/constants.js';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom'; 
 
 // Styles
@@ -23,6 +25,20 @@ function DiscoveryView () {
   const [popular, setPopular] = useState([]);
   const [top40, setTop40] = useState([]);
   const [loading, setLoading] = useState(true);
+  
+  const [rowGenres, setRowGenres] = useState({
+    trending: '',
+    upcoming: '',
+    popular: '',
+    top40: ''
+  });
+
+  const handleGenreChange = (rowId, genreSlug) => {
+    setRowGenres((prev) => ({
+      ...prev,
+      [rowId]: genreSlug
+    }));
+  };
 
   useEffect(() => {
     async function fetchAllCategories() {
@@ -57,12 +73,10 @@ function DiscoveryView () {
   return (
 
     <div className="flex flex-col gap-12 p-8">
-
-      <GameRow title="Trending Games" games={trending} />
+      <GameRow title="Trending Games" selectedGenre={rowGenres.trending} games={trending} />
       <GameRow title="Upcoming Games" games={upcoming} />
       <GameRow title="All Time Popular Games" games={popular} />
       <GameRow title="Top 40 Games" games={top40} />
-
     </div>
   );
 }
@@ -161,6 +175,8 @@ export function Discover() {
         )}
 
       </div>
+
+      <Footer />
     </div>
   );
 }

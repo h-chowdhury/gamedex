@@ -1,4 +1,5 @@
 import { Navbar } from './components/navbar.jsx';
+import { Footer } from './components/footer.jsx';
 import { useCallback, useEffect, useState } from 'react'
 import { Link, useParams, useLocation } from 'react-router-dom';
 import { useAuth, AuthProvider } from '../../services/authContext.jsx';
@@ -462,6 +463,8 @@ export function ViewGame() {
 
               </div>
             </aside>
+
+            <Footer />
 
           </div>
         </div>
