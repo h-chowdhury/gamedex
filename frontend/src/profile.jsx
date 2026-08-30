@@ -10,109 +10,169 @@ import { getUserIdFromToken } from '../../services/authServices.js';
 import { GAME_STATUS } from '../../services/constants.js';
 
 
-function ProfileCard ( { user, onAvatarUpdate }) {
+function ProfileCard ( { token, user, onProfileUpdate }) {
 
-  const [uploading, setUploading] = useState(false);
+  // update profile logic
+  const [isEditing, setIsEditing] = useState(false);
 
-  // update avatar logic
+  const [bio, setBio] = useState(user?.bio || "")
+  const [avatar, setAvatar] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
+
   const onFileChange = (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files?.[0];
     if (!file) return;
-    onFileUpload(file);
+    setAvatar(file);
+    const tempUrl = URL.createObjectURL(file);
+    setPreviewUrl(tempUrl);
   };
 
-  const onFileUpload = async (fileToUpload) => {
+  const saveChanges = async (e) => {
+    e.preventDefault()
 
-    if (!fileToUpload) return;
-
-    // format data
     const formData = new FormData();
-		formData.append("avatar", fileToUpload);
+    formData.append('bio', bio);
 
-    setUploading(true);
+    if (avatar) {
+      formData.append('avatar', avatar);
+    }
 
-    // post data
     try {
-      const token = localStorage.getItem('token');
-      const res = await fetch('http://localhost:5000/profile/avatar', {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${token}`},
-        body: formData
+      const response = await fetch('http://localhost:5000/profile/update-profile', {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: formData,
       });
 
-      if (!res.ok) {
-        const errorText = await res.text(); 
-        console.error("Server Error:", errorText);
-        return;
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to update profile');
       }
 
-      const updatedUser = await res.json();
-
-      if (onAvatarUpdate) {
-        onAvatarUpdate(updatedUser);
-      }
+      const updatedUser = await response.json();
+      onProfileUpdate(updatedUser);
+      setIsEditing(false);
 
     } catch (err) {
-      alert('Failed to upload avatar. Please try again.');
+      alert('Failed to save changes. Please try again.');
       console.error("Upload error:", err);
-    } finally {
-      setUploading(false);
     }
-  };
+  }
 
-  // Avatar + edit -> similar layout to view game
-  // Username, date joined
-  // bio
+  const cancelChanges = () => {
+    setBio(user?.bio || "");
+    setAvatar(null);
+    setPreviewUrl(null);
+    setIsEditing(false);
+  }
+
+  useEffect(() => {
+    return () => {
+      if (previewUrl && previewUrl.startsWith('blob:')) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    };
+  }, [previewUrl]);
+
+  const avatarSrc = previewUrl 
+    ? previewUrl
+    : user?.avatar?.startsWith("https")
+      ? user.avatar
+      : `http://localhost:5000${user?.avatar}`
+
 
   return (
     <div className="text-white">
 
-      {/* User avatar */}
       <div className="pixel-box group relative m-1 w-[18em] h-[18em]">
-        {user.avatar && (
+        {user?.avatar && (
           <img
-            src={user.avatar.startsWith('https') ? user.avatar : `http://localhost:5000${user.avatar}?t=${Date.now()}`}
+            src={avatarSrc}
             alt="Avatar"
             className="pixel-box m-1 w-[18em] h-[18em] object-cover"
           />
         )}
 
-        <input
-          type="file" 
-          accept="image/*" 
-          className="hidden"
-          id="avatar-upload" 
-          onChange={onFileChange} 
-          disabled={uploading}
-        />
+        {isEditing &&
+          ( <>
+              <input
+                type="file" 
+                accept="image/*" 
+                className="hidden"
+                id="avatar-upload" 
+                onChange={onFileChange} 
+              />
 
-        <label 
-          htmlFor="avatar-upload" 
-          className="absolute w-[18em] h-[18em] inset-0 bg-slate-900/75 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex flex-col items-center justify-center cursor-pointer font-vt323 text-slate-200"
-        >
-          <span className="text-3xl mb-1">📷</span>
-          <span className="text-2xl text-center">
-            {uploading ? "Uploading..." : "Change Avatar"}
-          </span>
-        </label>
-
+              <label 
+                htmlFor="avatar-upload" 
+                className="absolute w-[18em] h-[18em] inset-0 bg-slate-900/75 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex flex-col items-center justify-center cursor-pointer font-vt323 text-slate-200"
+              >
+                <span className="text-3xl mb-1">📷</span>
+                <span className="text-2xl text-center">
+                  Change Avatar
+                </span>
+              </label>
+            </>
+          )
+        }
       </div>
-
-      {/* Editing user avatar */}
-        {/* <button 
-          onClick={onFileUpload} 
-          disabled={uploading}
-          className="pixel-box w-full bg-indigo-600 hover:bg-indigo-500 px-3 py-2 disabled:bg-slate-800 disabled:opacity-50 text-white font-vt323">
-            {uploading ? "Uploading..." : "Upload image"}
-        </button>
 
 
       {/* Username, bio, etc. */}
       <div className="ml-8 font-vt323 text-2xl text-slate-400 py-5 flex flex-col gap-6">
-        <div>
-          <p className="font-press-start">{user.username.charAt(0).toUpperCase() + user.username.slice(1)}</p>
-          <p>{user.bio}</p>
-        </div>
+ 
+        <p className="font-press-start">{user.username?.charAt(0).toUpperCase() + user.username?.slice(1)}</p>
+
+        {isEditing
+          ? (
+            <form onSubmit={saveChanges}>
+              {/* <input 
+                type="text"
+                placeholder="Enter new username."
+                className="bg-slate-800 pixel-box px-4 py-1"
+                value={username.charAt(0).toUpperCase() + username.slice(1)}
+                onChange={(e) => setUsername(e.target.value)}
+              /> */}
+
+              <textarea
+                placeholder="Write something about yourself!"
+                className="bg-slate-800 pixel-box px-4 py-3"
+                rows="4" cols="50" 
+                value={bio}
+                onChange={(e) => setBio(e.target.value)}
+              />
+
+              <button 
+                type="submit"
+                className="pixel-box font-press-start text-xs py-2.5 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold shadow-md transition duration-100 active:scale-[0.98]"
+              >
+                Save Changes
+              </button>
+
+              <button 
+                type="button"
+                className="pixel-box font-press-start text-xs py-2.5 px-4 bg-red-600 hover:bg-red-500 text-white font-semibold shadow-md transition duration-100 active:scale-[0.98]"
+                onClick={cancelChanges}
+              >
+                Cancel Changes
+              </button>
+            </form>
+          )
+          : (
+            <div>
+              <p>{ user.bio.trim().length > 0 ? user.bio : "No bio set."}</p>
+              <button 
+                type="button"
+                className="pixel-box font-press-start text-xs py-2.5 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold shadow-md transition duration-100 active:scale-[0.98]"
+                onClick={() => setIsEditing(true)}
+              >
+                Edit Profile
+              </button>
+            </div>
+          )
+        }
       
         <div className="text-slate-600">
           <p>User ID: {user._id}</p>
@@ -341,7 +401,7 @@ export function Profile () {
   const[loading, setLoading] = useState(true)
   const [userGames, setUserGames] = useState([]);
 
-  const handleAvatarUpdate = (updatedUser) => {
+  const handleProfileUpdate = (updatedUser) => {
     setUser(updatedUser);
   };
 
@@ -433,7 +493,7 @@ export function Profile () {
       <Navbar />
 
       <div>
-        <ProfileCard user={user} onAvatarUpdate={handleAvatarUpdate}/>
+        <ProfileCard token={token} user={user} onProfileUpdate={handleProfileUpdate}/>
       </div>
 
       <div>

@@ -73,19 +73,34 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Image storage configuration ******************************************* //
 
-router.post('/avatar', verifyToken, upload.single('avatar'), async (req, res) => {
+router.put('/update-profile', verifyToken, upload.single('avatar'), async (req, res) => {
   try {
-    if (!req.file) {
-      return res.status(400).json({message: 'No file uploaded.'});
+    const userId = req.user.id || req.user.userId || req.user._id;
+    const { username, bio } = req.body;
+
+    const updateData = {};
+
+    if (username !== undefined && username.trim() !== '') {
+      updateData.username = username.toLowerCase().trim();
     }
 
-    const userId = req.user.id || req.user.userId || req.user._id;
-    const avatarUrl = `/uploads/${req.file.filename}`;
+    if (bio !== undefined) {
+      updateData.bio = bio;
+    }
+
+    if (req.file) {
+      updateData.avatar = `/uploads/${req.file.filename}`;
+    }
+
+    if (Object.keys(updateData).length === 0) {
+      return res.status(400).json({ message: 'No fields provided to update.' });
+    }
+
     const updatedUser = await User.findByIdAndUpdate(
       userId,
-      { avatar: avatarUrl },
+      { $set: updateData },
       { returnDocument: 'after' },
-      { runValidators: true }
+      { new: true, runValidators: true }
     ).select('-password');
 
     console.log(updatedUser);
@@ -464,7 +479,6 @@ app.get("/activity-feed/global", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 })
-
 
 
 // Manage user registration ********************************************** //
