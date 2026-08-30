@@ -17,7 +17,7 @@ export function GameCard ({gameData}) {
     >
       <div className="relative pixel-box h-[290px] w-[210px] bg-red-400 flex-shrink-0 transition-all duration-200 hover:-translate-y-1.5">
         <img
-          src="../public/cartridge.png"
+          src="/cartridge.png"
           alt="Cartridge base"
           className="h-full w-full inset-0 object-contain pointer-events-none z-0"
         />

@@ -32,19 +32,25 @@ export function Navbar () {
 
   const { isAuthenticated } = useAuth();
   return (
-    <nav className="flex flex-row justify-between py-5 px-7 bg-slate-900">
-      <div className="font-press-start text-white">
-        <h1>GameDex</h1>
+    <div className="flex flex-row justify-between bg-slate-900">
+      <div className="flex flex-row gap-5 items-center">
+        <img src="/roboicon.png" className="w-[3em] h-[3em] mb-3 ml-6 mt-3 [image-rendering:pixelated]" />
+
+        <div className="font-press-start text-white">
+          <h1>GameDex</h1>
+        </div>
       </div>
 
-      <ul className="flex flex-row gap-7">
-        <NavbarLink name={"Home"} page="" />
-        {isAuthenticated && <NavbarLink name={"Profile"} page="profile" />}
-        <NavbarLink name={"Browse"} page="discover" />
-        {isAuthenticated && <NavbarLink name={"Log out"} page="logout" />}
-        {!isAuthenticated && <NavbarLink name={"Login"} page="login" />}
-        {!isAuthenticated && <NavbarLink name={"Sign up"} page="signup" />}
-      </ul>
-    </nav>
+      <nav className="flex items-center">
+        <ul className="flex flex-row gap-7 items-center mr-6">
+          <li><NavbarLink name={"Home"} page="" /></li>
+          {isAuthenticated && <li><NavbarLink name={"Profile"} page="profile" /></li>}
+          <li><NavbarLink name={"Browse"} page="discover" /></li>
+          {isAuthenticated && <li><NavbarLink name={"Log out"} page="logout" /></li>}
+          {!isAuthenticated && <li><NavbarLink name={"Login"} page="login" /></li>}
+          {!isAuthenticated && <li><NavbarLink name={"Sign up"} page="signup" /></li>}
+        </ul>
+      </nav>
+    </div>
   );
 }
