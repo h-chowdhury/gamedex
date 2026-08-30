@@ -12,23 +12,22 @@ import { GAME_STATUS } from '../../services/constants.js';
 
 function ProfileCard ( { user, onAvatarUpdate }) {
 
-  const [selectedFile, setSelectedFile] = useState(null);
   const [uploading, setUploading] = useState(false);
 
   // update avatar logic
   const onFileChange = (e) => {
-    setSelectedFile(e.target.files[0]);
-  }
+    const file = e.target.files[0];
+    if (!file) return;
+    onFileUpload(file);
+  };
 
-  const onFileUpload = async () => {
-    if (!selectedFile) {
-      alert("Please select a file.");
-      return;
-    }
+  const onFileUpload = async (fileToUpload) => {
+
+    if (!fileToUpload) return;
 
     // format data
     const formData = new FormData();
-		formData.append("avatar", selectedFile);
+		formData.append("avatar", fileToUpload);
 
     setUploading(true);
 
@@ -53,8 +52,6 @@ function ProfileCard ( { user, onAvatarUpdate }) {
         onAvatarUpdate(updatedUser);
       }
 
-      setSelectedFile(null);
-
     } catch (err) {
       alert('Failed to upload avatar. Please try again.');
       console.error("Upload error:", err);
@@ -71,7 +68,7 @@ function ProfileCard ( { user, onAvatarUpdate }) {
     <div className="text-white">
 
       {/* User avatar */}
-      <div>
+      <div className="pixel-box group relative m-1 w-[18em] h-[18em]">
         {user.avatar && (
           <img
             src={user.avatar.startsWith('https') ? user.avatar : `http://localhost:5000${user.avatar}?t=${Date.now()}`}
@@ -79,29 +76,36 @@ function ProfileCard ( { user, onAvatarUpdate }) {
             className="pixel-box m-1 w-[18em] h-[18em] object-cover"
           />
         )}
-      </div>
 
-      {/* Editing user avatar */}
-      <div className="flex flex-col gap-2 items-center">
-        <input type="file" accept="image/*" className="hidden" id="avatar-upload" onChange={onFileChange} />
+        <input
+          type="file" 
+          accept="image/*" 
+          className="hidden"
+          id="avatar-upload" 
+          onChange={onFileChange} 
+          disabled={uploading}
+        />
 
         <label 
           htmlFor="avatar-upload" 
-          className="pixel-box w-full cursor-pointer bg-slate-800 hover:bg-slate-700 font-vt323 px-3 py-2 text-center text-slate-300">
-            {selectedFile ? "Change File" : "Choose Image"}
+          className="absolute w-[18em] h-[18em] inset-0 bg-slate-900/75 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex flex-col items-center justify-center cursor-pointer font-vt323 text-slate-200"
+        >
+          <span className="text-3xl mb-1">📷</span>
+          <span className="text-2xl text-center">
+            {uploading ? "Uploading..." : "Change Avatar"}
+          </span>
         </label>
 
-        <button 
+      </div>
+
+      {/* Editing user avatar */}
+        {/* <button 
           onClick={onFileUpload} 
           disabled={uploading}
           className="pixel-box w-full bg-indigo-600 hover:bg-indigo-500 px-3 py-2 disabled:bg-slate-800 disabled:opacity-50 text-white font-vt323">
             {uploading ? "Uploading..." : "Upload image"}
         </button>
-        
-        <p className="text-xl font-vt323 text-slate-400 truncate text-overflow: ellipsis">
-          {selectedFile ? `Selected: ${selectedFile.name}` : "No file selected"}
-        </p>
-      </div>
+
 
       {/* Username, bio, etc. */}
       <div className="ml-8 font-vt323 text-2xl text-slate-400 py-5 flex flex-col gap-6">
