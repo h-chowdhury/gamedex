@@ -139,7 +139,7 @@ export function Discover() {
   }, [searchQuery, debouncedSearch]);
 
   return (
-    <div className="w-full bg-slate-950 text-white">
+    <div className="w-full text-white">
 
       <Navbar />
 

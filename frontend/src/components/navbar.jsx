@@ -44,8 +44,8 @@ export function Navbar () {
       <nav className="flex items-center">
         <ul className="flex flex-row gap-7 items-center mr-6">
           <li><NavbarLink name={"Home"} page="" /></li>
-          {isAuthenticated && <li><NavbarLink name={"Profile"} page="profile" /></li>}
           <li><NavbarLink name={"Browse"} page="discover" /></li>
+          {isAuthenticated && <li><NavbarLink name={"Profile"} page="profile" /></li>}
           {isAuthenticated && <li><NavbarLink name={"Log out"} page="logout" /></li>}
           {!isAuthenticated && <li><NavbarLink name={"Login"} page="login" /></li>}
           {!isAuthenticated && <li><NavbarLink name={"Sign up"} page="signup" /></li>}

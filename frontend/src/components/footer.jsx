@@ -9,7 +9,7 @@ export function Footer({}) {
   const { isAuthenticated, logout } = useAuth();
 
   return (
-    <footer className="bg-slate-900 text-white">
+    <footer className="bg-slate-900 text-white mt-12">
       
       <div className="flex flex-row justify-evenly">
 

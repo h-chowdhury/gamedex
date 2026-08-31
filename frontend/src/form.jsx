@@ -33,7 +33,7 @@ export function Form ({isSignup, submitBtnText, onSubmit, errors}) {
   const errorClass = "pixel-box text-sm text-red-300 font-vt323 text-[1.1em] bg-red-950/40 border-l-4 border-red-500 rounded-r-lg px-4 py-3 mt-1";
   
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-950 p-4">
+    <div className="min-h-screen flex items-center justify-center p-4">
       <form onSubmit={handleSubmit} className="pixel-outline-slate w-full max-w-md">
 
         <div className="pixel-box-lg bg-slate-900 border border-slate-800 p-8 shadow-2xl space-y-6">

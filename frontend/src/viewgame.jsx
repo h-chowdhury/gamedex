@@ -106,7 +106,7 @@ function ViewEntry({ game, close, onEntryUpdated }) {
     }
 
     try {
-      console.log("CHECKING:", game);
+
       const res = await fetch('http://localhost:5000/save-entry', {
         method: 'POST',
         headers: {'Content-Type': 'application/json' },
@@ -193,8 +193,8 @@ function ViewEntry({ game, close, onEntryUpdated }) {
 
   if (loading) {
     return (
-      <div className="text-white font-vt323 text-2xl fixed inset-0  z-50 overflow-y-auto bg-black/30 backdrop-blur-sm p-15 md:p-25">
-        <div className="pixel-box-lg flex flex-col gap-3 bg-slate-800 p-5 md:p-10">
+      <div className="text-white font-vt323 text-2xl fixed inset-0  z-50 overflow-y-auto  backdrop-blur-sm p-15 md:p-25">
+        <div className="pixel-box-lg flex flex-col gap-3 p-5 md:p-10">
           <p className="font-press-start">Loading entry...</p>
         </div>
       </div>
@@ -203,11 +203,11 @@ function ViewEntry({ game, close, onEntryUpdated }) {
 
 
   return (
-    <div className="text-white font-vt323 text-2xl fixed inset-0  z-50 overflow-y-auto bg-black/30 backdrop-blur-sm p-15 md:p-25">
+    <div className="text-white font-vt323 text-2xl fixed inset-0  z-50 overflow-y-auto backdrop-blur-sm p-15 md:p-25">
 
       <form 
         onSubmit={handleSubmit}
-        className="pixel-box-lg flex flex-col gap-3 bg-slate-800 p-5 md:p-10"
+        className="pixel-box-lg flex flex-col gap-3 p-5 md:p-10"
       >
         <div>
           <div className="flex flex-row">
@@ -352,7 +352,7 @@ export function ViewGame() {
 
   if (loading) {
     return (
-      <div className="bg-[#0f1216] text-white">
+      <div className="text-white">
         <Navbar />
         <h2 className="text-white p-10 font-vt323 text-2xl">Loading game...</h2>
       </div>
@@ -361,7 +361,7 @@ export function ViewGame() {
 
   if (!game) {
     return (
-      <div className="bg-[#0f1216] text-white">
+      <div className="text-white">
         <Navbar />
         <h2 className="text-white p-10 font-vt323 text-2xl">Failed to load game.</h2>
       </div>
@@ -371,7 +371,7 @@ export function ViewGame() {
   console.log("CHECKING: ", game);
 
   return (
-    <div className="bg-[#0f1216]">
+    <div className="">
       <Navbar />
 
         <div className="relative overflow-hidden w-full h-72">
@@ -414,7 +414,7 @@ export function ViewGame() {
                 About the game
               </h3>
 
-              <hr className="bg-red-500" />
+              <hr />
 
               <p className="text-white font-vt323 text-xl">
                 {game.description_raw || "No description available."}

@@ -74,15 +74,15 @@
 
   .pixel-outline-slate {
     filter: 
-      drop-shadow(4px 0 0 #334155)
-      drop-shadow(-4px 0 0 #334155)
-      drop-shadow(0 4px 0 #334155)
-      drop-shadow(0 -4px 0 #334155);
+      drop-shadow(4px 0 0 #2c2c3e)
+      drop-shadow(-4px 0 0 #2c2c3e)
+      drop-shadow(0 4px 0 #2c2c3e)
+      drop-shadow(0 -4px 0 #2c2c3e);
   }
 }
 
 body {
-  background-color:#020617;
+  background-color: #3a3858;
 }
 
 /* Scrollbar styles */
