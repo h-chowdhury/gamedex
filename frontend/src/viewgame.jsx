@@ -266,59 +266,59 @@ function ViewEntry({ game, close, onEntryUpdated }) {
                 className="accent-[#83c5be] bg-[#1c1c28] cursor-pointer my-auto"
               />
             </div>
+
+            <div className="flex flex-col space-y-1">
+              <label htmlFor="hours_played" className="text-[#a8a8b3] text-lg">Hours Played</label>
+              <input 
+                type="number" 
+                name="hours_played" 
+                id="hours_played" 
+                min="0" 
+                value={formData.hours_played} 
+                onChange={handleChange} 
+                className="bg-[#1c1c28] text-[#f4f1de] text-xl p-2 focus:outline-none"
+              />
+            </div>
+
+            <div className="flex flex-col space-y-1">
+              <label htmlFor="total_replays" className="text-[#a8a8b3] text-lg">Total Replays</label>
+              <input 
+                type="number" 
+                name="total_replays" 
+                id="total_replays" 
+                min="0" 
+                value={formData.total_replays} 
+                onChange={handleChange} 
+                className="bg-[#1c1c28] text-[#f4f1de] p-2 focus:outline-none"
+              />
+            </div>
+
+            <div className="flex flex-col space-y-1">
+              <label htmlFor="start_date" className="text-[#a8a8b3] text-lg">Start Date</label>
+              <input 
+                type="date" 
+                name="start_date" 
+                id="start_date" 
+                value={formData.start_date?.split('T')[0] || ''} 
+                onChange={handleChange} 
+                className="bg-[#1c1c28] text-[#f4f1de] p-2 focus:outline-none"
+              />
+            </div>
+
+            <div className="flex flex-col space-y-1">
+              <label htmlFor="finish_date" className="text-[#a8a8b3] text-lg">Finish Date</label>
+              <input 
+                type="date" 
+                name="finish_date" 
+                id="finish_date" 
+                value={formData.finish_date?.split('T')[0] || ''} 
+                onChange={handleChange} 
+                className="bg-[#1c1c28] text-[#f4f1de] p-2 focus:outline-none"
+              />
+            </div>
           </div>
 
-          <div className="flex flex-col space-y-1">
-            <label htmlFor="hours_played" className="text-[#a8a8b3] text-lg">Hours Played</label>
-            <input 
-              type="number" 
-              name="hours_played" 
-              id="hours_played" 
-              min="0" 
-              value={formData.hours_played} 
-              onChange={handleChange} 
-              className="bg-[#1c1c28] text-[#f4f1de] text-xl p-2 focus:outline-none"
-            />
-          </div>
-
-          <div className="flex flex-col space-y-1">
-            <label htmlFor="total_replays" className="text-[#a8a8b3] text-lg">Total Replays</label>
-            <input 
-              type="number" 
-              name="total_replays" 
-              id="total_replays" 
-              min="0" 
-              value={formData.total_replays} 
-              onChange={handleChange} 
-              className="bg-[#1c1c28] text-[#f4f1de] p-2 focus:outline-none"
-            />
-          </div>
-
-          <div className="flex flex-col space-y-1">
-            <label htmlFor="start_date" className="text-[#a8a8b3] text-lg">Start Date</label>
-            <input 
-              type="date" 
-              name="start_date" 
-              id="start_date" 
-              value={formData.start_date?.split('T')[0] || ''} 
-              onChange={handleChange} 
-              className="bg-[#1c1c28] text-[#f4f1de] p-2 focus:outline-none"
-            />
-          </div>
-
-          <div className="flex flex-col space-y-1">
-            <label htmlFor="finish_date" className="text-[#a8a8b3] text-lg">Finish Date</label>
-            <input 
-              type="date" 
-              name="finish_date" 
-              id="finish_date" 
-              value={formData.finish_date?.split('T')[0] || ''} 
-              onChange={handleChange} 
-              className="bg-[#1c1c28] text-[#f4f1de] p-2 focus:outline-none"
-            />
-          </div>
-
-          <div className="flex items-center gap-3 bg-[#1c1c28] p-3 cursor-pointer">
+          <div className="flex items-center gap-3 bg-[#1c1c28] p-3 mt-8 cursor-pointer">
             <input 
               type="checkbox" 
               name="favourite" 
