@@ -629,7 +629,7 @@ export function ViewGame() {
                     </span>
 
                     <span className="text-s bg-[#83c5be]/20 text-[#83c5be] px-2 py-0.5 mb-2 mt-1">
-                      {STATUS_MAP[formData.status]}
+                      {hasEntry ? STATUS_MAP[formData.status] : "N/A"}
                     </span>
                   </div>
 
