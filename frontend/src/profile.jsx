@@ -95,7 +95,7 @@ function ProfileCard ( { token, user, onProfileUpdate }) {
         <div className="pixel-outline-slate group relative flex-shrink-0 w-[18em] h-[18em] bg-[#2c2c3e]">
         
           {user?.avatar ? (
-            <div className="pixel-outline-teal">
+            <div className="pixel-outline-teal w-full h-full">
               <img
                 src={avatarSrc}
                 alt="Avatar"
@@ -165,8 +165,8 @@ function ProfileCard ( { token, user, onProfileUpdate }) {
 
                   <button 
                     onClick={() => {
-                      setIsEditing(false);
                       clickSound.play();
+                      cancelChanges();
                     }}
                     type="button"
                     className="pixel-box font-press-start text-xs py-2.5 px-4 bg-[#83c5be] hover:bg-[#62b6cb] text-[#1c1c28] font-bold transition duration-100 active:translate-y-0.5 cursor-pointer"
