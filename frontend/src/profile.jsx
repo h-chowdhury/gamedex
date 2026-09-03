@@ -366,6 +366,9 @@ function Library ({ userGames }) {
 
   const favouriteGames = userGames.filter((game) => game.favourite === true );
 
+  displayedGames.sort((a, b) => a.game_title.localeCompare(b.game_title));
+  favouriteGames.sort((a, b) => a.game_title.localeCompare(b.game_title));
+
   return (
     <div className="w-full max-w-6xl mx-auto font-vt323">
 
