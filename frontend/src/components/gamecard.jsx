@@ -1,8 +1,11 @@
 import { Link } from 'react-router-dom';
+import clickAudio from "/audio/click.mp3";
 
 export function GameCard ({gameData}) {
 
   if (!gameData) return null;
+
+  const clickSound = new Audio(clickAudio);
 
   const gameId = gameData.id || gameData.game_id;
   const title = gameData.name || gameData.game_title;
@@ -17,6 +20,7 @@ export function GameCard ({gameData}) {
       to={`/game/${gameId}`}
       state={{ game: gameData }}
       className="cursor-pointer flex-shrink-0 block"
+      onClick={() => clickSound.play()}
     >
       <div className="relative h-[290px] w-[210px] transition-all duration-200 hover:-translate-y-1.5">
         <img

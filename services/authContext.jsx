@@ -4,15 +4,15 @@ import { useNavigate } from 'react-router-dom';
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState(localStorage.getItem('token') || null);
+  const [token, setToken] = useState(sessionStorage.getItem('token') || null);
   
   const login = (newToken, redirectTo = '/profile') => {
-    localStorage.setItem('token', newToken);
+    sessionStorage.setItem('token', newToken);
     setToken(newToken);
   }
 
   const logout = () => {
-    localStorage.removeItem('token');
+    sessionStorage.removeItem('token');
     setToken(null);
   };
 

@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 import { useAuth, AuthProvider } from '../../services/authContext.jsx';
 import { getUserIdFromToken } from '../../services/authServices.js';
+import clickAudio from "/audio/click.mp3";
 
 
 function formatDate(date) {
@@ -50,12 +51,14 @@ function ActivityRow ({ data }) {
   const gameImg = data.gameData?.background_image || data.background_image || '';
   const action = data.action;
   const date = data.createdAt || '';
+  const clickSound = new Audio(clickAudio);
 
   return (
     <Link
       to={`/game/${data.game_id}`}
       state={{ game: data.gameData }}
       className="cursor-pointer block"
+      onClick={() => clickSound.play()}
     >
       <div className="pixel-box w-full bg-[#2c2c3e] hover:bg-[#34344a] text-[#f4f1de] flex flex-row items-center transition-colors font-vt323 text-lg overflow-hidden">
         
@@ -121,6 +124,7 @@ function ActivityFeed () {
   const [activities, setActivities] = useState([]);
   const [isGlobal, setIsGlobal] = useState(true);
   const [loading, setLoading] = useState(true);
+  const clickSound = new Audio(clickAudio);
 
   useEffect (() => {
     const fetchActivities = async () => {
@@ -160,7 +164,10 @@ function ActivityFeed () {
 
         <button
           className="pixel-box bg-[#83c5be] hover:bg-[#62b6cb] text-[#1c1c28] font-press-start text-xs px-4 py-2 transition-all active:translate-y-0.5"
-          onClick={() => setIsGlobal(!isGlobal)}
+          onClick={() => {
+            setIsGlobal(!isGlobal);
+            clickSound.play();
+          }}
         >
           {isGlobal ? 'View My Activity' : 'View Global Activity'}
         </button>
@@ -184,7 +191,7 @@ function UserView () {
     const fetchDashboard = async () => {
 
       const userId = getUserIdFromToken();
-      const token = localStorage.getItem('token');
+      const token = sessionStorage.getItem('token');
       
       if (!token || !userId) {
         console.warn("No token or userId found in storage.");

@@ -5,9 +5,12 @@ import { Link, useParams, useLocation } from 'react-router-dom';
 import { useAuth, AuthProvider } from '../../services/authContext.jsx';
 import { GAME_STATUS, STATUS_MAP, STATUS_COLOURS, STAR_MAP } from '../../services/constants.js';
 import { getUserIdFromToken } from '../../services/authServices.js'
+import clickAudio from "/audio/click.mp3";
 
 
 function ViewEntry({ game, close, onEntryUpdated }) {
+
+  const clickSound = new Audio(clickAudio);
 
   const [formData, setFormData] = useState({
     status: GAME_STATUS.WANT_TO_PLAY,
@@ -43,7 +46,7 @@ function ViewEntry({ game, close, onEntryUpdated }) {
       try {
         const res = await fetch(`http://localhost:5000/fetch-entry?userId=${userId}&gameId=${game.id}`, {
           headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
+            'Authorization': `Bearer ${sessionStorage.getItem('token')}`
           }
         });
 
@@ -138,7 +141,7 @@ function ViewEntry({ game, close, onEntryUpdated }) {
       const res = await fetch(`http://localhost:5000/delete-entry`, {
         method: 'DELETE',
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Authorization': `Bearer ${sessionStorage.getItem('token')}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -213,7 +216,10 @@ function ViewEntry({ game, close, onEntryUpdated }) {
 
             <button 
               type="button"
-              onClick={close}
+              onClick={() => {
+                clickSound.play();
+                close();
+              }}
               className="font-press-start text-xs text-[#a8a8b3] hover:text-[#e76f51] p-1 cursor-pointer transition-colors"
             >
               [X]
@@ -355,13 +361,17 @@ function ViewEntry({ game, close, onEntryUpdated }) {
             <button 
               type="submit"
               className="pixel-box font-press-start text-xs py-3 px-6 bg-[#83c5be] hover:bg-[#62b6cb] text-[#1c1c28] font-bold cursor-pointer"
+              onClick={() => clickSound.play()}
             >
               SAVE ENTRY
             </button>
 
             <button 
               type="button" 
-              onClick={handleDelete}
+              onClick={ () => {
+                clickSound.play();
+                handleDelete();
+              }}
               className="pixel-box font-press-start text-xs py-3 px-6 bg-[#b45252] hover:bg-[#a13a3a] text-[#1c1c28] font-bold cursor-pointer"
             >
               DELETE ENTRY
@@ -381,6 +391,8 @@ function ViewEntry({ game, close, onEntryUpdated }) {
 
 
 export function ViewGame() {
+
+  const clickSound = new Audio(clickAudio);
 
   const { id } = useParams();
   const { isAuthenticated } = useAuth();
@@ -434,7 +446,7 @@ export function ViewGame() {
       const res = await fetch (`http://localhost:5000/fetch-entry?userId=${userId}&gameId=${id}`,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            Authorization: `Bearer ${sessionStorage.getItem('token')}`,
           },
         }
       );
@@ -681,7 +693,10 @@ export function ViewGame() {
                 <div className="flex items-center justify-center">
                   <button 
                     className="pixel-box font-press-start text-xs py-2.5 px-4 lg:w-full sm:w-[40em] bg-[#83c5be] hover:bg-[#62b6cb] text-[#1c1c28] font-bold transition duration-100 active:translate-y-0.5 cursor-pointer"
-                    onClick={() => setPopupActive(true)}
+                    onClick={() => {
+                      setPopupActive(true);
+                      clickSound.play();
+                    }}
                   >
                     {hasEntry ? 'Edit entry' : 'Add to library'}
                   </button>

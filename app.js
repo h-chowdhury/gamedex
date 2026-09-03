@@ -469,7 +469,7 @@ app.get("/activity-feed/global", async (req, res) => {
     const activities = await Activity.find()
       .populate('user', 'username avatar')
       .sort({ createdAt: -1 })
-      .limit(20)
+      .limit(50)
       .lean();
 
     res.json(activities);

@@ -6,6 +6,7 @@ import { Form } from './form.jsx'
 import { registerUser } from '../../services/authServices.js'
 import { useAuth } from '../../services/authContext.jsx';
 
+
 export function SignUp (props) {
 
   const [formData, setFormData] = useState('');

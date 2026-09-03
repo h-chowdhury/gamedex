@@ -8,9 +8,12 @@ import { GameGrid } from './components/gamegrid.jsx'
 import { useAuth } from '../../services/authContext.jsx';
 import { getUserIdFromToken } from '../../services/authServices.js';
 import { GAME_STATUS, STATUS_MAP, STATUS_COLOURS } from '../../services/constants.js';
+import clickAudio from "/audio/click.mp3";
 
 
 function ProfileCard ( { token, user, onProfileUpdate }) {
+
+  const clickSound = new Audio(clickAudio);
 
   // update profile logic
   const [isEditing, setIsEditing] = useState(false);
@@ -153,6 +156,7 @@ function ProfileCard ( { token, user, onProfileUpdate }) {
 
                 <div className="flex flex-wrap gap-4 pt-2">
                   <button 
+                    onClick={() => clickSound.play()}
                     type="submit"
                     className="pixel-box font-press-start text-xs py-2.5 px-4 bg-[#83c5be] hover:bg-[#62b6cb] text-[#1c1c28] font-bold transition duration-100 active:translate-y-0.5 cursor-pointer"
                   >
@@ -160,6 +164,10 @@ function ProfileCard ( { token, user, onProfileUpdate }) {
                   </button>
 
                   <button 
+                    onClick={() => {
+                      setIsEditing(false);
+                      clickSound.play();
+                    }}
                     type="button"
                     className="pixel-box font-press-start text-xs py-2.5 px-4 bg-[#83c5be] hover:bg-[#62b6cb] text-[#1c1c28] font-bold transition duration-100 active:translate-y-0.5 cursor-pointer"
                   >
@@ -177,7 +185,10 @@ function ProfileCard ( { token, user, onProfileUpdate }) {
                 <button 
                   type="button"
                   className="pixel-box font-press-start text-xs py-2.5 px-4 bg-[#83c5be] hover:bg-[#62b6cb] text-[#1c1c28] font-bold transition duration-100 active:translate-y-0.5 cursor-pointer"
-                  onClick={() => setIsEditing(true)}
+                  onClick={() => {
+                    clickSound.play();
+                    setIsEditing(true);
+                  }}
                 >
                   Edit Profile
                 </button>
@@ -349,6 +360,7 @@ function Library ({ userGames }) {
 
   const [filterStatus, setFilterStatus] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const clickSound = new Audio(clickAudio);
 
   const handleSelect = (e) => {
     setFilterStatus(e.target.value);
@@ -373,11 +385,9 @@ function Library ({ userGames }) {
     <div className="w-full max-w-6xl mx-auto font-vt323">
 
       {/* Favorites Games */}
-      {favouriteGames.length > 0 && (
-        <section className="w-full max-w-5xl mx-auto">
-          <GameRow title="Favourite Games" games={favouriteGames} />
-        </section>
-      )}
+      <section className="w-full max-w-5xl mx-auto">
+        <GameRow title="Favourite Games" games={favouriteGames} />
+      </section>
 
       <h2 className="text-lg md:text-xl text-[#f4f1de] font-press-start border-[#2c2c3e] pt-10 mt-10">
         Your Library
@@ -425,7 +435,10 @@ function Library ({ userGames }) {
           {/* Clear input */}
           {searchQuery && 
             <button
-              onClick={() => setSearchQuery('')}
+              onClick={() => {
+                clickSound.play();
+                setSearchQuery('');
+              }}
               className="pixel-box font-press-start text-xs py-2.5 px-4 bg-[#e76f51] hover:bg-[#d65f42] text-[#1c1c28] font-bold transition duration-100 active:translate-y-0.5 cursor-pointer"
             >
               CLEAR
@@ -461,7 +474,7 @@ function Library ({ userGames }) {
 
 export function Profile () {
 
-  const token = localStorage.getItem('token');
+  const token = sessionStorage.getItem('token');
   const[user, setUser] = useState(null);
   const[loading, setLoading] = useState(true)
   const [userGames, setUserGames] = useState([]);
@@ -473,7 +486,7 @@ export function Profile () {
   // fetch profile info
   useEffect(() => {
     if (!token) {
-      console.error("No token found in localStorage!");
+      console.error("No token found in sessionStorage!");
       setLoading(false);
       return;
     }
@@ -503,7 +516,7 @@ export function Profile () {
   useEffect(() => {
     const fetchGames = async () => {
       const userId = getUserIdFromToken();
-      const token = localStorage.getItem('token');
+      const token = sessionStorage.getItem('token');
       
       if (!token || !userId) {
         console.warn("No token or userId found in storage.");

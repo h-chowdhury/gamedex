@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
 import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '../../../services/authContext.jsx';
+import clickAudio from "/audio/click.mp3";
 
 
 function NavbarLink ({name, page}) {
   const { logout } = useAuth();
+  const clickSound = new Audio(clickAudio);
 
   const linkStyle = "text-slate-400 font-vt323 text-xl hover:text-[#83c5be]";
 
@@ -20,7 +22,7 @@ function NavbarLink ({name, page}) {
 
   return (
     <li>
-      <Link to={`/${page}`}>
+      <Link to={`/${page}`} onClick={() => clickSound.play()}>
         <p className={linkStyle}>{name}</p>
       </Link>
     </li>

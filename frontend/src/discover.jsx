@@ -6,6 +6,7 @@ import { GameGrid } from './components/gamegrid.jsx';
 import { GENRES } from '../../services/constants.js';
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom'; 
+import clickAudio from "/audio/click.mp3";
 
 // Styles
 const h1style = 'text-[#f4f1de] text-lg md:text-xl font-press-start tracking-wide uppercase';
@@ -146,6 +147,7 @@ export function Discover() {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(false);
+  const clickSound = new Audio(clickAudio);
 
   const fetchGames = async (searchQuery) => {
     if (!searchQuery.trim()) {
@@ -198,7 +200,10 @@ export function Discover() {
 
             {searchQuery && 
               <button
-                onClick={() => setSearchQuery('')}
+                onClick={() => {
+                  setSearchQuery('');
+                  clickSound.play()
+                }}
                 className="pixel-box font-press-start text-xs py-2.5 px-4 bg-[#83c5be] hover:bg-[#62b6cb] text-[#1c1c28] font-bold transition duration-100 active:translate-y-0.5 cursor-pointer"
               >
                 CLEAR

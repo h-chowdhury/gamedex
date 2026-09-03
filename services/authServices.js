@@ -46,7 +46,7 @@ const loginUser = async (username, password) => {
 }
 
 const getUserIdFromToken = () => {
-  const token = localStorage.getItem('token');
+  const token = sessionStorage.getItem('token');
   if (!token) return null;
 
   try {

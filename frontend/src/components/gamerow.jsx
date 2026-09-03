@@ -26,8 +26,8 @@ export function GameRow ({ title, games }) {
               </div>
             ))
           ) : (
-            <p className="text-[#a8a8b3] font-vt323 text-xl py-2">
-              [ No games found. ]
+            <p className="text-[#a8a8b3] font-vt323 text-xl py-2 mb-1 flex justify-center align-center w-full">
+              [ NO GAMES FOUND ]
             </p>
           )}
         </div>

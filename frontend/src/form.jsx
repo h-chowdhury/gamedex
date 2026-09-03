@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom'
+import clickAudio from "/audio/click.mp3";
 
 function InputField ({name, type, onChange}) {
   return (
@@ -16,6 +17,8 @@ function InputField ({name, type, onChange}) {
 }
 
 export function Form ({isSignup, submitBtnText, onSubmit, errors}) {
+
+  const clickSound = new Audio(clickAudio);
 
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
@@ -81,6 +84,7 @@ export function Form ({isSignup, submitBtnText, onSubmit, errors}) {
           <div>
             <button 
               className="pixel-box font-press-start text-xs md:text-sm w-full py-3 px-4 bg-[#83c5be] hover:bg-[#62b6cb] text-[#1c1c28] font-bold transition duration-100 active:translate-y-0.5 cursor-pointer"
+              onClick={() => clickSound.play()}
             >
               {submitBtnText}
             </button>
