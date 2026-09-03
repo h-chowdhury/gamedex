@@ -3,8 +3,8 @@ import { Footer } from './components/footer.jsx';
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Form } from './form.jsx'
-import { registerUser } from '../../services/authServices.js'
-import { useAuth } from '../../services/authContext.jsx';
+import { registerUser } from '../../backend/services/authServices.js'
+import { useAuth } from './context/authContext.jsx';
 
 
 export function SignUp (props) {

@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { Home } from './home';
 import { SignUp } from './signup';
@@ -6,7 +5,7 @@ import { Login } from './login';
 import { Profile } from './profile';
 import { Discover } from './discover';
 import { ViewGame } from './viewGame.jsx';
-import { AuthProvider, useAuth } from '../../services/authContext.jsx';
+import { AuthProvider, useAuth } from './context/authContext.jsx';
 
 function AppContent() {
 

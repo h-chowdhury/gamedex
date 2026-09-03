@@ -3,8 +3,8 @@ import { Footer } from './components/footer.jsx';
 import { useEffect, useState } from 'react'
 import { GameRow } from './components/gamerow.jsx'
 import { GameGrid } from './components/gamegrid.jsx'
-import { getUserIdFromToken } from '../../services/authServices.js';
-import { GAME_STATUS, STATUS_MAP, STATUS_COLOURS } from '../../services/constants.js';
+import { getUserIdFromToken } from '../../backend/services/authServices.js';
+import { GAME_STATUS, STATUS_MAP, STATUS_COLOURS } from '../../backend/services/constants.js';
 import clickAudio from "/audio/click.mp3";
 
 

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { useAuth } from '../../../services/authContext.jsx';
+import { useAuth } from '../context/authContext.jsx';
 import clickAudio from "/audio/click.mp3";
 
 

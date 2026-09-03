@@ -2,9 +2,9 @@ import { Navbar } from './components/navbar.jsx';
 import { Footer } from './components/footer.jsx';
 import { useCallback, useEffect, useState } from 'react'
 import { useParams, useLocation } from 'react-router-dom';
-import { useAuth } from '../../services/authContext.jsx';
-import { GAME_STATUS, STATUS_MAP, STAR_MAP } from '../../services/constants.js';
-import { getUserIdFromToken } from '../../services/authServices.js'
+import { useAuth } from './context/authContext.jsx';
+import { GAME_STATUS, STATUS_MAP, STAR_MAP } from '../../backend/services/constants.js';
+import { getUserIdFromToken } from '../../backend/services/authServices.js'
 import clickAudio from "/audio/click.mp3";
 
 
