@@ -1,7 +1,7 @@
 import { Navbar } from './components/navbar.jsx';
 import { Footer } from './components/footer.jsx';
-import { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Form } from './form.jsx'
 import { loginUser } from '../../services/authServices.js'
 import { useAuth } from '../../services/authContext.jsx';

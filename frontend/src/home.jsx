@@ -1,12 +1,10 @@
 import { Navbar } from './components/navbar.jsx';
 import { Footer } from './components/footer.jsx';
-import { GameCard } from './components/gamecard.jsx'
 import { GameRow } from './components/gamerow.jsx'
-import { GameGrid } from './components/gamegrid.jsx'
 import { ACTION_MAP } from '../../services/constants.js';
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
-import { useAuth, AuthProvider } from '../../services/authContext.jsx';
+import { useAuth } from '../../services/authContext.jsx';
 import { getUserIdFromToken } from '../../services/authServices.js';
 import clickAudio from "/audio/click.mp3";
 

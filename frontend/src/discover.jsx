@@ -1,11 +1,8 @@
 import { Navbar } from './components/navbar.jsx';
 import { Footer } from './components/footer.jsx';
-import { GameCard } from './components/gamecard.jsx';
 import { GameRow } from './components/gamerow.jsx';
 import { GameGrid } from './components/gamegrid.jsx';
-import { GENRES } from '../../services/constants.js';
-import { useEffect, useState, useCallback, useMemo } from 'react';
-import { Link } from 'react-router-dom'; 
+import { useEffect, useState, useMemo } from 'react';
 import clickAudio from "/audio/click.mp3";
 
 // Styles

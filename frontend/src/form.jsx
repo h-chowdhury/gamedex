@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import clickAudio from "/audio/click.mp3";
 
 function InputField ({name, type, onChange}) {

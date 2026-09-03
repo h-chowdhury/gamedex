@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 const registerUser = async (email, username, password) => {
   try {
     const res = await fetch('http://localhost:5000/signup', {
