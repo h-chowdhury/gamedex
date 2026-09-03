@@ -8,6 +8,7 @@ import { GameGrid } from './components/gamegrid.jsx'
 import { useAuth } from '../../services/authContext.jsx';
 import { getUserIdFromToken } from '../../services/authServices.js';
 import { GAME_STATUS } from '../../services/constants.js';
+import { STATUS_MAP } from '../../services/constants.js';
 
 
 function ProfileCard ( { token, user, onProfileUpdate }) {
@@ -219,14 +220,6 @@ function StatsProgressBar ({ counts, totalGames }) {
     [GAME_STATUS.DROPPED]: 'bg-[#d62828]',  
   };
 
-  const statusMap = {
-    "playing": "Playing",
-    "plan_to_play": "Planning",
-    "completed": "Completed",
-    "replaying": "Replaying",
-    "dropped": "Dropped",
-    "paused": "Paused"
-  };
 
   return (
 
@@ -241,7 +234,7 @@ function StatsProgressBar ({ counts, totalGames }) {
               key={status}
               style={{ width: `${percentage}%`}}
               className={`${statusColors[status] || 'bg-[#a8a8b3]'} transition-all duration-300`}
-              title={`${statusMap[status]}: ${count} (${Math.round(percentage)}%)`}
+              title={`${STATUS_MAP[status]}: ${count} (${Math.round(percentage)}%)`}
             />
           );
         })}
@@ -255,7 +248,7 @@ function StatsProgressBar ({ counts, totalGames }) {
           return (
             <div key={status} className="flex items-center gap-2">
               <span className={`w-3 h-3 inline-block ${statusColors[status] || 'bg-[#a8a8b3]'}`}/>
-              <span className="">{statusMap[status].toUpperCase()}</span>: {' '}
+              <span className="">{STATUS_MAP[status].toUpperCase()}</span>: {' '}
               <span className="text-[#f4a261]">{count}</span> {' '}
               <span className="text-[#a8a8b3] text-base">({percentage}%)</span>
               {/* <span>{statusMap[status]}: {count} ({percentage}%)</span> */}
@@ -384,15 +377,6 @@ function Library ({ userGames }) {
 
   const favouriteGames = userGames.filter((game) => game.favourite === true );
 
-  const statusMap = {
-    "playing": "Currently Playing",
-    "plan_to_play": "Playing Soon",
-    "completed": "Completed",
-    "replaying": "Replaying",
-    "dropped": "Dropped",
-    "paused": "Paused"
-  };
-
   return (
     <div className="w-full max-w-6xl mx-auto font-vt323">
 
@@ -471,7 +455,7 @@ function Library ({ userGames }) {
           title={
             filterStatus === 'all'
               ? 'ALL GAMES'
-              : `${(statusMap[filterStatus]).toUpperCase()}`
+              : `${(STATUS_MAP[filterStatus]).toUpperCase()}`
           }
           games={displayedGames}
           cols="5"

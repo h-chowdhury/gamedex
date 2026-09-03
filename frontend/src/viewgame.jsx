@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { Link, useParams, useLocation } from 'react-router-dom';
 import { useAuth, AuthProvider } from '../../services/authContext.jsx';
 import { GAME_STATUS } from '../../services/constants.js';
+import { STATUS_MAP } from '../../services/constants.js';
 import { getUserIdFromToken } from '../../services/authServices.js'
 
 
@@ -261,7 +262,7 @@ function ViewEntry({ game, close, onEntryUpdated }) {
                 name="score" 
                 id="score" 
                 min="0" max="5" 
-                value={formData.score || 0} 
+                value={formData.score} 
                 onChange={handleChange} 
                 className="accent-[#83c5be] bg-[#1c1c28] cursor-pointer my-auto"
               />
@@ -275,7 +276,7 @@ function ViewEntry({ game, close, onEntryUpdated }) {
               name="hours_played" 
               id="hours_played" 
               min="0" 
-              value={formData.hours_played || 0} 
+              value={formData.hours_played} 
               onChange={handleChange} 
               className="bg-[#1c1c28] text-[#f4f1de] text-xl p-2 focus:outline-none"
             />
@@ -288,7 +289,7 @@ function ViewEntry({ game, close, onEntryUpdated }) {
               name="total_replays" 
               id="total_replays" 
               min="0" 
-              value={formData.total_replays || 0} 
+              value={formData.total_replays} 
               onChange={handleChange} 
               className="bg-[#1c1c28] text-[#f4f1de] p-2 focus:outline-none"
             />
@@ -389,7 +390,18 @@ export function ViewGame() {
   const[game, setGame] = useState(null);
   const[loading, setLoading] = useState(true);
   const[popupActive, setPopupActive] = useState(false);
+
   const [hasEntry, setHasEntry] = useState(false);
+  const [formData, setFormData] = useState({
+    status: GAME_STATUS.WANT_TO_PLAY,
+    score: 0,
+    hours_played: 0,
+    start_date: '',
+    finish_date: '',
+    total_replays: 0,
+    favourite: false,
+    notes: '',
+  });
 
   const handlePopupActive = useCallback(() => {
     setPopupActive((prev) => !prev);
@@ -430,7 +442,23 @@ export function ViewGame() {
 
       if (res.ok) {
         const result = await res.json();
-        if (result.data) { setHasEntry(true); }
+        const entry = result.data;
+
+        if (result.data) { 
+          setHasEntry(true); 
+
+          setFormData({
+            status: entry.status || GAME_STATUS.WANT_TO_PLAY,
+            score: entry.score ?? 0,
+            hours_played: entry.hours_played ?? 0,
+            start_date: entry.start_date || '',
+            finish_date: entry.finish_date || '',
+            total_replays: entry.total_replays || 0,
+            favourite: Boolean(entry.favourite) || false,
+            notes: entry.notes || '',
+          });
+
+        }
         else { setHasEntry(false); }
       }
     } catch (err) {
@@ -559,7 +587,12 @@ export function ViewGame() {
                 <div className="space-y-3 text-lg">
                   <div className="flex justify-between items-center border-b-4 border-[#3a3a52]/50 pb-2">
                     <span className="text-[#a8a8b3]">Release Date</span>
-                    <span className="text-[#f4f1de]">{game.released || "N/A"}</span>
+                    <span className="text-[#f4f1de]">
+                      {game.released 
+                        ? new Date(game.released).toLocaleDateString('en-UK', {month:'numeric', day:'numeric', year:'numeric'})
+                        : "N/A"
+                      }
+                    </span>
                   </div>
 
                   <div className="flex justify-between items-center border-b-4 border-[#3a3a52]/50 pb-2">
@@ -588,49 +621,61 @@ export function ViewGame() {
               </div>
 
               {/* Entry info */}
-              <div className="bg-[#2c2c3e] pixel-box p-6 font-vt323">
-                <div className="flex items-center justify-between pb-2">
-                  <span className="font-press-start text-xs text-[#83c5be] uppercase tracking-wider">
-                    Cartridge status
-                  </span>
+              {isAuthenticated &&
+                <div className="bg-[#2c2c3e] pixel-box pt-4 p-6 font-vt323">
+                  <div className="flex items-center justify-between pb-2">
+                    <span className="font-press-start text-xs text-[#83c5be] uppercase tracking-wider py-2">
+                      Cartridge status
+                    </span>
 
-                  <span className="text-xs bg-[#83c5be]/20 text-[#83c5be] px-2 py-0.5 border border-[#83c5be]">
-                    PLAYED
-                  </span>
+                    <span className="text-s bg-[#83c5be]/20 text-[#83c5be] px-2 py-0.5 mb-2 mt-1">
+                      {STATUS_MAP[formData.status]}
+                    </span>
+                  </div>
+
+                  <div className="h-[0.2em] w-full bg-[#3a3a52] mb-3" />
+
+                  <div className="flex justify-between text-lg border-b-4 border-[#3a3a52]/50 pb-2">
+                    <span className="text-[#a8a8b3]">Your Rating:</span>
+                    <span className="text-[#f4f1de]">{formData.score}</span>
+                  </div>
+
+                  <div className="flex justify-between text-lg border-b-4 border-[#3a3a52]/50 py-2">
+                    <span className="text-[#a8a8b3]">Hours Played</span>
+                    <span className="text-[#f4f1de]">{formData.hours_played}</span>
+                  </div>
+
+                  <div className="flex justify-between text-lg border-b-4 border-[#3a3a52]/50 py-2">
+                    <span className="text-[#a8a8b3]">Date Started</span>
+                    <span className="text-[#f4f1de]">
+                      {formData.start_date 
+                        ? new Date(formData.start_date).toLocaleDateString('en-UK', {month:'numeric', day:'numeric', year:'numeric'})
+                        : "N/A"
+                      }
+                    </span>
+                  </div>
+
+                  <div className="flex justify-between text-lg border-b-4 border-[#3a3a52]/50 py-2">
+                    <span className="text-[#a8a8b3]">Date Completed</span>
+                    <span className="text-[#f4f1de]">
+                      {formData.finish_date 
+                        ? new Date(formData.finish_date).toLocaleDateString('en-UK', {month:'numeric', day:'numeric', year:'numeric'})
+                        : "N/A"
+                      }
+                    </span>
+                  </div>
+
+                  <div className="flex justify-between text-lg border-b-4 border-[#3a3a52]/50 py-2">
+                    <span className="text-[#a8a8b3]">Total Replays</span>
+                    <span className="text-[#f4f1de]">{formData.total_replays}</span>
+                  </div>
+
+                  <div className="flex flex-col text-lg pt-2">
+                    <p className="text-[#a8a8b3]">Notes</p>
+                    <p className="text-[#f4f1de] break-words line-clamp-3">{formData.notes ? formData.notes : "No notes added."}</p>
+                  </div>
                 </div>
-
-                <div className="h-[0.2em] w-full bg-[#3a3a52] mb-3" />
-
-                <div className="flex justify-between text-lg border-b-4 border-[#3a3a52]/50 pb-2">
-                  <span className="text-[#a8a8b3]">Your Rating:</span>
-                  <span className="text-[#f4f1de]">N/A</span>
-                </div>
-
-                <div className="flex justify-between text-lg border-b-4 border-[#3a3a52]/50 py-2">
-                  <span className="text-[#a8a8b3]">Hours Played</span>
-                  <span className="text-[#f4f1de]">N/A</span>
-                </div>
-
-                <div className="flex justify-between text-lg border-b-4 border-[#3a3a52]/50 py-2">
-                  <span className="text-[#a8a8b3]">Date Started</span>
-                  <span className="text-[#f4f1de]">N/A</span>
-                </div>
-
-                <div className="flex justify-between text-lg border-b-4 border-[#3a3a52]/50 py-2">
-                  <span className="text-[#a8a8b3]">Date Completed</span>
-                  <span className="text-[#f4f1de]">N/A</span>
-                </div>
-
-                <div className="flex justify-between text-lg border-b-4 border-[#3a3a52]/50 py-2">
-                  <span className="text-[#a8a8b3]">Total Replays</span>
-                  <span className="text-[#f4f1de]">0</span>
-                </div>
-
-                <div className="flex flex-col text-lg pt-2">
-                  <p className="text-[#a8a8b3]">Notes</p>
-                  <p className="text-[#f4f1de] break-words line-clamp-3">N/A</p>
-                </div>
-              </div>
+              }
 
               {/* Entry button */}
               {isAuthenticated && 

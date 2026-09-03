@@ -44,4 +44,13 @@ export const ACTION_MAP = Object.freeze({
     "dropped": "Has dropped",
     "removed": "Has removed",
     "paused": "Has paused playing"
-  });
+});
+
+export const STATUS_MAP = Object.freeze({
+    "playing": "Playing",
+    "plan_to_play": "Planning",
+    "completed": "Completed",
+    "replaying": "Replaying",
+    "dropped": "Dropped",
+    "paused": "Paused"
+});
