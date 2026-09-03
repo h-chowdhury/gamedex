@@ -5,14 +5,14 @@ function InputField ({name, type, onChange}) {
   return (
     <div className="pixel-outline-slate w-full max-w-md">
       <input 
-      className="pixel-box w-full px-4 py-2.5 bg-slate-800 text-white font-vt323 text-xl placeholder-slate-500 focus:outline-none focus:bg-slate-900 focus:border-transparent transition"
-      type = {type}
-      placeholder = {name == 'passwordConfirm'? "Confirm Password" : (name.charAt(0).toUpperCase())+(name.slice(1))}
-      name = {name}
-      onChange = {onChange} 
-    />
+        className="pixel-box w-full px-4 py-2.5 bg-[#1c1c28] text-[#f4f1de] font-vt323 text-xl placeholder-[#a8a8b3]/60 focus:outline-none focus:bg-[#252536] transition"
+        type={type}
+        placeholder={name === 'passwordConfirm' ? "Confirm Password" : (name.charAt(0).toUpperCase())+(name.slice(1))}
+        name={name}
+        onChange={onChange} 
+      />
     </div>
-  )
+  );
 }
 
 export function Form ({isSignup, submitBtnText, onSubmit, errors}) {
@@ -28,15 +28,15 @@ export function Form ({isSignup, submitBtnText, onSubmit, errors}) {
   }
 
   // Styles
-  const titleClass = "text-2xl text-white font-press-start"
-  const headerClass = "text-xl text-slate-400 pt-1 font-vt323"
-  const errorClass = "pixel-box text-sm text-red-300 font-vt323 text-[1.1em] bg-red-950/40 border-l-4 border-red-500 rounded-r-lg px-4 py-3 mt-1";
+  const titleClass = "text-xl md:text-2xl text-[#f4f1de] font-press-start tracking-wide drop-shadow-[2px_2px_0px_#f4a261]";
+  const headerClass = "text-xl text-[#a8a8b3] pt-1 font-vt323";
+  const errorClass = "pixel-box text-sm text-[#80493a] font-bold font-vt323 text-[1.1em] bg-[#b45252]/20 border-l-4 border[#b45252] px-4 py-2 mt-2";
   
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
       <form onSubmit={handleSubmit} className="pixel-outline-slate w-full max-w-md">
 
-        <div className="pixel-box-lg bg-slate-900 border border-slate-800 p-8 shadow-2xl space-y-6">
+        <div className="pixel-box-lg bg-[#1c1c28] p-8 space-y-6">
 
           <div className="text-center space-y-2">
             {isSignup && 
@@ -80,18 +80,19 @@ export function Form ({isSignup, submitBtnText, onSubmit, errors}) {
 
           <div>
             <button 
-              className="pixel-box font-press-start text-m w-full py-2.5 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold shadow-md transition duration-100 active:scale-[0.98]"
-              >{submitBtnText}
+              className="pixel-box font-press-start text-xs md:text-sm w-full py-3 px-4 bg-[#83c5be] hover:bg-[#62b6cb] text-[#1c1c28] font-bold transition duration-100 active:translate-y-0.5 cursor-pointer"
+            >
+              {submitBtnText}
             </button>
           </div>
 
-          <div className="flex flex-row gap-1 justify-center">
-            {isSignup && <p className="text-slate-500 font-vt323 text-xl">Already have an account?</p>}
-            {!isSignup && <p className="text-slate-500 font-vt323 text-xl">Not registered?</p>}
+          <div className="flex flex-row gap-2 justify-center items-center">
+            {isSignup && <p className="text-[#a8a8b3] font-vt323 text-xl">Already have an account?</p>}
+            {!isSignup && <p className="text-[#a8a8b3] font-vt323 text-xl">Not registered?</p>}
 
             <Link to={isSignup ? '/login' : '/signup'}>
-              {isSignup && <p className="text-indigo-500 hover:text-indigo-400 font-vt323 text-xl">Login</p>}
-              {!isSignup && <p className="text-indigo-500 hover:text-indigo-400 font-vt323 text-xl">Create an account</p>}
+              {isSignup && <p className="text-[#f4a261] hover:text-[#e76f51] font-vt323 text-xl underline decoration-dotted">Login</p>}
+              {!isSignup && <p className="text-[#f4a261] hover:text-[#e76f51] font-vt323 text-xl underline decoration-dotted">Create an account</p>}
             </Link>
           </div>
 
@@ -99,7 +100,6 @@ export function Form ({isSignup, submitBtnText, onSubmit, errors}) {
 
       </form>
     </div>
-
   );
 
 }

@@ -84,102 +84,115 @@ function ProfileCard ( { token, user, onProfileUpdate }) {
 
 
   return (
-    <div className="text-white">
+    <div className="bg-[#2c2c3e] border-b-4 border-[#1c1c28]">
 
-      <div className="pixel-box group relative m-1 w-[18em] h-[18em]">
-        {user?.avatar && (
-          <img
-            src={avatarSrc}
-            alt="Avatar"
-            className="pixel-box m-1 w-[18em] h-[18em] object-cover"
-          />
-        )}
+      <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-8 items-stretch p-6 pixel-box-lg text-[#f4f1de]">
 
-        {isEditing &&
-          ( <>
-              <input
-                type="file" 
-                accept="image/*" 
-                className="hidden"
-                id="avatar-upload" 
-                onChange={onFileChange} 
+        {/* Avatar block */}
+        <div className="pixel-outline-slate group relative flex-shrink-0 w-[18em] h-[18em] bg-[#2c2c3e]">
+        
+          {user?.avatar ? (
+            <div className="pixel-outline-teal">
+              <img
+                src={avatarSrc}
+                alt="Avatar"
+                className="w-full h-full object-cover pixel-box"
               />
-
-              <label 
-                htmlFor="avatar-upload" 
-                className="absolute w-[18em] h-[18em] inset-0 bg-slate-900/75 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex flex-col items-center justify-center cursor-pointer font-vt323 text-slate-200"
-              >
-                <span className="text-3xl mb-1">📷</span>
-                <span className="text-2xl text-center">
-                  Change Avatar
-                </span>
-              </label>
-            </>
-          )
-        }
-      </div>
-
-
-      {/* Username, bio, etc. */}
-      <div className="ml-8 font-vt323 text-2xl text-slate-400 py-5 flex flex-col gap-6">
- 
-        <p className="font-press-start">{user.username?.charAt(0).toUpperCase() + user.username?.slice(1)}</p>
-
-        {isEditing
-          ? (
-            <form onSubmit={saveChanges}>
-              {/* <input 
-                type="text"
-                placeholder="Enter new username."
-                className="bg-slate-800 pixel-box px-4 py-1"
-                value={username.charAt(0).toUpperCase() + username.slice(1)}
-                onChange={(e) => setUsername(e.target.value)}
-              /> */}
-
-              <textarea
-                placeholder="Write something about yourself!"
-                className="bg-slate-800 pixel-box px-4 py-3"
-                rows="4" cols="50" 
-                value={bio}
-                onChange={(e) => setBio(e.target.value)}
-              />
-
-              <button 
-                type="submit"
-                className="pixel-box font-press-start text-xs py-2.5 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold shadow-md transition duration-100 active:scale-[0.98]"
-              >
-                Save Changes
-              </button>
-
-              <button 
-                type="button"
-                className="pixel-box font-press-start text-xs py-2.5 px-4 bg-red-600 hover:bg-red-500 text-white font-semibold shadow-md transition duration-100 active:scale-[0.98]"
-                onClick={cancelChanges}
-              >
-                Cancel Changes
-              </button>
-            </form>
-          )
-          : (
-            <div>
-              <p>{ user.bio.trim().length > 0 ? user.bio : "No bio set."}</p>
-              <button 
-                type="button"
-                className="pixel-box font-press-start text-xs py-2.5 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold shadow-md transition duration-100 active:scale-[0.98]"
-                onClick={() => setIsEditing(true)}
-              >
-                Edit Profile
-              </button>
             </div>
-          )
-        }
-      
-        <div className="text-slate-600">
-          <p>User ID: {user._id}</p>
-          <p>Joined {new Date(user.date_joined).toLocaleDateString('en-UK', {month:'long', day:'numeric', year:'numeric'})}</p>
-        </div>
-      </div>
+          ) : (
+            <div className="w-full h-full flex items-center justify-center font-press-start text-xs text-[#a8a8b3]">
+              {'[No Avatar]'}
+            </div>
+          )}
 
+          {isEditing &&
+            ( <>
+                <input
+                  type="file" 
+                  accept="image/*" 
+                  className="hidden"
+                  id="avatar-upload" 
+                  onChange={onFileChange} 
+                />
+
+                <label 
+                  htmlFor="avatar-upload" 
+                  className="absolute inset-0 bg-[#1c1c28]/85 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex flex-col items-center justify-center cursor-pointer font-vt323 text-[#f4f1de]"
+                >
+                  <span className="text-4xl mb-1">📷</span>
+                  <span className="text-2xl text-center text-[#83c5be]">
+                    Change Avatar
+                  </span>
+                </label>
+              </>
+            )
+          }
+        </div>
+
+
+        {/* Username, bio, etc. */}
+        <div className="font-vt323 text-2xl text-[#a8a8b3] flex-1 flex flex-col gap-5 w-full">
+  
+          <p className="font-press-start text-xl md:text-2xl text-[#f4a261] tracking-wide drop-shadow-[2px_2px_0px_#1c1c28] mt-4">
+            {/* {user.username?.charAt(0).toUpperCase() + user.username?.slice(1)} */}
+            {user.username?.toUpperCase()}
+          </p>
+
+          {isEditing
+            ? (
+              <form onSubmit={saveChanges} className="flex flex-col gap-4">
+
+                <textarea
+                  placeholder="Write something about yourself!"
+                  className="bg-[#1c1c28] text-[#f4f1de] placeholder-[#a8a8b3]/60 pixel-box px-4 py-3 font-vt323 text-xl focus:outline-none resize-none"
+                  rows="3"
+                  value={bio}
+                  onChange={(e) => setBio(e.target.value)}
+                  maxLength={200}
+                />
+
+                <div className="flex flex-wrap gap-4 pt-2">
+                  <button 
+                    type="submit"
+                    className="pixel-box font-press-start text-xs py-2.5 px-4 bg-[#83c5be] hover:bg-[#62b6cb] text-[#1c1c28] font-bold transition duration-100 active:translate-y-0.5 cursor-pointer"
+                  >
+                    Save Changes
+                  </button>
+
+                  <button 
+                    type="button"
+                    className="pixel-box font-press-start text-xs py-2.5 px-4 bg-[#83c5be] hover:bg-[#62b6cb] text-[#1c1c28] font-bold transition duration-100 active:translate-y-0.5 cursor-pointer"
+                  >
+                    Cancel Changes
+                  </button>
+
+                </div>
+              </form>
+            ) : (
+              <div className="space-y-4">
+                <p className="pixel-box text-[#f4f1de] text-xl text-sm/3.5 break-words line-clamp-3 bg-[#1c1c28] p-4 border-[#2c2c3e]">
+                  {user.bio.trim().length > 0 ? user.bio : "No bio set."}
+                </p>
+
+                <button 
+                  type="button"
+                  className="pixel-box font-press-start text-xs py-2.5 px-4 bg-[#83c5be] hover:bg-[#62b6cb] text-[#1c1c28] font-bold transition duration-100 active:translate-y-0.5 cursor-pointer"
+                  onClick={() => setIsEditing(true)}
+                >
+                  Edit Profile
+                </button>
+              </div>
+            )
+          }
+
+          {/* border-t-4 border-[#2c2c3e] */}
+          <div className="text-xl font-vt323 text-[#a8a8b3]/80 flex flex-row mt-auto justify-between">
+            <p>Joined {new Date(user.date_joined).toLocaleDateString('en-UK', {month:'long', day:'numeric', year:'numeric'})}</p>
+            <p>ID: <span className="text-xl">{user._id}</span> </p>
+          </div>
+        </div>
+
+      </div>
     </div>
   );
 }
@@ -189,25 +202,36 @@ function StatsProgressBar ({ counts, totalGames }) {
 
   if (!totalGames || totalGames === 0) {
     return (
-      <div>
-        <span className="text-xs text-slate-500 font-vt323">No games in library</span>
-      </div>
-    );
+    <div className="bg-[#2c2c3e]/30 p-4 text-center">
+      <span className="font-vt323 text-xl text-[#a8a8b3]">
+        [ No games in library ]
+      </span>
+    </div>
+  );
   }
 
   const statusColors = {
-    [GAME_STATUS.PLAYING]: 'bg-emerald-500',
-    [GAME_STATUS.WANT_TO_PLAY]: 'bg-sky-500',
-    [GAME_STATUS.COMPLETED]: 'bg-indigo-500',
-    [GAME_STATUS.REPLAYING]: 'bg-amber-500',
-    [GAME_STATUS.PAUSED]: 'bg-orange-500',
-    [GAME_STATUS.DROPPED]: 'bg-rose-500',
+    [GAME_STATUS.PLAYING]: 'bg-[#83c5be]', 
+    [GAME_STATUS.WANT_TO_PLAY]: 'bg-[#3a86ff]', 
+    [GAME_STATUS.COMPLETED]: 'bg-[#f4a261]',    
+    [GAME_STATUS.REPLAYING]: 'bg-[#e9c46a]',   
+    [GAME_STATUS.PAUSED]: 'bg-[#e76f51]',     
+    [GAME_STATUS.DROPPED]: 'bg-[#d62828]',  
+  };
+
+  const statusMap = {
+    "playing": "Playing",
+    "plan_to_play": "Planning",
+    "completed": "Completed",
+    "replaying": "Replaying",
+    "dropped": "Dropped",
+    "paused": "Paused"
   };
 
   return (
 
-    <div>
-      <div className="w-full h-6 overflow-hidden flex">
+    <div className="space-y-3 font-vt323">
+      <div className="w-full h-5 flex overflow-hidden p-0.5">
         {Object.entries(counts).map(([status, count]) => {
           if (count === 0) return null;
           const percentage = (count / totalGames) * 100;
@@ -216,29 +240,29 @@ function StatsProgressBar ({ counts, totalGames }) {
             <div 
               key={status}
               style={{ width: `${percentage}%`}}
-              className={`${statusColors[status] || 'bg-slate-600'}`}
-              title={`${status}: ${count} (${Math.round(percentage)}%)`}
+              className={`${statusColors[status] || 'bg-[#a8a8b3]'} transition-all duration-300`}
+              title={`${statusMap[status]}: ${count} (${Math.round(percentage)}%)`}
             />
           );
         })}
       </div>
 
-      <div className="flex flex-wrap">
+      <div className="flex flex-wrap gap-x-5 gap-y-2 text-lg text-[#f4f1de]">
         {Object.entries(counts).map(([status, count]) => {
           if (count === 0) return null;
           const percentage = Math.round((count / totalGames) * 100);
 
           return (
-            <div key={status} className="flex items-center gap-1.5">
-              <span className={`w-3 h-3 inline-block ${statusColors[status]}`}/>
-              <span>{status}: {count} ({percentage}%)</span>
+            <div key={status} className="flex items-center gap-2">
+              <span className={`w-3 h-3 inline-block ${statusColors[status] || 'bg-[#a8a8b3]'}`}/>
+              <span className="">{statusMap[status].toUpperCase()}</span>: {' '}
+              <span className="text-[#f4a261]">{count}</span> {' '}
+              <span className="text-[#a8a8b3] text-base">({percentage}%)</span>
+              {/* <span>{statusMap[status]}: {count} ({percentage}%)</span> */}
             </div>
           );
         })}
       </div>
-
-
-
 
     </div>
   );
@@ -282,43 +306,60 @@ function Stats ( { userGames } ) {
     totalHours += game.hours_played;
   });
 
-  // const gamesPlaying = userGames.filter((g) => g.status === GAME_STATUS.PLAYING).length;
-  // const gamesPlanning = userGames.filter((g) => g.status === GAME_STATUS.WANT_TO_PLAY).length;
-  // const gamesCompleted = userGames.filter((g) => g.status === GAME_STATUS.COMPLETED).length;
-  // const gamesReplaying = userGames.filter((g) => g.status === GAME_STATUS.REPLAYING).length;
-  // const gamesPaused = userGames.filter((g) => g.status === GAME_STATUS.PAUSED).length;
-  // const gamesDropped = userGames.filter((g) => g.status === GAME_STATUS.DROPPED).length;
-
   return (
-    <div className="text-white">
+  <div className="pixel-box-lg bg-[#1c1c28] p-6 text-[#f4f1de] mt-6 space-y-6 max-w-5xl mx-auto">
+    
+    <div className="flex items-center gap-3 border-b-4 border-[#2c2c3e] pb-3">
+      <div className="w-2.5 h-2.5 bg-[#83c5be]" />
+      <h2 className="text-[#f4a261] font-press-start text-sm uppercase tracking-wider">
+        Player Statistics
+      </h2>
+    </div>
+
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       
-      <div>
-        <p>Total games: {totalGames}</p>
+      {/* Total Games */}
+      <div className="bg-[#2c2c3e]/50 p-4 text-center">
+        <p className="font-press-start text-xs text-[#83c5be] uppercase mb-1">
+          Total Games
+        </p>
+        <p className="font-vt323 text-4xl text-[#f4f1de] font-bold">
+          {totalGames}
+        </p>
       </div>
 
-      <div>
-        <p>Total hours: {totalHours}</p>
+      {/* Total Hours */}
+      <div className="bg-[#2c2c3e]/50 p-4 text-center">
+        <p className="font-press-start text-xs text-[#f4a261] uppercase mb-1">
+          Total Hours
+        </p>
+        <p className="font-vt323 text-4xl text-[#f4f1de] font-bold">
+          {totalHours}
+        </p>
       </div>
 
-      <div>
-        <p>Top genres: {top3Genres.length === 0 ? "None" : top3Genres.join(', ')}</p>
+      {/* Top Genres */}
+      <div className="bg-[#2c2c3e]/50 p-4 text-center">
+        <p className="font-press-start text-xs text-[#a8a8b3] uppercase mb-1">
+          Top Genres
+        </p>
+        <p className="font-vt323 text-2xl text-[#f4f1de] truncate">
+          {top3Genres.length === 0 ? "None" : top3Genres.join(', ')}
+        </p>
       </div>
-
-      <div>
-        <p>Games playing: {statusCounts[GAME_STATUS.PLAYING]}</p>
-        <p>Games planning: {statusCounts[GAME_STATUS.WANT_TO_PLAY]}</p>
-        <p>Games completed: {statusCounts[GAME_STATUS.COMPLETED]}</p>
-        <p>Games replaying: {statusCounts[GAME_STATUS.REPLAYING]}</p>
-        <p>Games paused: {statusCounts[GAME_STATUS.PAUSED]}</p>
-        <p>Games dropped: {statusCounts[GAME_STATUS.DROPPED]}</p>
-
-        <StatsProgressBar counts={statusCounts} totalGames={totalGames} />
- 
-      </div>
-
 
     </div>
-  );
+
+    {/* Progress Bar */}
+    <div className="bg-[#2c2c3e]/30 p-4 space-y-2">
+      <p className="font-press-start text-xs text-[#a8a8b3] uppercase mb-2">
+        Library Breakdown
+      </p>
+      <StatsProgressBar counts={statusCounts} totalGames={totalGames} />
+    </div>
+
+  </div>
+);
 }
 
 
@@ -343,51 +384,99 @@ function Library ({ userGames }) {
 
   const favouriteGames = userGames.filter((game) => game.favourite === true );
 
+  const statusMap = {
+    "playing": "Currently Playing",
+    "plan_to_play": "Playing Soon",
+    "completed": "Completed",
+    "replaying": "Replaying",
+    "dropped": "Dropped",
+    "paused": "Paused"
+  };
 
   return (
-    <div>
-      <div>
-        <select
-          name="filter" 
-          id="filter" 
-          className="text-black bg-white" 
-          onChange={handleSelect}
-          value={filterStatus}
-        >
-          <option value={'all'}>All</option>
-          <option value={GAME_STATUS.PLAYING}>Playing</option>
-          <option value={GAME_STATUS.WANT_TO_PLAY}>Plan to Play</option>
-          <option value={GAME_STATUS.COMPLETED}>Completed</option>
-          <option value={GAME_STATUS.REPLAYING}>Replaying</option>
-          <option value={GAME_STATUS.PAUSED}>Paused</option>
-          <option value={GAME_STATUS.DROPPED}>Dropped</option>
-        </select>
+    <div className="w-full max-w-6xl mx-auto font-vt323">
 
-        <input 
-          type='text' 
-          placeholder="Search games..." 
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="text-black bg-white font-vt323"
+      {/* Favorites Games */}
+      {favouriteGames.length > 0 && (
+        <section className="w-full max-w-5xl mx-auto">
+          <GameRow title="Favourite Games" games={favouriteGames} />
+        </section>
+      )}
+
+      <h2 className="text-lg md:text-xl text-[#f4f1de] font-press-start border-[#2c2c3e] pt-10 mt-10">
+        Your Library
+      </h2>
+
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-[#1c1c28] p-4 mt-5 pixel-box">
+
+        {/* Filtering */}
+        <div className="flex flex-1 flex-col sm:flex-row items-stretch sm:items-center gap-3">
+
+          {/* Select box */}
+          <div className="relative min-w-[160px]">
+            <select
+              name="filter" 
+              id="filter" 
+              onChange={handleSelect}
+              value={filterStatus}
+              className="w-full appearance-none bg-[#2c2c3e] text-[#f4f1de] font-vt323 text-xl px-4 py-2 focus:outline-none cursor-pointer"
+            >
+              <option value={'all'}>All</option>
+              <option value={GAME_STATUS.PLAYING}>Playing</option>
+              <option value={GAME_STATUS.WANT_TO_PLAY}>Plan to Play</option>
+              <option value={GAME_STATUS.COMPLETED}>Completed</option>
+              <option value={GAME_STATUS.REPLAYING}>Replaying</option>
+              <option value={GAME_STATUS.PAUSED}>Paused</option>
+              <option value={GAME_STATUS.DROPPED}>Dropped</option>
+            </select>
+
+            <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#83c5be]">
+              ▼
+            </span>
+          </div>
+
+          {/* Search input */}
+          <div className="relative flex-1 max-w-md">
+            <input 
+              type='text' 
+              placeholder="Search games..." 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pixel-box w-full bg-[#2c2c3e] text-[#f4f1de] placeholder-[#a8a8b3]/50 font-vt323 text-xl px-4 py-2 focus:outline-none"
+            />
+          </div>
+
+          {/* Clear input */}
+          {searchQuery && 
+            <button
+              onClick={() => setSearchQuery('')}
+              className="pixel-box font-press-start text-xs py-2.5 px-4 bg-[#e76f51] hover:bg-[#d65f42] text-[#1c1c28] font-bold transition duration-100 active:translate-y-0.5 cursor-pointer"
+            >
+              CLEAR
+            </button>
+          }
+
+        </div>
+
+        <div className="text-right text-[#a8a8b3] text-xl font-vt323">
+          SHOWING <span className="text-[#f4a261]">{displayedGames.length}</span> GAMES
+        </div>
+
+      </div>
+
+
+      {/* Main grid */}
+      <section className="mt-6">
+        <GameGrid
+          title={
+            filterStatus === 'all'
+              ? 'ALL GAMES'
+              : `${(statusMap[filterStatus]).toUpperCase()}`
+          }
+          games={displayedGames}
+          cols="5"
         />
-
-        {searchQuery && 
-          <button
-            onClick={() => setSearchQuery('')}
-            className="pixel-box font-press-start text-xs py-2.5 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold shadow-md transition duration-100 active:scale-[0.98]"
-          >
-            CLEAR
-          </button>
-        }
-      </div>
-
-      <div>
-        <GameRow title={"Favourite Games"} games={favouriteGames}/>
-      </div>
-
-      <div>
-        <GameGrid title={`${filterStatus} games`} games={displayedGames} cols='5' />
-      </div>
+      </section>
 
     </div>
   );
@@ -473,10 +562,21 @@ export function Profile () {
     return (
       <div>
         <Navbar />
-        <p>Loading profile...</p>
+
+        <div className="flex flex-col items-center justify-center min-h-[300px] w-full gap-4 font-vt323 p-8">
+
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 bg-[#83c5be] animate-bounce" style={{ animationDelay: '0ms' }} />
+            <div className="w-4 h-4 bg-[#f4a261] animate-bounce" style={{ animationDelay: '150ms' }} />
+            <div className="w-4 h-4 bg-[#e76f51] animate-bounce" style={{ animationDelay: '300ms' }} />
+          </div>
+
+          <p className="font-press-start text-sm text-[#f4a261] animate-pulse tracking-widest uppercase">
+            LOADING PROFILE...
+          </p>
+        </div>
       </div>
-    );
-  }
+    );}
 
   // Failed render
   if (!user) {

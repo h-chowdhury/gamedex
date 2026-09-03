@@ -35,3 +35,13 @@ export const GENRES = Object.freeze({
   EDUCATIONAL: 'educational',
   CARD: 'card'
 });
+
+export const ACTION_MAP = Object.freeze({
+    "playing": "Is playing",
+    "plan_to_play": "Plans to play",
+    "completed": "Completed",
+    "replaying": "Is replaying",
+    "dropped": "Has dropped",
+    "removed": "Has removed",
+    "paused": "Has paused playing"
+  });

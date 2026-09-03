@@ -9,16 +9,6 @@ import { getUserIdFromToken } from '../../services/authServices.js'
 
 function ViewEntry({ game, close, onEntryUpdated }) {
 
-  // const [status, setStatus] = useState("");
-  // const [score, setScore] = useState(0);
-  // const [hours, setHours] = useState(0);
-  // const [startDate, setStartDate] = useState('');
-  // const [finishDate, setFinishDate] = useState('');
-  // const [replays, setReplays] = useState(0);
-  // const [favourite, setFavourite] = useState(false);
-  // const [notes, setNotes] = useState("");
-
-
   const [formData, setFormData] = useState({
     status: GAME_STATUS.WANT_TO_PLAY,
     score: 0,
@@ -172,13 +162,6 @@ function ViewEntry({ game, close, onEntryUpdated }) {
         total_replays: 0,
         favourite: false,
         notes: '',
-        // gameData: {
-        //   id: null,
-        //   name: '',
-        //   background_image: '',
-        //   released: '',
-        //   genres: []
-        // }
       });
 
       await onEntryUpdated();
@@ -190,93 +173,206 @@ function ViewEntry({ game, close, onEntryUpdated }) {
     }
   }
 
-
   if (loading) {
     return (
-      <div className="text-white font-vt323 text-2xl fixed inset-0  z-50 overflow-y-auto  backdrop-blur-sm p-15 md:p-25">
-        <div className="pixel-box-lg flex flex-col gap-3 p-5 md:p-10">
-          <p className="font-press-start">Loading entry...</p>
+      <div className="flex flex-col items-center justify-center min-h-[300px] w-full gap-4 font-vt323 p-8">
+
+        <div className="flex items-center gap-2">
+          <div className="w-4 h-4 bg-[#83c5be] animate-bounce" style={{ animationDelay: '0ms' }} />
+          <div className="w-4 h-4 bg-[#f4a261] animate-bounce" style={{ animationDelay: '150ms' }} />
+          <div className="w-4 h-4 bg-[#e76f51] animate-bounce" style={{ animationDelay: '300ms' }} />
         </div>
+
+        <p className="font-press-start text-sm text-[#f4a261] animate-pulse tracking-widest uppercase">
+          Loading entry...
+        </p>
       </div>
     );
   }
 
 
   return (
-    <div className="text-white font-vt323 text-2xl fixed inset-0  z-50 overflow-y-auto backdrop-blur-sm p-15 md:p-25">
+    <div className="fixed inset-0 z-50 justify-center p-4 md:p-10 bg-[#1c1c28]/80 backdrop-blur-sm font-vt323 overflow-y-auto">
 
-      <form 
-        onSubmit={handleSubmit}
-        className="pixel-box-lg flex flex-col gap-3 p-5 md:p-10"
-      >
-        <div>
-          <div className="flex flex-row">
-            <p className="font-press-start">{game.name}</p>
-            <button className="text-4xl" onClick={close}>X</button>
+      <div className="pixel-outline-dark-slate max-w-2xl w-full mx-auto my-10">
+        <form 
+          onSubmit={handleSubmit}
+          className="pixel-box-lg bg-[#2c2c3e] text-[#f4f1de] w-full max-w-2xl p-6 space-y-5 my-10 shadow-[8px_8px_0px_0px_#1c1c28]"
+        >
+
+          <div className="flex justify-between pb-4">
+            <div className="space-y-1">
+              <span className="font-press-start text-[10px] text-[#83c5be] uppercase tracking-wider">
+                [ EDIT CARTRIDGE ENTRY ]
+              </span>
+
+              <h2 className="font-press-start text-base sm:text-lg text-[#f4a261] uppercase leading-snug">
+                {game.name}
+              </h2>
+            </div>
+
+            <button 
+              type="button"
+              onClick={close}
+              className="font-press-start text-xs text-[#a8a8b3] hover:text-[#e76f51] p-1 cursor-pointer transition-colors"
+            >
+              [X]
+            </button>
           </div>
-          <img src={game.background_image}/>
-        </div>
 
-        <div>
-          <label htmlFor="status">Status</label>
-          <select 
-            name="status" 
-            id="status" 
-            className="text-black" 
-            onChange={handleChange}
-            value={formData.status || GAME_STATUS.WANT_TO_PLAY}
-          >
-            <option value={GAME_STATUS.PLAYING}>Playing</option>
-            <option value={GAME_STATUS.WANT_TO_PLAY}>Plan to Play</option>
-            <option value={GAME_STATUS.COMPLETED}>Completed</option>
-            <option value={GAME_STATUS.REPLAYING}>Replaying</option>
-            <option value={GAME_STATUS.PAUSED}>Paused</option>
-            <option value={GAME_STATUS.DROPPED}>Dropped</option>
-          </select>
-        </div>
+          {game.background_image && (
+            <div className="h-28 w-full overflow-hidden border-2 border-[#3a3a52] bg-[#1c1c28]">
+              <img 
+                src={game.background_image} 
+                alt={game.name}
+                className="w-full h-full object-cover opacity-80"
+              />
+            </div>
+          )}
 
-        <div>
-          <label htmlFor="score">Score</label>
-          <input type="range" name="score" id="score" min="0" max="10" value={formData.score} onChange={handleChange} />
-        </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xl">
+            <div className="flex flex-col space-y-1">
+              <label htmlFor="status" className="text-[#a8a8b3] text-lg">Status</label>
+              <select 
+                name="status" 
+                id="status" 
+                className="bg-[#1c1c28] text-[#f4f1de] p-2 focus:outline-none focus:border-none focus:ring-0 border-none cursor-pointer"
+                onChange={handleChange}
+                value={formData.status || GAME_STATUS.WANT_TO_PLAY}
+              >
+                <option value={GAME_STATUS.PLAYING}>Playing</option>
+                <option value={GAME_STATUS.WANT_TO_PLAY}>Plan to Play</option>
+                <option value={GAME_STATUS.COMPLETED}>Completed</option>
+                <option value={GAME_STATUS.REPLAYING}>Replaying</option>
+                <option value={GAME_STATUS.PAUSED}>Paused</option>
+                <option value={GAME_STATUS.DROPPED}>Dropped</option>
+              </select>
+            </div>
 
-        <div>
-          <label htmlFor="hours_played">Hours Played</label>
-          <input type="number" name="hours_played" id="hours_played" min="0" value={formData.hours_played} onChange={handleChange} />
-        </div>
+            <div className="flex flex-col space-y-1"> 
+              <div className="flex justify-between items-center">
+                <label htmlFor="score" className="text-[#a8a8b3] text-lg">Score</label>
+                <span className="font-press-start text-xs text-[#f4a261]">
+                  {formData.score ? `${formData.score}/5` : 'N/A'}
+                </span>
+              </div>
+              <input 
+                type="range" 
+                name="score" 
+                id="score" 
+                min="0" max="5" 
+                value={formData.score || 0} 
+                onChange={handleChange} 
+                className="accent-[#83c5be] bg-[#1c1c28] cursor-pointer my-auto"
+              />
+            </div>
+          </div>
 
-        <div>
-          <label htmlFor="started_at">Start Date</label>
-          <input type="date" name="start_date" id="start_date" value={formData.start_date?.split('T')[0] || ''} onChange={handleChange} />
-        </div>
+          <div className="flex flex-col space-y-1">
+            <label htmlFor="hours_played" className="text-[#a8a8b3] text-lg">Hours Played</label>
+            <input 
+              type="number" 
+              name="hours_played" 
+              id="hours_played" 
+              min="0" 
+              value={formData.hours_played || 0} 
+              onChange={handleChange} 
+              className="bg-[#1c1c28] text-[#f4f1de] text-xl p-2 focus:outline-none"
+            />
+          </div>
 
-        <div>
-          <label htmlFor="finished_at">Finish Date</label>
-          <input type="date" name="finish_date" id="finish_date" value={formData.finish_date?.split('T')[0] || ''} onChange={handleChange} />
-        </div>
+          <div className="flex flex-col space-y-1">
+            <label htmlFor="total_replays" className="text-[#a8a8b3] text-lg">Total Replays</label>
+            <input 
+              type="number" 
+              name="total_replays" 
+              id="total_replays" 
+              min="0" 
+              value={formData.total_replays || 0} 
+              onChange={handleChange} 
+              className="bg-[#1c1c28] text-[#f4f1de] p-2 focus:outline-none"
+            />
+          </div>
 
-        <div>
-          <label htmlFor="total_replays">Total Replays</label>
-          <input type="number" name="total_replays" id="total_replays" min="0" value={formData.total_replays} onChange={handleChange} />
-        </div>
+          <div className="flex flex-col space-y-1">
+            <label htmlFor="start_date" className="text-[#a8a8b3] text-lg">Start Date</label>
+            <input 
+              type="date" 
+              name="start_date" 
+              id="start_date" 
+              value={formData.start_date?.split('T')[0] || ''} 
+              onChange={handleChange} 
+              className="bg-[#1c1c28] text-[#f4f1de] p-2 focus:outline-none"
+            />
+          </div>
 
-        <div>
-          <label htmlFor="favourite">Set as Favourite</label>
-          {/* <button onClick={toggleFavourite} name="favourite" id="favourite">{`<3`}</button> */}
-          <input type="checkbox" name="favourite" id="favourite" onChange={handleChange} checked={formData.favourite}/>
-        </div>
+          <div className="flex flex-col space-y-1">
+            <label htmlFor="finish_date" className="text-[#a8a8b3] text-lg">Finish Date</label>
+            <input 
+              type="date" 
+              name="finish_date" 
+              id="finish_date" 
+              value={formData.finish_date?.split('T')[0] || ''} 
+              onChange={handleChange} 
+              className="bg-[#1c1c28] text-[#f4f1de] p-2 focus:outline-none"
+            />
+          </div>
 
-        <div className="flex flex-col">
-          <label htmlFor="notes">Notes</label>
-          <textarea name="notes" id="notes" rows="4" cols="50" value={formData.notes} onChange={handleChange} />
-        </div>
+          <div className="flex items-center gap-3 bg-[#1c1c28] p-3 cursor-pointer">
+            <input 
+              type="checkbox" 
+              name="favourite" 
+              id="favourite" 
+              onChange={handleChange} 
+              checked={formData.favourite || false}
+            />
+            <label htmlFor="favourite" className="text-xl text-[#f4f1de] cursor-pointer select-none">
+              SET AS FAVOURITE
+            </label>
+          </div>
 
-        <div className="flex gap-5">
-          <button type="submit">Save Entry</button>
-          <button type="button" onClick={handleDelete}>Delete Entry</button>
-        </div>
+          <div className="flex flex-col space-y-1">
+            <div className="flex justify-between items-center">
+              <label htmlFor="notes" className="text-[#a8a8b3] text-lg">Notes</label>
+              <span className="font-press-start text-[10px] text-[#a8a8b3]">
+                {(formData.notes?.length || 0)}/500
+              </span>
+            </div>
 
-      </form>
+            <textarea 
+              name="notes" 
+              id="notes" 
+              rows="4" 
+              maxLength={500} 
+              value={formData.notes || ''} 
+              onChange={handleChange} 
+              placeholder="ENTER NOTES..."
+              className="bg-[#1c1c28] text-[#f4f1de] p-3 text-lg focus:outline-none resize-none break-words"
+            />
+          </div>
+
+          <div className="flex flex-col sm:flex-row justify-center gap-8 pt-2">
+            <button 
+              type="submit"
+              className="pixel-box font-press-start text-xs py-3 px-6 bg-[#83c5be] hover:bg-[#62b6cb] text-[#1c1c28] font-bold cursor-pointer"
+            >
+              SAVE ENTRY
+            </button>
+
+            <button 
+              type="button" 
+              onClick={handleDelete}
+              className="pixel-box font-press-start text-xs py-3 px-6 bg-[#b45252] hover:bg-[#a13a3a] text-[#1c1c28] font-bold cursor-pointer"
+            >
+              DELETE ENTRY
+            </button>
+
+
+
+          </div>
+
+        </form>
+      </div>
 
     </div>
   );
@@ -349,125 +445,212 @@ export function ViewGame() {
   }, [isAuthenticated, id, checkEntry]);
 
   
-
   if (loading) {
     return (
-      <div className="text-white">
+      <div>
         <Navbar />
-        <h2 className="text-white p-10 font-vt323 text-2xl">Loading game...</h2>
+
+        <div className="flex flex-col items-center justify-center min-h-[300px] w-full gap-4 font-vt323 p-8">
+
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 bg-[#83c5be] animate-bounce" style={{ animationDelay: '0ms' }} />
+            <div className="w-4 h-4 bg-[#f4a261] animate-bounce" style={{ animationDelay: '150ms' }} />
+            <div className="w-4 h-4 bg-[#e76f51] animate-bounce" style={{ animationDelay: '300ms' }} />
+          </div>
+
+          <p className="font-press-start text-sm text-[#f4a261] animate-pulse tracking-widest uppercase">
+            Loading Game...
+          </p>
+        </div>
+
       </div>
+
     );
   }
 
   if (!game) {
-    return (
-      <div className="text-white">
-        <Navbar />
-        <h2 className="text-white p-10 font-vt323 text-2xl">Failed to load game.</h2>
+  return (
+    <div className="w-full min-h-screen bg-[#1c1c28] text-[#f4f1de] font-vt323">
+      <Navbar />
+      
+      <div className="max-w-6xl w-full mx-auto px-4 sm:px-6 py-12 space-y-4 flex flex-col items-center">
+        <h2 className="text-[#e76f51] text-3xl">Failed to load game.</h2>
+        
+        <div>
+          <a
+            href="/discover"
+            className="inline-block pixel-box font-press-start text-xs py-2 px-4 bg-[#83c5be] hover:bg-[#62b6cb] text-[#1c1c28] font-bold"
+          >
+            CONTINUE BROWSING
+          </a>
+        </div>
       </div>
-    );
-  }
-
-  console.log("CHECKING: ", game);
+    </div>
+  );
+}
 
   return (
-    <div className="">
+    <div className="w-full min-h-screen text-[#f4f1de] flex flex-col font-vt323">
       <Navbar />
 
-        <div className="relative overflow-hidden w-full h-72">
+        {/* Header img */}
+        <div className="relative overflow-hidden w-full h-72 border-b-4 border-[#2c2c3e]">
           <img 
             src={game.background_image || `../${game.background_image}`}
-            className="blur-md object-cover object-center opacity-30 scale-105"
+            alt={game.name}
+            className="h-full w-full blur-md object-cover object-center opacity-30 scale-105 z-0 absolute inset-0"
           />
 
-          <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#0f1216] via-[#0f1216]/60 to-transparent" />
+          {/* <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#1c1c28] via-[#1c1c28]/60 to-transparent" /> */}
 
-          <div className="">
-            <h2 className="absolute bottom-6 text-white font-press-start font-bold text-3xl uppercase drop-shadow-md px-10">
+          <div className="max-w-6xl mx-auto h-full relative flex items-end pb-6 px-4 sm:px-6 z-10">
+            <h2 className="text-[#f4f1de] font-press-start font-bold text-2xl sm:text-4xl uppercase drop-shadow-[2px_2px_0px_#1c1c28] tracking-wider">
               {game.name}
             </h2>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2">
+        <div className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-10">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-            <div>
-              <img 
-                src={game.background_image || `../${game.background_image}`}
-                className="pixel-box-lg scale-93"
-              />
+            <div className="lg:col-span-2 space-y-6">
+              {/* Game img */}
+              <div className="pixel-outline-slate">
+                <img 
+                  src={game.background_image || `../${game.background_image}`}
+                  alt={game.name}
+                  className="pixel-box-lg"
+                />
+              </div>
+
+              {/* Game desc */}
+              <article className="pixel-box-lg bg-[#2c2c3e]/50 p-6 space-y-4">
+                <h3 className="font-press-start text-[#f4a261] text-sm uppercase tracking-wider border-b-4 border-[#3a3a52] pb-4">
+                  About the game
+                </h3>
+
+                <p className="text-[#f4f1de] text-xl leading-relaxed whitespace-pre-line">
+                  {game.description_raw.replace(/(\r?\n){2,}/g, "\n\n") || "No description available."}
+                </p>
+              </article>
             </div>
 
-            <div>
-              {isAuthenticated && 
-                <button 
-                  className="pixel-box font-press-start text-xs py-2.5 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold shadow-md transition duration-100 active:scale-[0.98]"
-                  onClick={() => setPopupActive(true)}
-                >
-                  {hasEntry ? 'Edit entry' : 'Add to library'}
-                </button>}
-            </div>
+            <aside className="lg:col-span-1 space-y-6">
 
-            <article className="mt-6">
-              <h3 className="font-vt323 text-white uppercase text-3xl">
-                About the game
-              </h3>
-
-              <hr />
-
-              <p className="text-white font-vt323 text-xl">
-                {game.description_raw || "No description available."}
-              </p>
-            </article>
-
-            <aside>
-              <div>
-                <div>
-                  <p className="text-white">Metascore</p>
-                  <p className="text-white">{game.metacritic || 'N/A'}</p>
+              {/* Scores */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-[#2c2c3e] p-4 text-center pixel-box">
+                  <p className="text-[#a8a8b3] text-sm font-press-start">Metascore</p>
+                  <p className="text-[#83c5be] text-3xl font-bold mt-1">{game.metacritic || 'N/A'}</p>
                 </div>
 
-                <div>
-                  <p className="text-white">User rating</p>
-                  <p className="text-white">{game.rating || 'N/A'}</p>
+                <div className="bg-[#2c2c3e] p-4 text-center pixel-box">
+                  <p className="text-[#a8a8b3] text-sm font-press-start">User rating</p>
+                  <p className="text-[#83c5be] text-3xl font-bold mt-1">{game.rating || 'N/A'}</p>
                 </div>
               </div>
 
-              <div>
-                <h3>
+              {/* Game info */}
+              <div className="bg-[#2c2c3e] p-6 space-y-4 pixel-box">
+                <h3 className="font-press-start text-xs text-[#f4a261] uppercase tracking-wider border-b-4 border-[#3a3a52] pb-2">
                   Information
                 </h3>
 
-                <div>
-                  <div>
-                    <p>Release Date</p>
-                    <p className="text-white">{game.released || "N/A"}</p>
+                <div className="space-y-3 text-lg">
+                  <div className="flex justify-between items-center border-b-4 border-[#3a3a52]/50 pb-2">
+                    <span className="text-[#a8a8b3]">Release Date</span>
+                    <span className="text-[#f4f1de]">{game.released || "N/A"}</span>
                   </div>
 
-                  <div>
-                    <p>Avg Playtime</p>
-                    <p className="text-white">{game.playtime || "N/A"}</p>
+                  <div className="flex justify-between items-center border-b-4 border-[#3a3a52]/50 pb-2">
+                    <span className="text-[#a8a8b3]">Avg Playtime</span>
+                    <span className="text-[#f4f1de]">
+                      {game.playtime ? `${game.playtime} Hours`: "N/A"}
+                    </span>
                   </div>
 
-                  <div>
-                    <p>Genres</p>
-                    {/* <p className="text-white">{game.genres || "N/A"}</p> */}
+                  <div className="flex justify-between items-center border-b-4 border-[#3a3a52]/50 pb-2">
+                    <span className="text-[#a8a8b3]">Genres</span>
+                    <span className="text-[#f4f1de]">
+                      {game.genres?.map((g) => g.name).join(", ") || "N/A"}
+                    </span>
                   </div>
 
-                  <div>
-                    <p>Platforms</p>
-                    {/* <p className="text-white">{game.platforms || "N/A"}</p> */}
+                  <div className="flex justify-between pb-2">
+                    <span className="text-[#a8a8b3]">Platforms</span>
+                    <div className="text-end">
+                      {game.platforms?.map((p) => <p>{p.platform.name}</p>) || "N/A"}
+                    </div>
                   </div>
+
                 </div>
 
               </div>
+
+              {/* Entry info */}
+              <div className="bg-[#2c2c3e] pixel-box p-6 font-vt323">
+                <div className="flex items-center justify-between pb-2">
+                  <span className="font-press-start text-xs text-[#83c5be] uppercase tracking-wider">
+                    Cartridge status
+                  </span>
+
+                  <span className="text-xs bg-[#83c5be]/20 text-[#83c5be] px-2 py-0.5 border border-[#83c5be]">
+                    PLAYED
+                  </span>
+                </div>
+
+                <div className="h-[0.2em] w-full bg-[#3a3a52] mb-3" />
+
+                <div className="flex justify-between text-lg border-b-4 border-[#3a3a52]/50 pb-2">
+                  <span className="text-[#a8a8b3]">Your Rating:</span>
+                  <span className="text-[#f4f1de]">N/A</span>
+                </div>
+
+                <div className="flex justify-between text-lg border-b-4 border-[#3a3a52]/50 py-2">
+                  <span className="text-[#a8a8b3]">Hours Played</span>
+                  <span className="text-[#f4f1de]">N/A</span>
+                </div>
+
+                <div className="flex justify-between text-lg border-b-4 border-[#3a3a52]/50 py-2">
+                  <span className="text-[#a8a8b3]">Date Started</span>
+                  <span className="text-[#f4f1de]">N/A</span>
+                </div>
+
+                <div className="flex justify-between text-lg border-b-4 border-[#3a3a52]/50 py-2">
+                  <span className="text-[#a8a8b3]">Date Completed</span>
+                  <span className="text-[#f4f1de]">N/A</span>
+                </div>
+
+                <div className="flex justify-between text-lg border-b-4 border-[#3a3a52]/50 py-2">
+                  <span className="text-[#a8a8b3]">Total Replays</span>
+                  <span className="text-[#f4f1de]">0</span>
+                </div>
+
+                <div className="flex flex-col text-lg pt-2">
+                  <p className="text-[#a8a8b3]">Notes</p>
+                  <p className="text-[#f4f1de] break-words line-clamp-3">N/A</p>
+                </div>
+              </div>
+
+              {/* Entry button */}
+              {isAuthenticated && 
+                <div className="flex items-center justify-center">
+                  <button 
+                    className="pixel-box font-press-start text-xs py-2.5 px-4 lg:w-full sm:w-[40em] bg-[#83c5be] hover:bg-[#62b6cb] text-[#1c1c28] font-bold transition duration-100 active:translate-y-0.5 cursor-pointer"
+                    onClick={() => setPopupActive(true)}
+                  >
+                    {hasEntry ? 'Edit entry' : 'Add to library'}
+                  </button>
+                </div>
+              }
+
             </aside>
 
-            <Footer />
-
           </div>
+
         </div>
+
+        <Footer />
 
         {popupActive && <ViewEntry game={game} close={handlePopupActive} onEntryUpdated={checkEntry} />}
 

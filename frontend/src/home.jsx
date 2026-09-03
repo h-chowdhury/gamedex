@@ -3,6 +3,7 @@ import { Footer } from './components/footer.jsx';
 import { GameCard } from './components/gamecard.jsx'
 import { GameRow } from './components/gamerow.jsx'
 import { GameGrid } from './components/gamegrid.jsx'
+import { ACTION_MAP } from '../../services/constants.js';
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 import { useAuth, AuthProvider } from '../../services/authContext.jsx';
@@ -50,16 +51,6 @@ function ActivityRow ({ data }) {
   const action = data.action;
   const date = data.createdAt || '';
 
-  const ACTION_MAP = {
-    "playing": "Is playing",
-    "plan_to_play": "Plans to play",
-    "completed": "Completed",
-    "replaying": "Is replaying",
-    "dropped": "Has dropped",
-    "removed": "Has removed",
-    "paused": "Has paused playing"
-  };
-  
   return (
     <Link
       to={`/game/${data.game_id}`}
@@ -86,14 +77,15 @@ function ActivityRow ({ data }) {
           />
 
           <div className="flex flex-col text-2xl flex-1">
-            <div className="flex flex-row justify-between items-center w-full">
-              <p className="text-[#83c5be]">{username}</p>
+            <div className="flex flex-row justify-between items-center w-full truncate">
+              <p className="text-[#83c5be]">{username.charAt(0).toUpperCase() + username.slice(1)}</p>
               <p className="text-lg text-[#a8a8b3]">{formatDate(date)}</p>
             </div>
 
             <div className="flex flex-row items-center gap-2.5">
               <span className="text-[#a8a8b3]">{ACTION_MAP[action]}</span>
               <p className="text-[#f4a261]">{game}</p>
+              <p className="text-[#a8a8b3]">{`${action === "removed" ? " from their library" : ""}`}</p>
             </div>
           </div>
         </div>
@@ -159,28 +151,23 @@ function ActivityFeed () {
   // border-2 border-[#2c2c3e]
 
   return (
-    <div className="pixel-outline-slate w-full mt-6">
-  
-      <div className="pixel-box-lg bg-[#1c1c28] p-6 space-y-6">
-        
-        <div className="flex flex-row justify-between items-center">
-          <h2 className="text-xl text-[#f4f1de] font-press-start">
-            {isGlobal ? 'Global Activity' : 'My Activity'}
-          </h2>
+    <div className="w-full mt-7 space-y-5 pt-6">
+      
+      <div className="flex flex-row justify-between items-center">
+        <h2 className="text-lg md:text-xl text-[#f4f1de] font-press-start">
+          {isGlobal ? 'Global Activity' : 'My Activity'}
+        </h2>
 
-          <div className="flex flex-row gap-5">
-            <button
-              className="pixel-box bg-[#83c5be] hover:bg-[#62b6cb] text-[#1c1c28] font-press-start text-xs px-4 py-2 active:translate-y-0.5 transition-all"
-              onClick={() => setIsGlobal(!isGlobal)}
-            >
-              {isGlobal ? 'View My Activity' : 'View Global Activity'}
-            </button>
-          </div>
-        </div>
-
-        <FeedEntries data={displayedLogs} />
-        
+        <button
+          className="pixel-box bg-[#83c5be] hover:bg-[#62b6cb] text-[#1c1c28] font-press-start text-xs px-4 py-2 transition-all active:translate-y-0.5"
+          onClick={() => setIsGlobal(!isGlobal)}
+        >
+          {isGlobal ? 'View My Activity' : 'View Global Activity'}
+        </button>
       </div>
+
+      <FeedEntries data={displayedLogs} />
+      
     </div>
   );
 }
@@ -247,36 +234,42 @@ function UserView () {
   const gamesInProgress = userGames.filter((g) => g.status === "playing");
   const gamesPlanned = userGames.filter((g) => g.status === "plan_to_play")
 
-  if ( loading || !user ) return <div className="text-white">Loading dashboard...</div>
+  if ( loading || !user ) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[300px] w-full gap-4 font-vt323 p-8">
+
+        <div className="flex items-center gap-2">
+          <div className="w-4 h-4 bg-[#83c5be] animate-bounce" style={{ animationDelay: '0ms' }} />
+          <div className="w-4 h-4 bg-[#f4a261] animate-bounce" style={{ animationDelay: '150ms' }} />
+          <div className="w-4 h-4 bg-[#e76f51] animate-bounce" style={{ animationDelay: '300ms' }} />
+        </div>
+
+        <p className="font-press-start text-sm text-[#f4a261] animate-pulse tracking-widest uppercase">
+          Loading Dashboard...
+        </p>
+      </div>
+    );
+  }
 
   return (
-    <div className="p-6 max-w-7xl mx-auto flex flex-col gap-6">
+    <div className="p-6 max-w-7xl mx-auto flex flex-col mt-4">
       <div>
-        <h1 className="text-[#f4f1de] text-2xl md:text-3xl font-press-start">
-          Welcome Back{' '}
-          {user.username.charAt(0).toUpperCase() + user.username.slice(1) ||
-            null}
-          !
+        <h1 className="text-[#f4f1de] text-lg md:text-xl font-press-start tracking-wide uppercase">
+          Welcome Back, <span className="text-[#f4a261]">{user.username}</span>!
         </h1>
       </div>
 
-      {/* Stats card */}
-      <StatsCard />
-
-      {/* Games in progress */}
       <GameRow
         title={"Games you're currently playing"}
         games={gamesInProgress}
       />
 
-      {/* Games planned */}
       <GameRow 
         title={'Games to play Next'} 
         games={gamesPlanned} 
       />
 
       <div>
-        {/* Recent activity feed -- global + local */}
         <ActivityFeed />
       </div>
     </div>
@@ -289,8 +282,8 @@ function GuestView () {
 
   const features = [
     {
-      title: "Discover your obsessions",
-      desc: "Track what you're playing, rate your backlog, and analyze your favorite gaming genres with personalised shelf stats."
+      title: "Find your thing",
+      desc: "Track what you're playing, rate your backlog, and analyse your favorite gaming genres with personalised shelf stats."
     },
     {
       title: "Build your digital shelf",
@@ -307,11 +300,11 @@ function GuestView () {
   ];
 
   return (
-    <div className="text-[#f4f1de] flex flex-col gap-10 m-10 max-w-5xl mx-auto items-center">
+    <div className="text-[#f4f1de] flex flex-col gap-10 m-10 mt-20 max-w-5xl mx-auto items-center">
       <h1 className="text-center font-press-start text-3xl text-[#f4a261]">
         The next-generation gaming platform
       </h1>
-      <p className="text-center font-press-start text-lg text-[#83c5be]">
+      <p className="text-center font-vt323 text-3xl text-[#83c5be] mb-8">
         Track, rate, and organize your favorite video games.
       </p>
 
@@ -319,7 +312,7 @@ function GuestView () {
         {features.map((feature, index) => (
           <div
             key={index}
-            className="flex flex-col bg-[#2c2c3e] p-6 rounded"
+            className="flex flex-col-4 pixel-box bg-[#1c1c28] p-6 px-8 items-center hover:-translate-y-1 transition-all"
           >
             <h3 className="text-lg font-press-start text-[#f4a261] mb-3">
               {feature.title}
@@ -334,7 +327,7 @@ function GuestView () {
       <div className="mt-4">
         <Link
           to="/signup"
-          className="bg-[#e76f51] hover:bg-[#f4a261] text-[#1c1c28] font-press-start px-8 py-4 text-sm inline-block active:translate-y-0.5 transition-all"
+          className="pixel-box-lg bg-[#e76f51] hover:bg-[#f4a261] text-[#1c1c28] font-press-start px-8 py-4 text-sm inline-block active:translate-y-0.5 transition-all"
         >
           Join Now
         </Link>
@@ -350,7 +343,7 @@ export function Home() {
   const {isAuthenticated } = useAuth();
 
   return (
-    <div className="bg-[#181824] min-h-screen text-[#f4f1de]">
+    <div className="min-h-screen text-[#f4f1de]">
       <Navbar />
 
       {isAuthenticated ? <UserView /> : <GuestView />}
