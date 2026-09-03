@@ -7,8 +7,7 @@ import { GameRow } from './components/gamerow.jsx'
 import { GameGrid } from './components/gamegrid.jsx'
 import { useAuth } from '../../services/authContext.jsx';
 import { getUserIdFromToken } from '../../services/authServices.js';
-import { GAME_STATUS } from '../../services/constants.js';
-import { STATUS_MAP } from '../../services/constants.js';
+import { GAME_STATUS, STATUS_MAP, STATUS_COLOURS } from '../../services/constants.js';
 
 
 function ProfileCard ( { token, user, onProfileUpdate }) {
@@ -211,16 +210,6 @@ function StatsProgressBar ({ counts, totalGames }) {
   );
   }
 
-  const statusColors = {
-    [GAME_STATUS.PLAYING]: 'bg-[#83c5be]', 
-    [GAME_STATUS.WANT_TO_PLAY]: 'bg-[#3a86ff]', 
-    [GAME_STATUS.COMPLETED]: 'bg-[#f4a261]',    
-    [GAME_STATUS.REPLAYING]: 'bg-[#e9c46a]',   
-    [GAME_STATUS.PAUSED]: 'bg-[#e76f51]',     
-    [GAME_STATUS.DROPPED]: 'bg-[#d62828]',  
-  };
-
-
   return (
 
     <div className="space-y-3 font-vt323">
@@ -233,7 +222,7 @@ function StatsProgressBar ({ counts, totalGames }) {
             <div 
               key={status}
               style={{ width: `${percentage}%`}}
-              className={`${statusColors[status] || 'bg-[#a8a8b3]'} transition-all duration-300`}
+              className={`${STATUS_COLOURS[status] || 'bg-[#a8a8b3]'} transition-all duration-300`}
               title={`${STATUS_MAP[status]}: ${count} (${Math.round(percentage)}%)`}
             />
           );
@@ -247,7 +236,7 @@ function StatsProgressBar ({ counts, totalGames }) {
 
           return (
             <div key={status} className="flex items-center gap-2">
-              <span className={`w-3 h-3 inline-block ${statusColors[status] || 'bg-[#a8a8b3]'}`}/>
+              <span className={`w-3 h-3 inline-block ${STATUS_COLOURS[status] || 'bg-[#a8a8b3]'}`}/>
               <span className="">{STATUS_MAP[status].toUpperCase()}</span>: {' '}
               <span className="text-[#f4a261]">{count}</span> {' '}
               <span className="text-[#a8a8b3] text-base">({percentage}%)</span>

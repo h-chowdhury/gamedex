@@ -3,8 +3,7 @@ import { Footer } from './components/footer.jsx';
 import { useCallback, useEffect, useState } from 'react'
 import { Link, useParams, useLocation } from 'react-router-dom';
 import { useAuth, AuthProvider } from '../../services/authContext.jsx';
-import { GAME_STATUS } from '../../services/constants.js';
-import { STATUS_MAP } from '../../services/constants.js';
+import { GAME_STATUS, STATUS_MAP, STATUS_COLOURS, STAR_MAP } from '../../services/constants.js';
 import { getUserIdFromToken } from '../../services/authServices.js'
 
 
@@ -628,7 +627,7 @@ export function ViewGame() {
                       Cartridge status
                     </span>
 
-                    <span className="text-s bg-[#83c5be]/20 text-[#83c5be] px-2 py-0.5 mb-2 mt-1">
+                    <span className="text-s pixel-box bg-[#83c5be]/20 text-[#83c5be] px-3 py-0.5 mb-2 mt-1">
                       {hasEntry ? STATUS_MAP[formData.status] : "N/A"}
                     </span>
                   </div>
@@ -637,7 +636,7 @@ export function ViewGame() {
 
                   <div className="flex justify-between text-lg border-b-4 border-[#3a3a52]/50 pb-2">
                     <span className="text-[#a8a8b3]">Your Rating:</span>
-                    <span className="text-[#f4f1de]">{formData.score}</span>
+                    <span className="text-[#d3a068]">{STAR_MAP[formData.score]}</span>
                   </div>
 
                   <div className="flex justify-between text-lg border-b-4 border-[#3a3a52]/50 py-2">

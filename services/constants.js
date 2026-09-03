@@ -54,3 +54,22 @@ export const STATUS_MAP = Object.freeze({
     "dropped": "Dropped",
     "paused": "Paused"
 });
+
+export const STAR_MAP = Object.freeze({
+  "0": "☆☆☆☆☆",
+  "1": "★☆☆☆☆",
+  "2": "★★☆☆☆",
+  "3": "★★★☆☆",
+  "4": "★★★★☆",
+  "5": "★★★★★",
+})
+
+export const STATUS_COLOURS = Object.freeze ({
+    [GAME_STATUS.PLAYING]: 'bg-[#83c5be]', 
+    [GAME_STATUS.WANT_TO_PLAY]: 'bg-[#3a86ff]', 
+    [GAME_STATUS.COMPLETED]: 'bg-[#f4a261]',    
+    [GAME_STATUS.REPLAYING]: 'bg-[#e9c46a]',   
+    [GAME_STATUS.PAUSED]: 'bg-[#e76f51]',     
+    [GAME_STATUS.DROPPED]: 'bg-[#d62828]',  
+    default: 'bg-[#83c5be]'
+});
