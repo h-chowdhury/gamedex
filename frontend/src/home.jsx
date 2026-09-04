@@ -317,7 +317,7 @@ function GuestView () {
         {features.map((feature, index) => (
           <div
             key={index}
-            className="flex flex-col-4 pixel-box bg-[#1c1c28] p-6 px-8 items-center hover:-translate-y-1 transition-all"
+            className="flex flex-col-4 gap-5 pixel-box bg-[#1c1c28] p-6 px-8 items-center hover:-translate-y-1 transition-all"
           >
             <h3 className="text-lg font-press-start text-[#f4a261] mb-3">
               {feature.title}
