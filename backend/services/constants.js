@@ -64,12 +64,22 @@ export const STAR_MAP = Object.freeze({
   "5": "★★★★★",
 })
 
-export const STATUS_COLOURS = Object.freeze ({
-    [GAME_STATUS.PLAYING]: 'bg-[#83c5be]', 
-    [GAME_STATUS.WANT_TO_PLAY]: 'bg-[#3a86ff]', 
-    [GAME_STATUS.COMPLETED]: 'bg-[#f4a261]',    
-    [GAME_STATUS.REPLAYING]: 'bg-[#e9c46a]',   
-    [GAME_STATUS.PAUSED]: 'bg-[#e76f51]',     
-    [GAME_STATUS.DROPPED]: 'bg-[#d62828]',  
-    default: 'bg-[#83c5be]'
+export const STATUS_COLOURS = Object.freeze({
+  [GAME_STATUS.PLAYING]: '#4b80ca', 
+  [GAME_STATUS.WANT_TO_PLAY]: '#68c2d3', 
+  [GAME_STATUS.COMPLETED]: '#a2dcc7',    
+  [GAME_STATUS.REPLAYING]: '#ede19e',   
+  [GAME_STATUS.PAUSED]: '#d3a068',     
+  [GAME_STATUS.DROPPED]: '#b45252',  
+  default: '#83c5be'
+});
+
+export const STATUS_COLOURS_LOW = Object.freeze({
+  [GAME_STATUS.PLAYING]: '#4b80ca4D', 
+  [GAME_STATUS.WANT_TO_PLAY]: '#68c2d34D', 
+  [GAME_STATUS.COMPLETED]: '#a2dcc74D',    
+  [GAME_STATUS.REPLAYING]: '#ede19e4D',   
+  [GAME_STATUS.PAUSED]: '#d3a0684D',     
+  [GAME_STATUS.DROPPED]: '#b452524D',  
+  default: '#83c5be4D'
 });

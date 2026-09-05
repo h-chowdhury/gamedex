@@ -7,7 +7,7 @@ function NavbarLink ({name, page}) {
   const { logout } = useAuth();
   const clickSound = new Audio(clickAudio);
 
-  const linkStyle = "text-slate-400 font-vt323 text-xl hover:text-[#83c5be]";
+  const linkStyle = "text-slate-400 font-vt323 text-base hover:text-[#83c5be]";
 
   if (name == "Log out") {
     return (
@@ -33,23 +33,23 @@ export function Navbar () {
 
   const { isAuthenticated } = useAuth();
   return (
-  <div className="flex flex-row justify-between bg-[#1c1c28] border-[#2c2c3e] px-2 py-1 shadow-md">
-    <div className="flex flex-row gap-5 items-center">
-      <img src="/roboicon.png" className="w-[3em] h-[3em] mb-3 ml-6 mt-3 [image-rendering:pixelated] drop-shadow-[0_2px_0px_#1c1c28]" />
+  <div className="flex flex-row justify-between items-center bg-[#1c1c28] px-8 shadow-md">
+    <div className="flex flex-row gap-3 items-center">
+      <img src="/roboicon.png" className="w-10 h-10 mb-1 mr-1 [image-rendering:pixelated] drop-shadow-[0_2px_0px_#1c1c28]" />
 
       <div className="font-press-start text-[#f4f1de] tracking-wider">
-        <h1 className="text-lg md:text-xl drop-shadow-[2px_2px_0px_#f4a261]">GameDex</h1>
+        <h1 className="text-base drop-shadow-[2px_2px_0px_#f4a261]">GameDex</h1>
       </div>
     </div>
 
     <nav className="flex items-center">
-      <ul className="flex flex-row gap-7 items-center mr-6 font-vt323 text-xl text-[#83c5be]">
-        <li><NavbarLink name={"Home"} page="" /></li>
-        <li><NavbarLink name={"Browse"} page="discover" /></li>
-        {isAuthenticated && <li><NavbarLink name={"Profile"} page="profile" /></li>}
-        {isAuthenticated && <li><NavbarLink name={"Log out"} page="logout" /></li>}
-        {!isAuthenticated && <li><NavbarLink name={"Login"} page="login" /></li>}
-        {!isAuthenticated && <li><NavbarLink name={"Sign up"} page="signup" /></li>}
+      <ul className="flex flex-row gap-6 items-center font-vt323 py-4 pb-5 text-lg text-[#83c5be] pb-1">
+        <NavbarLink name={"Home"} page="" />
+        <NavbarLink name={"Browse"} page="discover" />
+        {isAuthenticated && <NavbarLink name={"Profile"} page="profile" />}
+        {isAuthenticated && <NavbarLink name={"Log out"} page="logout" />}
+        {!isAuthenticated && <NavbarLink name={"Login"} page="login" />}
+        {!isAuthenticated && <NavbarLink name={"Sign up"} page="signup" />}
       </ul>
     </nav>
   </div>

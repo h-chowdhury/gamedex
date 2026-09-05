@@ -5,15 +5,16 @@ import { GameGrid } from './components/gamegrid.jsx';
 import { useEffect, useState, useMemo } from 'react';
 import clickAudio from "/audio/click.mp3";
 
-// Styles
-const h1style = 'text-[#f4f1de] text-lg md:text-xl font-press-start tracking-wide uppercase';
-const h2style = 'text-slate-200 font-vt323 text-2xl uppercase';
+// Styles scaled down to match the compact retro layout
+const h1style = "text-[#f4f1de] text-base font-press-start tracking-wide uppercase mb-1";
+
+const clickSound = new Audio(clickAudio);
 
 function debounce(func, delay) {
   let timeout;
   return function (...args) {
     clearTimeout(timeout);
-    timeout = setTimeout(() => func.apply(this, args), delay)
+    timeout = setTimeout(() => func.apply(this, args), delay);
   };
 }
 
@@ -69,24 +70,21 @@ function DiscoveryView () {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[300px] w-full gap-4 font-vt323 p-8">
-
         <div className="flex items-center gap-2">
-          <div className="w-4 h-4 bg-[#83c5be] animate-bounce" style={{ animationDelay: '0ms' }} />
-          <div className="w-4 h-4 bg-[#f4a261] animate-bounce" style={{ animationDelay: '150ms' }} />
-          <div className="w-4 h-4 bg-[#e76f51] animate-bounce" style={{ animationDelay: '300ms' }} />
+          <div className="w-3 h-3 bg-[#83c5be] animate-bounce" style={{ animationDelay: '0ms' }} />
+          <div className="w-3 h-3 bg-[#f4a261] animate-bounce" style={{ animationDelay: '150ms' }} />
+          <div className="w-3 h-3 bg-[#e76f51] animate-bounce" style={{ animationDelay: '300ms' }} />
         </div>
 
-        <p className="font-press-start text-sm text-[#f4a261] animate-pulse tracking-widest uppercase">
+        <p className="font-press-start text-xs text-[#f4a261] animate-pulse tracking-widest uppercase">
           LOADING CARTRIDGES...
         </p>
       </div>
     );
   }
 
-
   return (
-
-    <div className="flex flex-col gap-0 p-8">
+    <div className="flex flex-col gap-4 py-4 mt-3">
       <GameRow title="Trending Games" selectedGenre={rowGenres.trending} games={trending} />
       <GameRow title="Upcoming Games" games={upcoming} />
       <GameRow title="All Time Popular Games" games={popular} />
@@ -100,14 +98,13 @@ function SearchView ({query, results, loading}) {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[300px] w-full gap-4 font-vt323 p-8">
-
         <div className="flex items-center gap-2">
-          <div className="w-4 h-4 bg-[#83c5be] animate-bounce" style={{ animationDelay: '0ms' }} />
-          <div className="w-4 h-4 bg-[#f4a261] animate-bounce" style={{ animationDelay: '150ms' }} />
-          <div className="w-4 h-4 bg-[#e76f51] animate-bounce" style={{ animationDelay: '300ms' }} />
+          <div className="w-3 h-3 bg-[#83c5be] animate-bounce" style={{ animationDelay: '0ms' }} />
+          <div className="w-3 h-3 bg-[#f4a261] animate-bounce" style={{ animationDelay: '150ms' }} />
+          <div className="w-3 h-3 bg-[#e76f51] animate-bounce" style={{ animationDelay: '300ms' }} />
         </div>
 
-        <p className="font-press-start text-sm text-[#f4a261] animate-pulse tracking-widest uppercase">
+        <p className="font-press-start text-xs text-[#f4a261] animate-pulse tracking-widest uppercase">
           Searching for "{query}"...
         </p>
       </div>
@@ -115,36 +112,31 @@ function SearchView ({query, results, loading}) {
   }
 
   return (
-  <div className="space-y-4 font-vt323">
-
-    <div className="flex items-center gap-3 pb-2">
-      <div className="w-2.5 h-2.5 bg-[#83c5be] mt-4" />
-      <h2 className="text-[#f4a261] font-press-start text-sm uppercase tracking-wider mt-5">
-        SEARCH: {query.toUpperCase()}
-      </h2>
-    </div>
-
-    {/* Empty State */}
-    {(results.length <= 0) ? (
-      <div className="bg-[#2c2c3e]/30 p-8 text-center my-4">
-        <p className="text-[#a8a8b3] text-xl">
-          [ NO CARTRIDGES FOUND FOR "{query.toUpperCase()}" ]
-        </p>
+    <div className="space-y-4 font-vt323 my-4">
+      <div className="flex items-center gap-2 mt-5">
+        <div className="w-2 h-2 bg-[#83c5be] mb-2" />
+        <h2 className="text-[#f4a261] mb-1.5 font-press-start text-xs uppercase tracking-wider">
+          SEARCH: {query.toUpperCase()}
+        </h2>
       </div>
-    ) : (
-      <GameGrid games={results} />
-    )}
-  </div>
-);
+
+      {results.length <= 0 ? (
+        <div className="bg-[#2c2c3e]/30 p-6 text-center my-4">
+          <p className="text-[#a8a8b3] text-lg">
+            [ NO CARTRIDGES FOUND FOR "{query.toUpperCase()}" ]
+          </p>
+        </div>
+      ) : (
+        <GameGrid games={results} />
+      )}
+    </div>
+  );
 }
 
-
 export function Discover() {
-
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(false);
-  const clickSound = new Audio(clickAudio);
 
   const fetchGames = async (searchQuery) => {
     if (!searchQuery.trim()) {
@@ -177,48 +169,47 @@ export function Discover() {
   }, [searchQuery, debouncedSearch]);
 
   return (
-    <div className="w-full text-white">
+    <div className="w-full text-white min-h-screen flex flex-col justify-between">
+      <div>
+        <Navbar />
 
-      <Navbar />
+        <div className="max-w-4xl mx-auto px-4 py-4">
+          <div className="flex flex-col gap-2 mt-5">
+            <h1 className={h1style}>BROWSE GAMES</h1>
 
-      <div className="px-20 py-5">
+            <div className="flex flex-row gap-3">
+              <input 
+                type='text' 
+                placeholder="Search games..." 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pixel-box-sm w-full bg-[#2c2c3e] text-[#f4f1de] placeholder-[#a8a8b3]/40 font-vt323 text-lg px-4 py-1.5 focus:outline-none tracking-wide"
+              />
 
-        <div className="flex flex-col gap-3 mt-6">
-          <h1 className={h1style}>Browse Games</h1>
-
-          <div className="flex flex-row gap-5">
-            <input 
-              type='text' 
-              placeholder="Search games..." 
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pixel-box w-full bg-[#2c2c3e] text-[#f4f1de] placeholder-[#a8a8b3]/50 font-vt323 text-xl px-4 py-2 focus:outline-none tracking-wide"
-            />
-
-            {searchQuery && 
-              <button
-                onClick={() => {
-                  setSearchQuery('');
-                  clickSound.play()
-                }}
-                className="pixel-box font-press-start text-xs py-2.5 px-4 bg-[#83c5be] hover:bg-[#62b6cb] text-[#1c1c28] font-bold transition duration-100 active:translate-y-0.5 cursor-pointer"
-              >
-                CLEAR
-              </button>
-            }
+              {searchQuery && (
+                <button
+                  onClick={() => {
+                    setSearchQuery('');
+                    clickSound.currentTime = 0;
+                    clickSound.play().catch(() => {});
+                  }}
+                  className="pixel-box-sm font-press-start text-[10px] py-1.5 px-3 bg-[#83c5be] hover:bg-[#62b6cb] text-[#1c1c28] font-bold transition duration-100 active:translate-y-0.5 cursor-pointer shrink-0"
+                >
+                  CLEAR
+                </button>
+              )}
+            </div>
           </div>
+
+          {searchQuery.trim().length > 0 ? (
+            <SearchView query={searchQuery} results={searchResults} loading={loading}/>
+          ) : (
+            <DiscoveryView />
+          )}
         </div>
-
-        {searchQuery.trim().length > 0 ? (
-          <SearchView query={searchQuery} results={searchResults} loading={loading}/>
-        ) : (
-          <DiscoveryView />
-        )}
-
       </div>
 
       <Footer />
     </div>
   );
 }
-  

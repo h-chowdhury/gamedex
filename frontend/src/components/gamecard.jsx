@@ -22,7 +22,7 @@ export function GameCard ({gameData}) {
       className="cursor-pointer flex-shrink-0 block"
       onClick={() => clickSound.play()}
     >
-      <div className="relative h-[290px] w-[210px] transition-all duration-200 hover:-translate-y-1.5">
+      <div className="relative h-[220px] w-[160px] transition-all duration-200 hover:-translate-y-1">
         <img
           src="/cartridge.png"
           alt="Cartridge base"
@@ -31,21 +31,21 @@ export function GameCard ({gameData}) {
 
         <div className="absolute top-[24%] left-[12.5%] h-[63.5%] w-[75%] overflow-hidden z-10">
           <img 
-            src={coverImage || 'https://via.placeholder.com/290x210'} 
+            src={coverImage || 'https://via.placeholder.com/220x160'} 
             alt={title} 
             className="h-full w-full object-cover"
           />
         </div>
 
         <div className="absolute top-[9%] left-[13%] w-[68%] z-20 font-press-start">
-          <h2 className="text-[0.6em] text-[#1c1c28] p-0 m-0 text-sm/3.5 line-clamp-2 break-words">
+          <h2 className="text-[0.5em] text-[#1c1c28] p-0 m-0 text-xs/3 line-clamp-2 break-words">
             {title}
           </h2>
         </div>
 
         {releaseDate && (
           <div className="absolute bottom-[2%] left-[12.5%] w-[75%] z-20 font-vt323 text-center">
-            <span className="text-[#47464f] font-bold text-lg px-2 py-0.5 pixel-box tracking-wider">
+            <span className="text-[#47464f] font-bold text-sm px-1.5 py-0.5 pixel-box tracking-wider">
               {formattedDate}
             </span>
           </div>

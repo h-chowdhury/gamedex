@@ -3,7 +3,7 @@ import { Footer } from './components/footer.jsx';
 import { useCallback, useEffect, useState } from 'react'
 import { useParams, useLocation } from 'react-router-dom';
 import { useAuth } from './context/authContext.jsx';
-import { GAME_STATUS, STATUS_MAP, STAR_MAP } from '../../backend/services/constants.js';
+import { GAME_STATUS, STATUS_MAP, STAR_MAP, STATUS_COLOURS, STATUS_COLOURS_LOW } from '../../backend/services/constants.js';
 import { getUserIdFromToken } from '../../backend/services/authServices.js'
 import clickAudio from "/audio/click.mp3";
 
@@ -51,7 +51,7 @@ function ViewEntry({ game, close, onEntryUpdated }) {
         });
 
         if (!res.ok) {
-          throw new Error('Error fetching game entry. Server status:', res.status)
+          throw new Error(`Error fetching game entry. Server status: ${res.status}`)
         }
 
         const data = await res.json();
@@ -178,15 +178,15 @@ function ViewEntry({ game, close, onEntryUpdated }) {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[300px] w-full gap-4 font-vt323 p-8">
+      <div className="flex flex-col items-center justify-center min-h-[200px] w-full gap-3 font-vt323 p-6">
 
-        <div className="flex items-center gap-2">
-          <div className="w-4 h-4 bg-[#83c5be] animate-bounce" style={{ animationDelay: '0ms' }} />
-          <div className="w-4 h-4 bg-[#f4a261] animate-bounce" style={{ animationDelay: '150ms' }} />
-          <div className="w-4 h-4 bg-[#e76f51] animate-bounce" style={{ animationDelay: '300ms' }} />
+        <div className="flex items-center gap-1.5">
+          <div className="w-3 h-3 bg-[#83c5be] animate-bounce" style={{ animationDelay: '0ms' }} />
+          <div className="w-3 h-3 bg-[#f4a261] animate-bounce" style={{ animationDelay: '150ms' }} />
+          <div className="w-3 h-3 bg-[#e76f51] animate-bounce" style={{ animationDelay: '300ms' }} />
         </div>
 
-        <p className="font-press-start text-sm text-[#f4a261] animate-pulse tracking-widest uppercase">
+        <p className="font-press-start text-xs text-[#f4a261] animate-pulse tracking-widest uppercase">
           Loading entry...
         </p>
       </div>
@@ -195,21 +195,21 @@ function ViewEntry({ game, close, onEntryUpdated }) {
 
 
   return (
-    <div className="fixed inset-0 z-50 justify-center p-4 md:p-10 bg-[#1c1c28]/80 backdrop-blur-sm font-vt323 overflow-y-auto">
+    <div className="fixed inset-0 z-50 justify-center p-3 md:p-6 bg-[#1c1c28]/80 backdrop-blur-sm font-vt323 overflow-y-auto">
 
-      <div className="pixel-outline-dark-slate max-w-2xl w-full mx-auto my-10">
+      <div className="pixel-outline-dark-slate max-w-lg w-full mx-auto my-6">
         <form 
           onSubmit={handleSubmit}
-          className="pixel-box-lg bg-[#2c2c3e] text-[#f4f1de] w-full max-w-2xl p-6 space-y-5 my-10 shadow-[8px_8px_0px_0px_#1c1c28]"
+          className="pixel-box-lg bg-[#2c2c3e] text-[#f4f1de] w-full max-w-lg p-4 space-y-3.5 my-6 shadow-[6px_6px_0px_0px_#1c1c28]"
         >
 
-          <div className="flex justify-between pb-4">
-            <div className="space-y-1">
-              <span className="font-press-start text-[10px] text-[#83c5be] uppercase tracking-wider">
+          <div className="flex justify-between pb-2">
+            <div className="space-y-0.5">
+              <span className="font-press-start text-[8px] text-[#83c5be] uppercase tracking-wider">
                 [ EDIT CARTRIDGE ENTRY ]
               </span>
 
-              <h2 className="font-press-start text-base sm:text-lg text-[#f4a261] uppercase leading-snug">
+              <h2 className="font-press-start text-xs sm:text-sm text-[#f4a261] uppercase leading-snug">
                 {game.name}
               </h2>
             </div>
@@ -220,14 +220,14 @@ function ViewEntry({ game, close, onEntryUpdated }) {
                 clickSound.play();
                 close();
               }}
-              className="font-press-start text-xs text-[#a8a8b3] hover:text-[#e76f51] p-1 cursor-pointer transition-colors"
+              className="font-press-start text-[10px] text-[#a8a8b3] hover:text-[#e76f51] p-0.5 cursor-pointer transition-colors"
             >
               [X]
             </button>
           </div>
 
           {game.background_image && (
-            <div className="h-28 w-full overflow-hidden border-2 border-[#3a3a52] bg-[#1c1c28]">
+            <div className="h-20 w-full overflow-hidden border-2 border-[#3a3a52] bg-[#1c1c28]">
               <img 
                 src={game.background_image} 
                 alt={game.name}
@@ -236,13 +236,13 @@ function ViewEntry({ game, close, onEntryUpdated }) {
             </div>
           )}
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xl">
-            <div className="flex flex-col space-y-1">
-              <label htmlFor="status" className="text-[#a8a8b3] text-lg">Status</label>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 text-base p-3">
+            <div className="flex flex-col space-y-0.5">
+              <label htmlFor="status" className="text-[#a8a8b3] text-sm">Status</label>
               <select 
                 name="status" 
                 id="status" 
-                className="bg-[#1c1c28] text-[#f4f1de] p-2 focus:outline-none focus:border-none focus:ring-0 border-none cursor-pointer"
+                className="bg-[#1c1c28] text-[#f4f1de] p-1.5 focus:outline-none focus:border-none focus:ring-0 border-none cursor-pointer text-base"
                 onChange={handleChange}
                 value={formData.status || GAME_STATUS.WANT_TO_PLAY}
               >
@@ -255,10 +255,10 @@ function ViewEntry({ game, close, onEntryUpdated }) {
               </select>
             </div>
 
-            <div className="flex flex-col space-y-1"> 
+            <div className="flex flex-col space-y-0.5"> 
               <div className="flex justify-between items-center">
-                <label htmlFor="score" className="text-[#a8a8b3] text-lg">Score</label>
-                <span className="font-press-start text-xs text-[#f4a261]">
+                <label htmlFor="score" className="text-[#a8a8b3] text-sm">Score</label>
+                <span className="font-press-start text-[10px] text-[#f4a261]">
                   {formData.score ? `${formData.score}/5` : 'N/A'}
                 </span>
               </div>
@@ -273,8 +273,8 @@ function ViewEntry({ game, close, onEntryUpdated }) {
               />
             </div>
 
-            <div className="flex flex-col space-y-1">
-              <label htmlFor="hours_played" className="text-[#a8a8b3] text-lg">Hours Played</label>
+            <div className="flex flex-col space-y-0.5">
+              <label htmlFor="hours_played" className="text-[#a8a8b3] text-sm">Hours Played</label>
               <input 
                 type="number" 
                 name="hours_played" 
@@ -282,12 +282,12 @@ function ViewEntry({ game, close, onEntryUpdated }) {
                 min="0" 
                 value={formData.hours_played} 
                 onChange={handleChange} 
-                className="bg-[#1c1c28] text-[#f4f1de] text-xl p-2 focus:outline-none"
+                className="bg-[#1c1c28] text-[#f4f1de] text-base p-1.5 focus:outline-none"
               />
             </div>
 
-            <div className="flex flex-col space-y-1">
-              <label htmlFor="total_replays" className="text-[#a8a8b3] text-lg">Total Replays</label>
+            <div className="flex flex-col space-y-0.5">
+              <label htmlFor="total_replays" className="text-[#a8a8b3] text-sm">Total Replays</label>
               <input 
                 type="number" 
                 name="total_replays" 
@@ -295,36 +295,36 @@ function ViewEntry({ game, close, onEntryUpdated }) {
                 min="0" 
                 value={formData.total_replays} 
                 onChange={handleChange} 
-                className="bg-[#1c1c28] text-[#f4f1de] p-2 focus:outline-none"
+                className="bg-[#1c1c28] text-[#f4f1de] text-base p-1.5 focus:outline-none"
               />
             </div>
 
-            <div className="flex flex-col space-y-1">
-              <label htmlFor="start_date" className="text-[#a8a8b3] text-lg">Start Date</label>
+            <div className="flex flex-col space-y-0.5">
+              <label htmlFor="start_date" className="text-[#a8a8b3] text-sm">Start Date</label>
               <input 
                 type="date" 
                 name="start_date" 
                 id="start_date" 
                 value={formData.start_date?.split('T')[0] || ''} 
                 onChange={handleChange} 
-                className="bg-[#1c1c28] text-[#f4f1de] p-2 focus:outline-none"
+                className="bg-[#1c1c28] text-[#f4f1de] text-base p-1.5 focus:outline-none"
               />
             </div>
 
-            <div className="flex flex-col space-y-1">
-              <label htmlFor="finish_date" className="text-[#a8a8b3] text-lg">Finish Date</label>
+            <div className="flex flex-col space-y-0.5">
+              <label htmlFor="finish_date" className="text-[#a8a8b3] text-sm">Finish Date</label>
               <input 
                 type="date" 
                 name="finish_date" 
                 id="finish_date" 
                 value={formData.finish_date?.split('T')[0] || ''} 
                 onChange={handleChange} 
-                className="bg-[#1c1c28] text-[#f4f1de] p-2 focus:outline-none"
+                className="bg-[#1c1c28] text-[#f4f1de] text-base p-1.5 focus:outline-none"
               />
             </div>
           </div>
 
-          <div className="flex items-center gap-3 bg-[#1c1c28] p-3 mt-8 cursor-pointer">
+          <div className="flex items-center gap-2 bg-[#1c1c28] p-2 mt-5 mx-3 cursor-pointer">
             <input 
               type="checkbox" 
               name="favourite" 
@@ -332,15 +332,15 @@ function ViewEntry({ game, close, onEntryUpdated }) {
               onChange={handleChange} 
               checked={formData.favourite || false}
             />
-            <label htmlFor="favourite" className="text-xl text-[#f4f1de] cursor-pointer select-none">
+            <label htmlFor="favourite" className="text-base text-[#f4f1de] cursor-pointer select-none">
               SET AS FAVOURITE
             </label>
           </div>
 
-          <div className="flex flex-col space-y-1">
+          <div className="flex flex-col space-y-0.5 px-3 py-1">
             <div className="flex justify-between items-center">
-              <label htmlFor="notes" className="text-[#a8a8b3] text-lg">Notes</label>
-              <span className="font-press-start text-[10px] text-[#a8a8b3]">
+              <label htmlFor="notes" className="text-[#a8a8b3] text-sm">Notes</label>
+              <span className="font-press-start text-[8px] text-[#a8a8b3]">
                 {(formData.notes?.length || 0)}/500
               </span>
             </div>
@@ -348,19 +348,19 @@ function ViewEntry({ game, close, onEntryUpdated }) {
             <textarea 
               name="notes" 
               id="notes" 
-              rows="4" 
+              rows="3" 
               maxLength={500} 
               value={formData.notes || ''} 
               onChange={handleChange} 
               placeholder="ENTER NOTES..."
-              className="bg-[#1c1c28] text-[#f4f1de] p-3 text-lg focus:outline-none resize-none break-words"
+              className="bg-[#1c1c28] text-[#f4f1de] p-2 text-base focus:outline-none resize-none break-words"
             />
           </div>
 
-          <div className="flex flex-col sm:flex-row justify-center gap-8 pt-2">
+          <div className="flex flex-col sm:flex-row justify-center gap-5 pt-2 pb-4">
             <button 
               type="submit"
-              className="pixel-box font-press-start text-xs py-3 px-6 bg-[#83c5be] hover:bg-[#62b6cb] text-[#1c1c28] font-bold cursor-pointer"
+              className="pixel-box-sm font-press-start text-[10px] py-2 w-[17em] bg-[#83c5be] hover:bg-[#62b6cb] text-[#1c1c28] font-bold cursor-pointer"
               onClick={() => clickSound.play()}
             >
               SAVE ENTRY
@@ -372,7 +372,7 @@ function ViewEntry({ game, close, onEntryUpdated }) {
                 clickSound.play();
                 handleDelete();
               }}
-              className="pixel-box font-press-start text-xs py-3 px-6 bg-[#b45252] hover:bg-[#a13a3a] text-[#1c1c28] font-bold cursor-pointer"
+              className="pixel-box-sm font-press-start text-[10px] py-2 w-[17em] bg-[#b45252] hover:bg-[#a13a3a] text-[#1c1c28] font-bold cursor-pointer"
             >
               DELETE ENTRY
             </button>
@@ -489,15 +489,15 @@ export function ViewGame() {
       <div>
         <Navbar />
 
-        <div className="flex flex-col items-center justify-center min-h-[300px] w-full gap-4 font-vt323 p-8">
+        <div className="flex flex-col items-center justify-center min-h-[200px] w-full gap-3 font-vt323 p-6">
 
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-[#83c5be] animate-bounce" style={{ animationDelay: '0ms' }} />
-            <div className="w-4 h-4 bg-[#f4a261] animate-bounce" style={{ animationDelay: '150ms' }} />
-            <div className="w-4 h-4 bg-[#e76f51] animate-bounce" style={{ animationDelay: '300ms' }} />
+          <div className="flex items-center gap-1.5">
+            <div className="w-3 h-3 bg-[#83c5be] animate-bounce" style={{ animationDelay: '0ms' }} />
+            <div className="w-3 h-3 bg-[#f4a261] animate-bounce" style={{ animationDelay: '150ms' }} />
+            <div className="w-3 h-3 bg-[#e76f51] animate-bounce" style={{ animationDelay: '300ms' }} />
           </div>
 
-          <p className="font-press-start text-sm text-[#f4a261] animate-pulse tracking-widest uppercase">
+          <p className="font-press-start text-xs text-[#f4a261] animate-pulse tracking-widest uppercase">
             Loading Game...
           </p>
         </div>
@@ -509,16 +509,16 @@ export function ViewGame() {
 
   if (!game) {
   return (
-    <div className="w-full min-h-screen bg-[#1c1c28] text-[#f4f1de] font-vt323">
+    <div className="w-full min-h-screen bg-[#0d0e15] text-[#f4f1de] font-vt323">
       <Navbar />
       
-      <div className="max-w-6xl w-full mx-auto px-4 sm:px-6 py-12 space-y-4 flex flex-col items-center">
-        <h2 className="text-[#e76f51] text-3xl">Failed to load game.</h2>
+      <div className="max-w-4xl w-full mx-auto px-3 sm:px-4 py-8 space-y-3 flex flex-col items-center">
+        <h2 className="text-[#e76f51] text-2xl">Failed to load game.</h2>
         
         <div>
           <a
             href="/discover"
-            className="inline-block pixel-box font-press-start text-xs py-2 px-4 bg-[#83c5be] hover:bg-[#62b6cb] text-[#1c1c28] font-bold"
+            className="inline-block pixel-box-sm font-press-start text-[10px] py-3 px-6 bg-[#83c5be] hover:bg-[#62b6cb] text-[#1c1c28] font-bold"
           >
             CONTINUE BROWSING
           </a>
@@ -533,70 +533,70 @@ export function ViewGame() {
       <Navbar />
 
         {/* Header img */}
-        <div className="relative overflow-hidden w-full h-72 border-b-4 border-[#2c2c3e]">
+        <div className="relative overflow-hidden w-full h-48 border-b-2 border-[#2c2c3e]">
           <img 
             src={game.background_image || `../${game.background_image}`}
             alt={game.name}
             className="h-full w-full blur-md object-cover object-center opacity-30 scale-105 z-0 absolute inset-0"
           />
 
-          {/* <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#1c1c28] via-[#1c1c28]/60 to-transparent" /> */}
+          {/* <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#1c1c28] via-[#1c1c28]/60 to-transparent" /> */}
 
-          <div className="max-w-6xl mx-auto h-full relative flex items-end pb-6 px-4 sm:px-6 z-10">
-            <h2 className="text-[#f4f1de] font-press-start font-bold text-2xl sm:text-4xl uppercase drop-shadow-[2px_2px_0px_#1c1c28] tracking-wider">
+          <div className="max-w-4xl mx-auto h-full relative flex items-end pb-4 px-3 sm:px-4 z-10">
+            <h2 className="text-[#f4f1de] font-press-start font-bold text-lg sm:text-2xl uppercase drop-shadow-[2px_2px_0px_#1c1c28] tracking-wider">
               {game.name}
             </h2>
           </div>
         </div>
 
-        <div className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-10">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="flex-1 max-w-4xl w-full mx-auto px-3 sm:px-4 py-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
 
-            <div className="lg:col-span-2 space-y-6">
+            <div className="lg:col-span-2 space-y-4">
               {/* Game img */}
               <div className="pixel-outline-slate">
                 <img 
                   src={game.background_image || `../${game.background_image}`}
                   alt={game.name}
-                  className="pixel-box-lg"
+                  className="pixel-box"
                 />
               </div>
 
               {/* Game desc */}
-              <article className="pixel-box-lg bg-[#2c2c3e]/50 p-6 space-y-4">
-                <h3 className="font-press-start text-[#f4a261] text-sm uppercase tracking-wider border-b-4 border-[#3a3a52] pb-4">
+              <article className="pixel-box bg-[#2c2c3e]/50 p-4 space-y-2.5">
+                <h3 className="font-press-start text-[#f4a261] text-xs uppercase tracking-wider border-b-2 border-[#3a3a52] pb-2.5">
                   About the game
                 </h3>
 
-                <p className="text-[#f4f1de] text-xl leading-relaxed whitespace-pre-line">
-                  {game.description_raw.replace(/(\r?\n){2,}/g, "\n\n") || "No description available."}
+                <p className="text-[#f4f1de] text-base leading-relaxed whitespace-pre-line">
+                  {game.description_raw?.replace(/(\r?\n){2,}/g, "\n\n") || "No description available."}
                 </p>
               </article>
             </div>
 
-            <aside className="lg:col-span-1 space-y-6">
+            <aside className="lg:col-span-1 space-y-4">
 
               {/* Scores */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-[#2c2c3e] p-4 text-center pixel-box">
-                  <p className="text-[#a8a8b3] text-sm font-press-start">Metascore</p>
-                  <p className="text-[#83c5be] text-3xl font-bold mt-1">{game.metacritic || 'N/A'}</p>
+              <div className="grid grid-cols-2 gap-3.5">
+                <div className="bg-[#2c2c3e] p-2.5 text-center pixel-box-sm">
+                  <p className="text-[#a8a8b3] text-[10px] font-press-start">Metascore</p>
+                  <p className="text-[#83c5be] text-xl font-bold mt-0.5">{game.metacritic || 'N/A'}</p>
                 </div>
 
-                <div className="bg-[#2c2c3e] p-4 text-center pixel-box">
-                  <p className="text-[#a8a8b3] text-sm font-press-start">User rating</p>
-                  <p className="text-[#83c5be] text-3xl font-bold mt-1">{game.rating || 'N/A'}</p>
+                <div className="bg-[#2c2c3e] p-2.5 text-center pixel-box-sm">
+                  <p className="text-[#a8a8b3] text-[10px] font-press-start">User rating</p>
+                  <p className="text-[#83c5be] text-xl font-bold mt-0.5">{game.rating || 'N/A'}</p>
                 </div>
               </div>
 
               {/* Game info */}
-              <div className="bg-[#2c2c3e] p-6 space-y-4 pixel-box">
-                <h3 className="font-press-start text-xs text-[#f4a261] uppercase tracking-wider border-b-4 border-[#3a3a52] pb-2">
+              <div className="bg-[#2c2c3e] p-4 space-y-2.5 pixel-box-sm">
+                <h3 className="font-press-start text-[10px] text-[#f4a261] uppercase tracking-wider border-b-2 border-[#3a3a52] pb-1.5">
                   Information
                 </h3>
 
-                <div className="space-y-3 text-lg">
-                  <div className="flex justify-between items-center border-b-4 border-[#3a3a52]/50 pb-2">
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between items-center border-b-2 border-[#3a3a52]/50 pb-1.5">
                     <span className="text-[#a8a8b3]">Release Date</span>
                     <span className="text-[#f4f1de]">
                       {game.released 
@@ -606,24 +606,24 @@ export function ViewGame() {
                     </span>
                   </div>
 
-                  <div className="flex justify-between items-center border-b-4 border-[#3a3a52]/50 pb-2">
+                  <div className="flex justify-between items-center border-b-2 border-[#3a3a52]/50 pb-1.5">
                     <span className="text-[#a8a8b3]">Avg Playtime</span>
                     <span className="text-[#f4f1de]">
                       {game.playtime ? `${game.playtime} Hours`: "N/A"}
                     </span>
                   </div>
 
-                  <div className="flex justify-between items-center border-b-4 border-[#3a3a52]/50 pb-2">
+                  <div className="flex justify-between items-center border-b-2 border-[#3a3a52]/50 pb-1.5">
                     <span className="text-[#a8a8b3]">Genres</span>
                     <span className="text-[#f4f1de]">
                       {game.genres?.map((g) => g.name).join(", ") || "N/A"}
                     </span>
                   </div>
 
-                  <div className="flex justify-between pb-2">
+                  <div className="flex justify-between pb-1">
                     <span className="text-[#a8a8b3]">Platforms</span>
                     <div className="text-end">
-                      {game.platforms?.map((p) => <p>{p.platform.name}</p>) || "N/A"}
+                      {game.platforms?.map((p) => <p key={p.platform.id || p.platform.name}>{p.platform.name}</p>) || "N/A"}
                     </div>
                   </div>
 
@@ -633,30 +633,33 @@ export function ViewGame() {
 
               {/* Entry info */}
               {isAuthenticated &&
-                <div className="bg-[#2c2c3e] pixel-box pt-4 p-6 font-vt323">
-                  <div className="flex items-center justify-between pb-2">
-                    <span className="font-press-start text-xs text-[#83c5be] uppercase tracking-wider py-2">
+                <div className="bg-[#2c2c3e] pixel-box-sm pt-3 p-4 font-vt323">
+                  <div className="flex items-center justify-between pb-1.5">
+                    <span className="font-press-start text-[10px] text-[#83c5be] uppercase tracking-wider py-1">
                       Cartridge status
                     </span>
 
-                    <span className="text-s pixel-box bg-[#83c5be]/20 text-[#83c5be] px-3 py-0.5 mb-2 mt-1">
+                    <span 
+                      className="text-xs pixel-box-base text-[#f4f1de] px-2 py-0.5 mb-1 mt-0.5"
+                      style={{backgroundColor: STATUS_COLOURS_LOW[formData?.status] || STATUS_COLOURS_LOW.default}}
+                    >
                       {hasEntry ? STATUS_MAP[formData.status] : "N/A"}
                     </span>
                   </div>
 
-                  <div className="h-[0.2em] w-full bg-[#3a3a52] mb-3" />
+                  <div className="h-[0.15em] w-full bg-[#3a3a52] mb-2" />
 
-                  <div className="flex justify-between text-lg border-b-4 border-[#3a3a52]/50 pb-2">
+                  <div className="flex justify-between text-sm border-b-2 border-[#3a3a52]/50 pb-1.5">
                     <span className="text-[#a8a8b3]">Your Rating:</span>
                     <span className="text-[#d3a068]">{STAR_MAP[formData.score]}</span>
                   </div>
 
-                  <div className="flex justify-between text-lg border-b-4 border-[#3a3a52]/50 py-2">
+                  <div className="flex justify-between text-sm border-b-2 border-[#3a3a52]/50 py-1.5">
                     <span className="text-[#a8a8b3]">Hours Played</span>
                     <span className="text-[#f4f1de]">{formData.hours_played}</span>
                   </div>
 
-                  <div className="flex justify-between text-lg border-b-4 border-[#3a3a52]/50 py-2">
+                  <div className="flex justify-between text-sm border-b-2 border-[#3a3a52]/50 py-1.5">
                     <span className="text-[#a8a8b3]">Date Started</span>
                     <span className="text-[#f4f1de]">
                       {formData.start_date 
@@ -666,7 +669,7 @@ export function ViewGame() {
                     </span>
                   </div>
 
-                  <div className="flex justify-between text-lg border-b-4 border-[#3a3a52]/50 py-2">
+                  <div className="flex justify-between text-sm border-b-2 border-[#3a3a52]/50 py-1.5">
                     <span className="text-[#a8a8b3]">Date Completed</span>
                     <span className="text-[#f4f1de]">
                       {formData.finish_date 
@@ -676,12 +679,12 @@ export function ViewGame() {
                     </span>
                   </div>
 
-                  <div className="flex justify-between text-lg border-b-4 border-[#3a3a52]/50 py-2">
+                  <div className="flex justify-between text-sm border-b-2 border-[#3a3a52]/50 py-1.5">
                     <span className="text-[#a8a8b3]">Total Replays</span>
                     <span className="text-[#f4f1de]">{formData.total_replays}</span>
                   </div>
 
-                  <div className="flex flex-col text-lg pt-2">
+                  <div className="flex flex-col text-sm pt-1.5">
                     <p className="text-[#a8a8b3]">Notes</p>
                     <p className="text-[#f4f1de] break-words line-clamp-3">{formData.notes ? formData.notes : "No notes added."}</p>
                   </div>
@@ -692,7 +695,7 @@ export function ViewGame() {
               {isAuthenticated && 
                 <div className="flex items-center justify-center">
                   <button 
-                    className="pixel-box font-press-start text-xs py-2.5 px-4 lg:w-full sm:w-[40em] bg-[#83c5be] hover:bg-[#62b6cb] text-[#1c1c28] font-bold transition duration-100 active:translate-y-0.5 cursor-pointer"
+                    className="pixel-box-sm font-press-start text-[0.6rem] py-2 px-3 lg:w-full sm:w-[40em] md:w-[40em] bg-[#83c5be] hover:bg-[#62b6cb] text-[#1c1c28] font-bold transition duration-100 active:translate-y-0.5 cursor-pointer"
                     onClick={() => {
                       setPopupActive(true);
                       clickSound.play();

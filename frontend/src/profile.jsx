@@ -12,7 +12,6 @@ function ProfileCard ( { token, user, onProfileUpdate }) {
 
   const clickSound = new Audio(clickAudio);
 
-  // update profile logic
   const [isEditing, setIsEditing] = useState(false);
 
   const [bio, setBio] = useState(user?.bio || "")
@@ -84,23 +83,23 @@ function ProfileCard ( { token, user, onProfileUpdate }) {
 
 
   return (
-    <div className="bg-[#2c2c3e] border-b-4 border-[#1c1c28]">
+    <div className="bg-[#2c2c3e] border-b-3 border-[#1c1c28]">
 
-      <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-8 items-stretch p-6 pixel-box-lg text-[#f4f1de]">
+      <div className="max-w-5xl mx-auto flex flex-row gap-4 py-6 items-stretch p-4 pixel-box-lg text-[#f4f1de]">
 
         {/* Avatar block */}
-        <div className="pixel-outline-slate group relative flex-shrink-0 w-[18em] h-[18em] bg-[#2c2c3e]">
+        <div className="pixel-outline-slate group relative flex-shrink-0 w-48 h-48 mr-2 bg-[#2c2c3e]">
         
           {user?.avatar ? (
             <div className="pixel-outline-teal w-full h-full">
               <img
                 src={avatarSrc}
                 alt="Avatar"
-                className="w-full h-full object-cover pixel-box"
+                className="w-full h-full object-cover pixel-box-sm"
               />
             </div>
           ) : (
-            <div className="w-full h-full flex items-center justify-center font-press-start text-xs text-[#a8a8b3]">
+            <div className="w-full h-full flex items-center justify-center font-press-start text-[10px] text-[#a8a8b3]">
               {'[No Avatar]'}
             </div>
           )}
@@ -119,8 +118,8 @@ function ProfileCard ( { token, user, onProfileUpdate }) {
                   htmlFor="avatar-upload" 
                   className="absolute inset-0 bg-[#1c1c28]/85 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex flex-col items-center justify-center cursor-pointer font-vt323 text-[#f4f1de]"
                 >
-                  <span className="text-4xl mb-1">📷</span>
-                  <span className="text-2xl text-center text-[#83c5be]">
+                  <span className="text-2xl mb-1">📷</span>
+                  <span className="text-base text-center text-[#83c5be]">
                     Change Avatar
                   </span>
                 </label>
@@ -131,31 +130,30 @@ function ProfileCard ( { token, user, onProfileUpdate }) {
 
 
         {/* Username, bio, etc. */}
-        <div className="font-vt323 text-2xl text-[#a8a8b3] flex-1 flex flex-col gap-5 w-full">
+        <div className="font-vt323 text-lg text-[#a8a8b3] flex-1 flex flex-col gap-3 w-full">
   
-          <p className="font-press-start text-xl md:text-2xl text-[#f4a261] tracking-wide drop-shadow-[2px_2px_0px_#1c1c28] mt-4">
-            {/* {user.username?.charAt(0).toUpperCase() + user.username?.slice(1)} */}
+          <p className="font-press-start text-base md:text-lg ml-1 mt-2 text-[#f4a261] tracking-wide drop-shadow-[2px_2px_0px_#1c1c28] mt-1">
             {user.username?.toUpperCase()}
           </p>
 
           {isEditing
             ? (
-              <form onSubmit={saveChanges} className="flex flex-col gap-4">
+              <form onSubmit={saveChanges} className="flex flex-col gap-2">
 
                 <textarea
                   placeholder="Write something about yourself!"
-                  className="bg-[#1c1c28] text-[#f4f1de] placeholder-[#a8a8b3]/60 pixel-box px-4 py-3 font-vt323 text-xl focus:outline-none resize-none"
-                  rows="3"
+                  className="bg-[#1c1c28] text-[#f4f1de] placeholder-[#a8a8b3]/60 pixel-box px-3 py-2 font-vt323 text-base focus:outline-none resize-none"
+                  rows="2"
                   value={bio}
                   onChange={(e) => setBio(e.target.value)}
-                  maxLength={200}
+                  maxLength={165}
                 />
 
-                <div className="flex flex-wrap gap-4 pt-2">
+                <div className="flex flex-wrap gap-3 pt-1">
                   <button 
                     onClick={() => clickSound.play()}
                     type="submit"
-                    className="pixel-box font-press-start text-xs py-2.5 px-4 bg-[#83c5be] hover:bg-[#62b6cb] text-[#1c1c28] font-bold transition duration-100 active:translate-y-0.5 cursor-pointer"
+                    className="pixel-box-sm font-press-start text-[10px] py-1.5 px-3 bg-[#83c5be] hover:bg-[#62b6cb] text-[#1c1c28] font-bold transition duration-100 active:translate-y-0.5 cursor-pointer"
                   >
                     Save Changes
                   </button>
@@ -166,7 +164,7 @@ function ProfileCard ( { token, user, onProfileUpdate }) {
                       cancelChanges();
                     }}
                     type="button"
-                    className="pixel-box font-press-start text-xs py-2.5 px-4 bg-[#83c5be] hover:bg-[#62b6cb] text-[#1c1c28] font-bold transition duration-100 active:translate-y-0.5 cursor-pointer"
+                    className="pixel-box-sm font-press-start text-[10px] py-1.5 px-3 bg-[#b45252] hover:bg-[#a13a3a] text-[#1c1c28] font-bold transition duration-100 active:translate-y-0.5 cursor-pointer"
                   >
                     Cancel Changes
                   </button>
@@ -174,14 +172,14 @@ function ProfileCard ( { token, user, onProfileUpdate }) {
                 </div>
               </form>
             ) : (
-              <div className="space-y-4">
-                <p className="pixel-box text-[#f4f1de] text-xl text-sm/3.5 break-words line-clamp-3 bg-[#1c1c28] p-4 border-[#2c2c3e]">
+              <div className="space-y-2">
+                <p className="pixel-box-sm text-[#f4f1de] text-base break-words line-clamp-3 bg-[#1c1c28] p-2.5 pl-3 border-[#2c2c3e]">
                   {user.bio.trim().length > 0 ? user.bio : "No bio set."}
                 </p>
 
                 <button 
                   type="button"
-                  className="pixel-box font-press-start text-xs py-2.5 px-4 bg-[#83c5be] hover:bg-[#62b6cb] text-[#1c1c28] font-bold transition duration-100 active:translate-y-0.5 cursor-pointer"
+                  className="pixel-box-sm font-press-start text-[0.5em] py-1.5 px-3 mt-1 bg-[#83c5be] hover:bg-[#62b6cb] text-[#1c1c28] font-bold transition duration-100 active:translate-y-0.5 cursor-pointer"
                   onClick={() => {
                     clickSound.play();
                     setIsEditing(true);
@@ -193,10 +191,9 @@ function ProfileCard ( { token, user, onProfileUpdate }) {
             )
           }
 
-          {/* border-t-4 border-[#2c2c3e] */}
-          <div className="text-xl font-vt323 text-[#a8a8b3]/80 flex flex-row mt-auto justify-between">
+          <div className="text-sm font-vt323 text-[#a8a8b3]/80 flex flex-row mt-auto justify-between">
             <p>Joined {new Date(user.date_joined).toLocaleDateString('en-UK', {month:'long', day:'numeric', year:'numeric'})}</p>
-            <p>ID: <span className="text-xl">{user._id}</span> </p>
+            <p>ID: <span className="text-sm">{user._id}</span> </p>
           </div>
         </div>
 
@@ -210,8 +207,8 @@ function StatsProgressBar ({ counts, totalGames }) {
 
   if (!totalGames || totalGames === 0) {
     return (
-    <div className="bg-[#2c2c3e]/30 p-4 text-center">
-      <span className="font-vt323 text-xl text-[#a8a8b3]">
+    <div className="bg-[#2c2c3e]/30 p-2 text-center">
+      <span className="font-vt323 text-base text-[#a8a8b3]">
         [ No games in library ]
       </span>
     </div>
@@ -220,8 +217,8 @@ function StatsProgressBar ({ counts, totalGames }) {
 
   return (
 
-    <div className="space-y-3 font-vt323">
-      <div className="w-full h-5 flex overflow-hidden p-0.5">
+    <div className="space-y-2 font-vt323">
+      <div className="w-full h-3 flex overflow-hidden p-0.5">
         {Object.entries(counts).map(([status, count]) => {
           if (count === 0) return null;
           const percentage = (count / totalGames) * 100;
@@ -229,26 +226,28 @@ function StatsProgressBar ({ counts, totalGames }) {
           return (
             <div 
               key={status}
-              style={{ width: `${percentage}%`}}
-              className={`${STATUS_COLOURS[status] || 'bg-[#a8a8b3]'} transition-all duration-300`}
+              style={{ 
+                width: `${percentage}%`,
+                backgroundColor: STATUS_COLOURS[status] || STATUS_COLOURS.default
+              }}
+              className="transition-all duration-300"
               title={`${STATUS_MAP[status]}: ${count} (${Math.round(percentage)}%)`}
             />
           );
         })}
       </div>
 
-      <div className="flex flex-wrap gap-x-5 gap-y-2 text-lg text-[#f4f1de]">
+      <div className="flex flex-wrap gap-x-3 gap-y-1 text-sm text-[#f4f1de]">
         {Object.entries(counts).map(([status, count]) => {
           if (count === 0) return null;
           const percentage = Math.round((count / totalGames) * 100);
 
           return (
-            <div key={status} className="flex items-center gap-2">
-              <span className={`w-3 h-3 inline-block ${STATUS_COLOURS[status] || 'bg-[#a8a8b3]'}`}/>
+            <div key={status} className="flex items-center gap-1.5">
+              <span className="w-2 h-2 inline-block" style= {{backgroundColor: STATUS_COLOURS[status] || STATUS_COLOURS.default}} />
               <span className="">{STATUS_MAP[status].toUpperCase()}</span>: {' '}
               <span className="text-[#f4a261]">{count}</span> {' '}
-              <span className="text-[#a8a8b3] text-base">({percentage}%)</span>
-              {/* <span>{statusMap[status]}: {count} ({percentage}%)</span> */}
+              <span className="text-[#a8a8b3] text-xs">({percentage}%)</span>
             </div>
           );
         })}
@@ -274,7 +273,6 @@ function Stats ( { userGames } ) {
     [GAME_STATUS.DROPPED]: 0,
   }
 
-  // get top genre
   userGames.forEach((game) => {
     if (Array.isArray(game?.genres)) {
       game.genres.forEach((g) => {
@@ -288,7 +286,6 @@ function Stats ( { userGames } ) {
   .slice(0, 3)               
   .map(([genre]) => genre);   
 
-  // get status counts
   userGames.forEach((game) => {
     if (game.status in statusCounts) { 
       statusCounts[game.status] += 1; 
@@ -297,52 +294,51 @@ function Stats ( { userGames } ) {
   });
 
   return (
-  <div className="pixel-box-lg bg-[#1c1c28] p-6 text-[#f4f1de] mt-6 space-y-6 max-w-5xl mx-auto">
+  <div className="pixel-box bg-[#1c1c28] p-6 text-[#f4f1de] mt-6 space-y-4 max-w-4xl mx-auto">
     
-    <div className="flex items-center gap-3 border-b-4 border-[#2c2c3e] pb-3">
-      <div className="w-2.5 h-2.5 bg-[#83c5be]" />
-      <h2 className="text-[#f4a261] font-press-start text-sm uppercase tracking-wider">
+    <div className="p-1 pt-0 flex items-center gap-2 border-b-3 border-[#2c2c3e] pb-2">
+      <div className="w-2.5 h-2.5 bg-[#83c5be] mb-1 mr-1 mr-2" />
+      <h2 className="text-[#f4a261] font-press-start text-xs uppercase tracking-wider">
         Player Statistics
       </h2>
     </div>
 
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
       
       {/* Total Games */}
-      <div className="bg-[#2c2c3e]/50 p-4 text-center">
-        <p className="font-press-start text-xs text-[#83c5be] uppercase mb-1">
+      <div className="flex flex-col gap-1.5 pixel-box-sm bg-[#2c2c3e]/70 p-3 pt-4.5 text-center">
+        <p className="font-press-start text-[10px] text-[#83c5be] uppercase mb-0.5">
           Total Games
         </p>
-        <p className="font-vt323 text-4xl text-[#f4f1de] font-bold">
+        <p className="font-vt323 text-2xl text-[#f4f1de] font-bold">
           {totalGames}
         </p>
       </div>
 
       {/* Total Hours */}
-      <div className="bg-[#2c2c3e]/50 p-4 text-center">
-        <p className="font-press-start text-xs text-[#f4a261] uppercase mb-1">
+      <div className="flex flex-col gap-1.5 pixel-box-sm bg-[#2c2c3e]/70 p-2.5 pt-4.5 text-center">
+        <p className="font-press-start text-[10px] text-[#f4a261] uppercase mb-0.5">
           Total Hours
         </p>
-        <p className="font-vt323 text-4xl text-[#f4f1de] font-bold">
+        <p className="font-vt323 text-2xl text-[#f4f1de] font-bold">
           {totalHours}
         </p>
       </div>
 
       {/* Top Genres */}
-      <div className="bg-[#2c2c3e]/50 p-4 text-center">
-        <p className="font-press-start text-xs text-[#a8a8b3] uppercase mb-1">
+      <div className="flex flex-col gap-1.5 pixel-box-sm bg-[#2c2c3e]/70 p-2.5 pt-4.5 pb-3 text-center">
+        <p className="font-press-start text-[10px] text-[#a8a8b3] uppercase mb-0.5">
           Top Genres
         </p>
-        <p className="font-vt323 text-2xl text-[#f4f1de] truncate">
+        <p className="font-vt323 text-lg text-[#f4f1de] truncate">
           {top3Genres.length === 0 ? "None" : top3Genres.join(', ')}
         </p>
       </div>
-
     </div>
 
     {/* Progress Bar */}
-    <div className="bg-[#2c2c3e]/30 p-4 space-y-2">
-      <p className="font-press-start text-xs text-[#a8a8b3] uppercase mb-2">
+    <div className="pixel-box p-5 bg-[#2c2c3e]/50">
+      <p className="font-press-start text-[10px] text-[#a8a8b3] uppercase mb-1">
         Library Breakdown
       </p>
       <StatsProgressBar counts={statusCounts} totalGames={totalGames} />
@@ -379,30 +375,30 @@ function Library ({ userGames }) {
   favouriteGames.sort((a, b) => a.game_title.localeCompare(b.game_title));
 
   return (
-    <div className="w-full max-w-6xl mx-auto font-vt323">
+    <div className="w-full max-w-4xl mx-auto font-vt323">
 
       {/* Favorites Games */}
-      <section className="w-full max-w-5xl mx-auto">
+      <section className="w-full max-w-4xl mx-auto mt-5">
         <GameRow title="Favourite Games" games={favouriteGames} />
       </section>
 
-      <h2 className="text-lg md:text-xl text-[#f4f1de] font-press-start border-[#2c2c3e] pt-10 mt-10">
+      <h2 className="text-base text-[#f4f1de] font-press-start border-[#2c2c3e] pt-6 mt-6">
         Your Library
       </h2>
 
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-[#1c1c28] p-4 mt-5 pixel-box">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-[#1c1c28] p-3 mt-3 pixel-box-sm">
 
         {/* Filtering */}
         <div className="flex flex-1 flex-col sm:flex-row items-stretch sm:items-center gap-3">
 
           {/* Select box */}
-          <div className="relative min-w-[160px]">
+          <div className="relative min-w-[140px]">
             <select
               name="filter" 
               id="filter" 
               onChange={handleSelect}
               value={filterStatus}
-              className="w-full appearance-none bg-[#2c2c3e] text-[#f4f1de] font-vt323 text-xl px-4 py-2 focus:outline-none cursor-pointer"
+              className="pixel-box w-full appearance-none bg-[#2c2c3e] text-[#f4f1de] font-vt323 text-base px-3 py-1.5 focus:outline-none cursor-pointer"
             >
               <option value={'all'}>All</option>
               <option value={GAME_STATUS.PLAYING}>Playing</option>
@@ -413,7 +409,7 @@ function Library ({ userGames }) {
               <option value={GAME_STATUS.DROPPED}>Dropped</option>
             </select>
 
-            <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#83c5be]">
+            <span className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-[10px] text-[#83c5be]">
               ▼
             </span>
           </div>
@@ -425,7 +421,7 @@ function Library ({ userGames }) {
               placeholder="Search games..." 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pixel-box w-full bg-[#2c2c3e] text-[#f4f1de] placeholder-[#a8a8b3]/50 font-vt323 text-xl px-4 py-2 focus:outline-none"
+              className="pixel-box w-full bg-[#2c2c3e] text-[#f4f1de] placeholder-[#a8a8b3]/50 font-vt323 text-base px-3 py-1.5 focus:outline-none"
             />
           </div>
 
@@ -436,7 +432,7 @@ function Library ({ userGames }) {
                 clickSound.play();
                 setSearchQuery('');
               }}
-              className="pixel-box font-press-start text-xs py-2.5 px-4 bg-[#e76f51] hover:bg-[#d65f42] text-[#1c1c28] font-bold transition duration-100 active:translate-y-0.5 cursor-pointer"
+              className="pixel-box font-press-start text-[10px] py-1.5 px-3 bg-[#e76f51] hover:bg-[#d65f42] text-[#1c1c28] font-bold transition duration-100 active:translate-y-0.5 cursor-pointer"
             >
               CLEAR
             </button>
@@ -444,7 +440,7 @@ function Library ({ userGames }) {
 
         </div>
 
-        <div className="text-right text-[#a8a8b3] text-xl font-vt323">
+        <div className="text-right text-[#a8a8b3] text-lg font-vt323">
           SHOWING <span className="text-[#f4a261]">{displayedGames.length}</span> GAMES
         </div>
 
@@ -452,12 +448,12 @@ function Library ({ userGames }) {
 
 
       {/* Main grid */}
-      <section className="mt-6">
+      <section className="mt-7">
         <GameGrid
           title={
             filterStatus === 'all'
               ? 'ALL GAMES'
-              : `${(STATUS_MAP[filterStatus]).toUpperCase()}`
+              : `${(STATUS_MAP[filterStatus]).toUpperCase()} GAMES`
           }
           games={displayedGames}
           cols="5"
@@ -480,7 +476,6 @@ export function Profile () {
     setUser(updatedUser);
   };
 
-  // fetch profile info
   useEffect(() => {
     if (!token) {
       console.error("No token found in sessionStorage!");
@@ -509,7 +504,6 @@ export function Profile () {
 
   }, [token]);
 
-  // fetch library
   useEffect(() => {
     const fetchGames = async () => {
       const userId = getUserIdFromToken();
@@ -543,33 +537,32 @@ export function Profile () {
 
   }, []);
 
-  // loading render
   if (loading) {
     return (
       <div>
         <Navbar />
 
-        <div className="flex flex-col items-center justify-center min-h-[300px] w-full gap-4 font-vt323 p-8">
+        <div className="flex flex-col items-center justify-center min-h-[200px] w-full gap-3 font-vt323 p-6">
 
           <div className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-[#83c5be] animate-bounce" style={{ animationDelay: '0ms' }} />
-            <div className="w-4 h-4 bg-[#f4a261] animate-bounce" style={{ animationDelay: '150ms' }} />
-            <div className="w-4 h-4 bg-[#e76f51] animate-bounce" style={{ animationDelay: '300ms' }} />
+            <div className="w-3 h-3 bg-[#83c5be] animate-bounce" style={{ animationDelay: '0ms' }} />
+            <div className="w-3 h-3 bg-[#f4a261] animate-bounce" style={{ animationDelay: '150ms' }} />
+            <div className="w-3 h-3 bg-[#e76f51] animate-bounce" style={{ animationDelay: '300ms' }} />
           </div>
 
-          <p className="font-press-start text-sm text-[#f4a261] animate-pulse tracking-widest uppercase">
+          <p className="font-press-start text-xs text-[#f4a261] animate-pulse tracking-widest uppercase">
             LOADING PROFILE...
           </p>
         </div>
       </div>
-    );}
+    );
+  }
 
-  // Failed render
   if (!user) {
     return (
       <div>
         <Navbar />
-        <p>Failed to load profile. Please login or try again.</p>
+        <p className="text-center font-vt323 text-lg py-8 text-[#a8a8b3]">Failed to load profile. Please login or try again.</p>
       </div>
     );
   }

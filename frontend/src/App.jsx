@@ -4,7 +4,7 @@ import { SignUp } from './signup';
 import { Login } from './login';
 import { Profile } from './profile';
 import { Discover } from './discover';
-import { ViewGame } from './viewGame.jsx';
+import { ViewGame } from './game.jsx';
 import { AuthProvider, useAuth } from './context/authContext.jsx';
 
 function AppContent() {

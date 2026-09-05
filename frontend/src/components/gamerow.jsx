@@ -8,12 +8,12 @@ export function GameRow ({ title, games }) {
 
   return (
   <div className="">
-    <div className="pixel-box-lg w-full my-6 bg-[#1c1c28]">
-      <section className="p-5 space-y-4">
+    <div className="pixel-box w-full my-3 bg-[#1c1c28]">
+      <section className="p-6 space-y-4">
         
-        <div className="flex items-center gap-3 border-b-4 border-[#2c2c3e] pb-3">
+        <div className="flex items-center gap-3 border-b-3 border-[#2c2c3e] pb-3">
           <div className="w-2.5 h-2.5 bg-[#83c5be] mb-1 mr-1" />
-          <h2 className="text-[#f4a261] font-press-start text-xs md:text-sm uppercase tracking-wider">
+          <h2 className="text-[#f4a261] font-press-start text-xs uppercase tracking-wider">
             {title}
           </h2>
         </div>
