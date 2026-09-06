@@ -7,6 +7,7 @@ import { GAME_STATUS, STATUS_MAP, STAR_MAP, STATUS_COLOURS, STATUS_COLOURS_LOW }
 import { getUserIdFromToken } from '../../backend/services/authServices.js'
 import clickAudio from "/audio/click.mp3";
 
+const APIURL = process.env.API_URL;
 
 function ViewEntry({ game, close, onEntryUpdated }) {
 
@@ -424,7 +425,7 @@ export function ViewGame() {
 
     setLoading(true);
 
-    fetch(`http://localhost:5000/api/game/${id}`)
+    fetch(`http://localhost:5000/${APIURL}/game/${id}`)
       .then((res) => res.json())
       .then((data) => {
         setGame(data);

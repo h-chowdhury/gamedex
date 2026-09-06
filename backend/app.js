@@ -25,6 +25,7 @@ const router = express.Router();
 const port = process.env.PORT || 10000;
 const mongoDBURL = process.env.DB_URL || 'mongodb://127.0.0.1:27017/gamedex';
 const rawgAPIkey = process.env.RAWG_API_KEY;
+const APIURL = process.env.API_URL;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -49,7 +50,7 @@ const upload = multer({storage})
 
 // const JWT_SECRET = process.env.JWT_SECRET;
 // const gameID = 4200;
-// const gameURL = `https://api.rawg.io/api/games/${gameID}?key=${rawgAPIkey}`;
+// const gameURL = `https://api.rawg.io/${APIURL}/games/${gameID}?key=${rawgAPIkey}`;
 
 
 // Database connection *************************************************** //
@@ -62,7 +63,14 @@ mongoose.connect(mongoDBURL)
 
 
 // Middleware  *********************************************************** //
-app.use(cors());
+app.use(cors({
+  origin: [
+    'http://localhost:5173',
+    'http://localhost:3000',
+    'https://your-frontend-name.onrender.com'
+  ],
+  credentials: true
+}));
 app.use(express.json());
 app.use(function (req, res, next) {
     console.log(`User requested: ${req.method} to ${req.url}`);
@@ -126,7 +134,7 @@ app.get('/', (req, res) => {
 
 
 // Return singular game match ******************************************** //
-app.get('/api/game/:idOrSlug', async (req, res) => {
+app.get(`/${APIURL}/game/:idOrSlug`, async (req, res) => {
 
   const idOrSlug = req.params.idOrSlug;
 
@@ -145,7 +153,7 @@ app.get('/api/game/:idOrSlug', async (req, res) => {
 
   // Live API fetch
   try {
-    const response = await fetch(`https://api.rawg.io/api/games/${idOrSlug}?key=${rawgAPIkey}`);
+    const response = await fetch(`https://api.rawg.io/${APIURL}/games/${idOrSlug}?key=${rawgAPIkey}`);
 
     if (!response.ok) {
       return res.status(response.status).json({ 
@@ -164,7 +172,7 @@ app.get('/api/game/:idOrSlug', async (req, res) => {
 
 
 // Return several game matches ******************************************* //
-app.get('/api/games', async (req, res) => {
+app.get(`/${APIURL}/games`, async (req, res) => {
 
   const { search } = req.query;
 
@@ -190,7 +198,7 @@ app.get('/api/games', async (req, res) => {
   try {
     const { search } = req.query;
 
-    const url = new URL('https://api.rawg.io/api/games');
+    const url = new URL(`https://api.rawg.io/${APIURL}/games`);
     url.searchParams.append('key', rawgAPIkey);
 
     if (search) url.searchParams.append('search', search);
@@ -217,7 +225,7 @@ app.get('/api/games', async (req, res) => {
 // Return trending, upcoming and popular games *************************** //
 
 // trending
-app.get('/api/games/trending', async (req, res) => {
+app.get(`/${APIURL}/games/trending`, async (req, res) => {
 
   // local data fetch
   if (USE_MOCK_DATA) {
@@ -229,7 +237,7 @@ app.get('/api/games/trending', async (req, res) => {
     const today = new Date().toISOString().split('T')[0];
     const pastDate = new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]; // 60 days ago
 
-    const url = `https://api.rawg.io/api/games?key=${rawgAPIkey}&dates=${pastDate},${today}&ordering=-added&page_size=25`;
+    const url = `https://api.rawg.io/${APIURL}/games?key=${rawgAPIkey}&dates=${pastDate},${today}&ordering=-added&page_size=25`;
     const response = await fetch(url);
 
     if (!response.ok) {
@@ -248,7 +256,7 @@ app.get('/api/games/trending', async (req, res) => {
 
 
 // upcoming
-app.get('/api/games/upcoming', async (req, res) => {
+app.get(`/${APIURL}/games/upcoming`, async (req, res) => {
 
   // local data fetch
   if (USE_MOCK_DATA) {
@@ -260,7 +268,7 @@ app.get('/api/games/upcoming', async (req, res) => {
     const today = new Date().toISOString().split('T')[0];
     const futureDate = new Date(Date.now() + 180 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]; // 180 days in future
 
-    const url = `https://api.rawg.io/api/games?key=${rawgAPIkey}&dates=${today},${futureDate}&ordering=released&page_size=25`;
+    const url = `https://api.rawg.io/${APIURL}/games?key=${rawgAPIkey}&dates=${today},${futureDate}&ordering=released&page_size=25`;
     const response = await fetch(url);
 
     if (!response.ok) {
@@ -278,7 +286,7 @@ app.get('/api/games/upcoming', async (req, res) => {
 
 
 // popular
-app.get('/api/games/popular', async (req, res) => {
+app.get(`/${APIURL}/games/popular`, async (req, res) => {
 
   // local data fetch
   if (USE_MOCK_DATA) {
@@ -287,7 +295,7 @@ app.get('/api/games/popular', async (req, res) => {
 
   // live API fetch
   try {
-    const url = `https://api.rawg.io/api/games?key=${rawgAPIkey}&ordering=-added&page_size=25`;
+    const url = `https://api.rawg.io/${APIURL}/games?key=${rawgAPIkey}&ordering=-added&page_size=25`;
     const response = await fetch(url);
 
     if (!response.ok) {
@@ -305,7 +313,7 @@ app.get('/api/games/popular', async (req, res) => {
 
 
 // top 40
-app.get('/api/games/top-40', async (req, res) => {
+app.get(`/${APIURL}/games/top-40`, async (req, res) => {
 
   // local data fetch
   if (USE_MOCK_DATA) {
@@ -314,7 +322,7 @@ app.get('/api/games/top-40', async (req, res) => {
 
   // live API fetch
   try {
-    const url = `https://api.rawg.io/api/games?key=${rawgAPIkey}&ordering=-rating&page_size=40`;
+    const url = `https://api.rawg.io/${APIURL}/games?key=${rawgAPIkey}&ordering=-rating&page_size=40`;
     const response = await fetch(url);
 
     if (!response.ok) {
