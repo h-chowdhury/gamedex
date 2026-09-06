@@ -25,6 +25,7 @@ const port = process.env.PORT || 10000;
 const mongoDBURL = process.env.DB_URL || 'mongodb://127.0.0.1:27017/gamedex';
 const rawgAPIkey = process.env.RAWG_API_KEY;
 const APIURL = process.env.API_URL;
+const RENDERURL = process.env.RENDER_URL;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -66,7 +67,7 @@ app.use(cors({
   origin: [
     'http://localhost:5173',
     'http://localhost:3000',
-    'https://your-frontend-name.onrender.com'
+    {RENDERURL}
   ],
   credentials: true
 }));
@@ -591,6 +592,6 @@ app.post(`/api/login`, async (req, res) => {
 });
 
 
-app.listen(port, () => {
+app.listen(port, '0.0.0.0', () => {
   console.log(`Server started at port ${port}`);
 });
