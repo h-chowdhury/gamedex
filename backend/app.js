@@ -129,6 +129,7 @@ app.put(`/api/profile/update-profile`, verifyToken, upload.single('avatar'), asy
 // Routes **************************************************************** //
 app.get('/', (req, res) => {
   console.log(`Connected to Express & MongoDB Setup!`);
+  res.status(200).json({ status: "ok", message: "App is running" });
 });
 
 
