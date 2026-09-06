@@ -8,6 +8,9 @@ import { GAME_STATUS, STATUS_MAP, STATUS_COLOURS } from '../../backend/services/
 import clickAudio from "/audio/click.mp3";
 
 
+const APIURL = import.meta.env.VITE_API_URL || 'http://localhost:10000';
+
+
 function ProfileCard ( { token, user, onProfileUpdate }) {
 
   const clickSound = new Audio(clickAudio);
@@ -37,7 +40,7 @@ function ProfileCard ( { token, user, onProfileUpdate }) {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/profile/update-profile', {
+      const response = await fetch(`${APIURL}/api/profile/update-profile`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -79,7 +82,7 @@ function ProfileCard ( { token, user, onProfileUpdate }) {
     ? previewUrl
     : user?.avatar?.startsWith("https")
       ? user.avatar
-      : `http://localhost:5000${user?.avatar}`
+      : `${APIURL}${user?.avatar}`
 
 
   return (
@@ -483,7 +486,7 @@ export function Profile () {
       return;
     }
 
-    fetch("http://localhost:5000/users/me", {
+    fetch(`${APIURL}/api/users/me`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -516,7 +519,7 @@ export function Profile () {
       }
 
       try {
-        const resGames = await fetch(`http://localhost:5000/fetch-entry?userId=${userId}`, { 
+        const resGames = await fetch(`${APIURL}/api/fetch-entry?userId=${userId}`, { 
           headers: { 'Authorization': `Bearer ${token}`}
         });
 

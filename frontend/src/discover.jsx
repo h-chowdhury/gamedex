@@ -7,8 +7,9 @@ import clickAudio from "/audio/click.mp3";
 
 // Styles scaled down to match the compact retro layout
 const h1style = "text-[#f4f1de] text-base font-press-start tracking-wide uppercase mb-1";
-
 const clickSound = new Audio(clickAudio);
+const APIURL = import.meta.env.VITE_API_URL || 'http://localhost:10000';
+
 
 function debounce(func, delay) {
   let timeout;
@@ -45,10 +46,10 @@ function DiscoveryView () {
         setLoading(true);
 
         const [trendingRes, upcomingRes, popularRes, top40Res] = await Promise.all([
-          fetch('http://localhost:5000/api/games/trending').then(res => res.json()),
-          fetch('http://localhost:5000/api/games/upcoming').then(res => res.json()),
-          fetch('http://localhost:5000/api/games/popular').then(res => res.json()),
-          fetch('http://localhost:5000/api/games/top-40').then(res => res.json()),
+          fetch(`${APIURL}/api/games/trending`).then(res => res.json()),
+          fetch(`${APIURL}/api/games/upcoming`).then(res => res.json()),
+          fetch(`${APIURL}/api/games/popular`).then(res => res.json()),
+          fetch(`${APIURL}/api/games/top-40`).then(res => res.json()),
         ]);
 
         setTrending(trendingRes.results || trendingRes);
@@ -147,7 +148,7 @@ export function Discover() {
     setLoading(true);
 
     try {
-      const res = await fetch(`http://localhost:5000/api/games?search=${encodeURIComponent(searchQuery)}`);
+      const res = await fetch(`${APIURL}/api/games?search=${encodeURIComponent(searchQuery)}`);
       const data = await res.json();
       setSearchResults(data.results || []);
     } catch (err) {

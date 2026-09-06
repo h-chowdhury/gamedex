@@ -20,7 +20,6 @@ const USE_MOCK_DATA = false;
 
 dotenv.config();
 const app = express();
-const router = express.Router();
 
 const port = process.env.PORT || 10000;
 const mongoDBURL = process.env.DB_URL || 'mongodb://127.0.0.1:27017/gamedex';
@@ -81,7 +80,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Image storage configuration ******************************************* //
 
-router.put('/update-profile', verifyToken, upload.single('avatar'), async (req, res) => {
+app.put(`/api/profile/update-profile`, verifyToken, upload.single('avatar'), async (req, res) => {
   try {
     const userId = req.user.id || req.user.userId || req.user._id;
     const { username, bio } = req.body;
@@ -107,7 +106,6 @@ router.put('/update-profile', verifyToken, upload.single('avatar'), async (req, 
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       { $set: updateData },
-      { returnDocument: 'after' },
       { new: true, runValidators: true }
     ).select('-password');
 
@@ -124,7 +122,7 @@ router.put('/update-profile', verifyToken, upload.single('avatar'), async (req, 
   }
 });
 
-app.use('/profile', router);
+// app.use('/profile', router);
 
 
 // Routes **************************************************************** //
@@ -134,7 +132,7 @@ app.get('/', (req, res) => {
 
 
 // Return singular game match ******************************************** //
-app.get(`/${APIURL}/game/:idOrSlug`, async (req, res) => {
+app.get(`/api/game/:idOrSlug`, async (req, res) => {
 
   const idOrSlug = req.params.idOrSlug;
 
@@ -153,7 +151,7 @@ app.get(`/${APIURL}/game/:idOrSlug`, async (req, res) => {
 
   // Live API fetch
   try {
-    const response = await fetch(`https://api.rawg.io/${APIURL}/games/${idOrSlug}?key=${rawgAPIkey}`);
+    const response = await fetch(`https://api.rawg.io/api/games/${idOrSlug}?key=${rawgAPIkey}`);
 
     if (!response.ok) {
       return res.status(response.status).json({ 
@@ -171,8 +169,125 @@ app.get(`/${APIURL}/game/:idOrSlug`, async (req, res) => {
 });
 
 
+// Return trending, upcoming and popular games *************************** //
+
+// trending
+app.get(`/api/games/trending`, async (req, res) => {
+
+  // local data fetch
+  if (USE_MOCK_DATA) {
+    return [];
+  }
+
+  // live API fetch
+  try {
+    const today = new Date().toISOString().split('T')[0];
+    const pastDate = new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]; // 60 days ago
+
+    const url = `https://api.rawg.io/api/games?key=${rawgAPIkey}&dates=${pastDate},${today}&ordering=-added&page_size=25`;
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      return res.status(response.status).json({ error: 'Failed to fetch trending games from RAWG' });
+    }
+
+    const data = await response.json();
+    console.log(data);
+    res.json(data.results);
+
+  } catch (error) {
+    console.error("Error fetching trending games:", error)
+    return res.status(500).json({ error: "Failed to fetch trending games." });
+  }
+});
+
+
+// upcoming
+app.get(`/api/games/upcoming`, async (req, res) => {
+
+  // local data fetch
+  if (USE_MOCK_DATA) {
+    return [];
+  }
+
+  // live API fetch
+  try {
+    const today = new Date().toISOString().split('T')[0];
+    const futureDate = new Date(Date.now() + 180 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]; // 180 days in future
+
+    const url = `https://api.rawg.io/api/games?key=${rawgAPIkey}&dates=${today},${futureDate}&ordering=released&page_size=25`;
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      return res.status(response.status).json({ error: 'Failed to fetch upcoming games from RAWG' });
+    }
+
+    const data = await response.json();
+    res.json(data.results);
+
+  } catch (error) {
+    console.error("Error fetching upcoming games:", error)
+    return res.status(500).json({ error: "Failed to fetch upcoming games." });
+  }
+});
+
+
+// popular
+app.get(`/api/games/popular`, async (req, res) => {
+
+  // local data fetch
+  if (USE_MOCK_DATA) {
+    return [];
+  }
+
+  // live API fetch
+  try {
+    const url = `https://api.rawg.io/api/games?key=${rawgAPIkey}&ordering=-added&page_size=25`;
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      return res.status(response.status).json({ error: 'Failed to fetch popular games from RAWG' });
+    }
+
+    const data = await response.json();
+    res.json(data.results);
+
+  } catch (error) {
+    console.error("Error fetching popular games:", error)
+    return res.status(500).json({ error: "Failed to fetch popular games." });
+  }
+});
+
+
+// top 40
+app.get(`/api/games/top-40`, async (req, res) => {
+
+  // local data fetch
+  if (USE_MOCK_DATA) {
+    return [];
+  }
+
+  // live API fetch
+  try {
+    const url = `https://api.rawg.io/api/games?key=${rawgAPIkey}&ordering=-rating&page_size=40`;
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      return res.status(response.status).json({ error: 'Failed to fetch top games from RAWG' });
+    }
+
+    const data = await response.json();
+    res.json(data.results);
+
+  } catch (error) {
+    console.error("Error fetching top games:", error)
+    return res.status(500).json({ error: "Failed to fetch top games." });
+  }
+});
+
+
 // Return several game matches ******************************************* //
-app.get(`/${APIURL}/games`, async (req, res) => {
+app.get(`/api/games`, async (req, res) => {
 
   const { search } = req.query;
 
@@ -198,7 +313,7 @@ app.get(`/${APIURL}/games`, async (req, res) => {
   try {
     const { search } = req.query;
 
-    const url = new URL(`https://api.rawg.io/${APIURL}/games`);
+    const url = new URL(`https://api.rawg.io/api/games`);
     url.searchParams.append('key', rawgAPIkey);
 
     if (search) url.searchParams.append('search', search);
@@ -222,125 +337,8 @@ app.get(`/${APIURL}/games`, async (req, res) => {
 });
 
 
-// Return trending, upcoming and popular games *************************** //
-
-// trending
-app.get(`/${APIURL}/games/trending`, async (req, res) => {
-
-  // local data fetch
-  if (USE_MOCK_DATA) {
-    return [];
-  }
-
-  // live API fetch
-  try {
-    const today = new Date().toISOString().split('T')[0];
-    const pastDate = new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]; // 60 days ago
-
-    const url = `https://api.rawg.io/${APIURL}/games?key=${rawgAPIkey}&dates=${pastDate},${today}&ordering=-added&page_size=25`;
-    const response = await fetch(url);
-
-    if (!response.ok) {
-      return res.status(response.status).json({ error: 'Failed to fetch trending games from RAWG' });
-    }
-
-    const data = await response.json();
-    console.log(data);
-    res.json(data.results);
-
-  } catch (error) {
-    console.error("Error fetching trending games:", error)
-    return res.status(500).json({ error: "Failed to fetch trending games." });
-  }
-});
-
-
-// upcoming
-app.get(`/${APIURL}/games/upcoming`, async (req, res) => {
-
-  // local data fetch
-  if (USE_MOCK_DATA) {
-    return [];
-  }
-
-  // live API fetch
-  try {
-    const today = new Date().toISOString().split('T')[0];
-    const futureDate = new Date(Date.now() + 180 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]; // 180 days in future
-
-    const url = `https://api.rawg.io/${APIURL}/games?key=${rawgAPIkey}&dates=${today},${futureDate}&ordering=released&page_size=25`;
-    const response = await fetch(url);
-
-    if (!response.ok) {
-      return res.status(response.status).json({ error: 'Failed to fetch upcoming games from RAWG' });
-    }
-
-    const data = await response.json();
-    res.json(data.results);
-
-  } catch (error) {
-    console.error("Error fetching upcoming games:", error)
-    return res.status(500).json({ error: "Failed to fetch upcoming games." });
-  }
-});
-
-
-// popular
-app.get(`/${APIURL}/games/popular`, async (req, res) => {
-
-  // local data fetch
-  if (USE_MOCK_DATA) {
-    return [];
-  }
-
-  // live API fetch
-  try {
-    const url = `https://api.rawg.io/${APIURL}/games?key=${rawgAPIkey}&ordering=-added&page_size=25`;
-    const response = await fetch(url);
-
-    if (!response.ok) {
-      return res.status(response.status).json({ error: 'Failed to fetch popular games from RAWG' });
-    }
-
-    const data = await response.json();
-    res.json(data.results);
-
-  } catch (error) {
-    console.error("Error fetching popular games:", error)
-    return res.status(500).json({ error: "Failed to fetch popular games." });
-  }
-});
-
-
-// top 40
-app.get(`/${APIURL}/games/top-40`, async (req, res) => {
-
-  // local data fetch
-  if (USE_MOCK_DATA) {
-    return [];
-  }
-
-  // live API fetch
-  try {
-    const url = `https://api.rawg.io/${APIURL}/games?key=${rawgAPIkey}&ordering=-rating&page_size=40`;
-    const response = await fetch(url);
-
-    if (!response.ok) {
-      return res.status(response.status).json({ error: 'Failed to fetch top games from RAWG' });
-    }
-
-    const data = await response.json();
-    res.json(data.results);
-
-  } catch (error) {
-    console.error("Error fetching top games:", error)
-    return res.status(500).json({ error: "Failed to fetch top games." });
-  }
-});
-
-
 // Save game entry info ************************************************** //
-app.post('/save-entry', async (req, res) => {
+app.post(`/api/save-entry`, async (req, res) => {
   try {
     const { userId, gameId, gameTitle, gameImage, gameReleased, gameGenres, formData } = req.body;
 
@@ -399,7 +397,7 @@ app.post('/save-entry', async (req, res) => {
 
 
 // delete game entry info ************************************************** //
-app.delete('/delete-entry', async (req, res) => {
+app.delete(`/api/delete-entry`, async (req, res) => {
   try {
     const { userId, gameId, gameTitle, gameImage } = req.body;
 
@@ -439,7 +437,7 @@ app.delete('/delete-entry', async (req, res) => {
 
 
 // Fetch game entry info ************************************************** //
-app.get('/fetch-entry', async (req, res) => {
+app.get(`/api/fetch-entry`, async (req, res) => {
   try {
     const { userId, gameId } = req.query;
 
@@ -464,7 +462,7 @@ app.get('/fetch-entry', async (req, res) => {
 
 
 // Return user data ****************************************************** //
-app.get('/users/me', verifyToken, async (req, res) => {
+app.get(`/api/users/me`, verifyToken, async (req, res) => {
   const userId = req.user.id || req.user.userId || req.user._id;
   const user = await User.findById(userId).select('-password');
   res.json(user);
@@ -472,7 +470,7 @@ app.get('/users/me', verifyToken, async (req, res) => {
 
 
 // Return activity feed ************************************************** // 
-app.get("/activity-feed/global", async (req, res) => {
+app.get(`/api/activity-feed/global`, async (req, res) => {
   try {
     const activities = await Activity.find()
       .populate('user', 'username avatar')
@@ -490,7 +488,7 @@ app.get("/activity-feed/global", async (req, res) => {
 
 
 // Manage user registration ********************************************** //
-app.post('/signup', async (req, res) => {
+app.post(`/api/signup`, async (req, res) => {
 
   try {
     const { email, username, password } = req.body;
@@ -547,7 +545,7 @@ app.post('/signup', async (req, res) => {
 
 
 // Manage user login ***************************************************** //
-app.post('/login', async (req, res) => {
+app.post(`/api/login`, async (req, res) => {
 
   try {
     const { username, password } = req.body;

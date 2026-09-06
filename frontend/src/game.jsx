@@ -7,7 +7,7 @@ import { GAME_STATUS, STATUS_MAP, STAR_MAP, STATUS_COLOURS, STATUS_COLOURS_LOW }
 import { getUserIdFromToken } from '../../backend/services/authServices.js'
 import clickAudio from "/audio/click.mp3";
 
-const APIURL = process.env.API_URL;
+const APIURL = import.meta.env.VITE_API_URL || 'http://localhost:10000';
 
 function ViewEntry({ game, close, onEntryUpdated }) {
 
@@ -45,7 +45,7 @@ function ViewEntry({ game, close, onEntryUpdated }) {
       }
 
       try {
-        const res = await fetch(`http://localhost:5000/fetch-entry?userId=${userId}&gameId=${game.id}`, {
+        const res = await fetch(`${APIURL}/api/fetch-entry?userId=${userId}&gameId=${game.id}`, {
           headers: {
             'Authorization': `Bearer ${sessionStorage.getItem('token')}`
           }
@@ -101,7 +101,7 @@ function ViewEntry({ game, close, onEntryUpdated }) {
 
     try {
 
-      const res = await fetch('http://localhost:5000/save-entry', {
+      const res = await fetch(`${APIURL}/api/save-entry`, {
         method: 'POST',
         headers: {'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -139,7 +139,7 @@ function ViewEntry({ game, close, onEntryUpdated }) {
     }
     
     try {
-      const res = await fetch(`http://localhost:5000/delete-entry`, {
+      const res = await fetch(`${APIURL}/api/delete-entry`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${sessionStorage.getItem('token')}`,
@@ -425,7 +425,7 @@ export function ViewGame() {
 
     setLoading(true);
 
-    fetch(`http://localhost:5000/${APIURL}/game/${id}`)
+    fetch(`${APIURL}/api/game/${id}`)
       .then((res) => res.json())
       .then((data) => {
         setGame(data);
@@ -444,7 +444,7 @@ export function ViewGame() {
     if (!userId || !id) return;
 
     try {
-      const res = await fetch (`http://localhost:5000/fetch-entry?userId=${userId}&gameId=${id}`,
+      const res = await fetch (`${APIURL}/api/fetch-entry?userId=${userId}&gameId=${id}`,
         {
           headers: {
             Authorization: `Bearer ${sessionStorage.getItem('token')}`,
@@ -641,7 +641,7 @@ export function ViewGame() {
                     </span>
 
                     <span 
-                      className="text-xs pixel-box-base text-[#f4f1de] px-2 py-0.5 mb-1 mt-0.5"
+                      className="text-xs pixel-box-sm text-[#f4f1de] px-2 py-0.5 mb-1 mt-0.5"
                       style={{backgroundColor: STATUS_COLOURS_LOW[formData?.status] || STATUS_COLOURS_LOW.default}}
                     >
                       {hasEntry ? STATUS_MAP[formData.status] : "N/A"}

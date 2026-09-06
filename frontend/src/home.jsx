@@ -8,6 +8,8 @@ import { useAuth } from './context/authContext.jsx';
 import { getUserIdFromToken } from '../../backend/services/authServices.js';
 import clickAudio from "/audio/click.mp3";
 
+const APIURL = import.meta.env.VITE_API_URL || 'http://localhost:10000';
+
 
 function formatDate(date) {
   if (!date) return '';
@@ -71,7 +73,7 @@ function ActivityRow ({ data }) {
             src={
               avatar?.startsWith('https')
                 ? avatar
-                : `http://localhost:5000${avatar}?t=${Date.now()}`
+                : `${APIURL}${avatar}?t=${Date.now()}`
             }
             className="pixel-box w-12 h-12 object-cover flex-shrink-0"
             alt="avatar"
@@ -127,7 +129,7 @@ function ActivityFeed () {
   useEffect (() => {
     const fetchActivities = async () => {
       try {
-        const res = await fetch ('http://localhost:5000/activity-feed/global');
+        const res = await fetch (`${APIURL}/api/activity-feed/global`);
         if (res.ok) {
           const data = await res.json();
           setActivities(data);
@@ -193,12 +195,12 @@ function UserView () {
 
       try {
         const [resGames, resUser] = await Promise.all([
-          fetch(`http://localhost:5000/fetch-entry?userId=${userId}`, { 
+          fetch(`${APIURL}/api/fetch-entry?userId=${userId}`, { 
             headers: {
               'Authorization': `Bearer ${token}`
             }
           }),
-          fetch('http://localhost:5000/users/me', {
+          fetch(`${APIURL}/api/users/me`, {
             headers: {
               'Authorization': `Bearer ${token}`,
               'Content-Type': 'application/json'
