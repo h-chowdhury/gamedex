@@ -214,7 +214,7 @@ function StatsProgressBar ({ counts, totalGames }) {
     return (
     <div className="bg-[#2c2c3e]/30 p-2 text-center">
       <span className="font-vt323 text-base text-[#a8a8b3]">
-        [ No games in library ]
+        [ NO GAMES IN LIBRARY ]
       </span>
     </div>
   );

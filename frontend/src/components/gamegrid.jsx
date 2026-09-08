@@ -20,9 +20,9 @@ export function GameGrid ({ title, games, cols = 5}) {
             <GameCard key={game.id || game._id} gameData={game} />
         ))
       ) : (
-        <div className="col-span-full bg-[#2c2c3e]/30 p-4 text-center">
+        <div className="pixel-box-sm col-span-full bg-[#2c2c3e]/30 p-4 text-center">
           <p className="text-[#a8a8b3] text-base">
-            [ No games found. ]
+            [ NO GAMES FOUND ]
           </p>
         </div>
       )}

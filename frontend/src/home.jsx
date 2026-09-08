@@ -114,8 +114,8 @@ function FeedEntries({ data }) {
           ))}
         </div>
       ) : (
-        <div className="pixel-box text-[#a8a8b3] font-vt323 text-base p-3 bg-[#2c2c3e]">
-          <p>No activity to display.</p>
+        <div className="pixel-box text-[#a8a8b3] font-vt323 text-base p-4 bg-[#2c2c3e] flex justify-center">
+          <p>[ NO ACTIVITY TO DISPLAY ]</p>
         </div>
       )}
     </div>
