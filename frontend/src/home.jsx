@@ -71,14 +71,14 @@ function ActivityRow ({ data }) {
         
         <img
           src={gameImg}
-          className="w-16 h-20 object-cover flex-shrink-0 border-r-2 border-[#f4a261] mr-4"
+          className="w-16 h-20 object-cover flex-shrink-0 border-r-2 border-[#f4a261] mr-3.5"
           alt="bg"
         />
 
         <div className="flex flex-row items-center gap-3 py-2 pr-4 flex-1">
           <img
             src={avatarSrc}
-            className="pixel-box w-12 h-12 object-cover flex-shrink-0"
+            className="pixel-box-sm w-14 h-14 object-cover flex-shrink-0"
             alt="avatar"
           />
 
