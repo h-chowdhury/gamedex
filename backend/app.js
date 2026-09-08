@@ -5,6 +5,8 @@ import cors from 'cors';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import multer from 'multer';
+import { v2 as cloudinary } from 'cloudinary';
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
@@ -26,31 +28,43 @@ const mongoDBURL = process.env.DB_URL || 'mongodb://127.0.0.1:27017/gamedex';
 const rawgAPIkey = process.env.RAWG_API_KEY;
 const APIURL = process.env.API_URL;
 const RENDERURL = process.env.RENDER_URL;
+const FRONTENDURL = process.env.FRONTEND_URL;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// creates folder for photo uploads if not existing
-const uploadDir = path.join(__dirname, 'uploads');
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
+// // creates folder for photo uploads if not existing
+// const uploadDir = path.join(__dirname, 'uploads');
+// if (!fs.existsSync(uploadDir)) {
+//   fs.mkdirSync(uploadDir, { recursive: true });
+// }
 
-// initiates storage for photo uploads
-const storage = multer.diskStorage({
-  destination: (req, file, callback) => {
-    callback(null, ("uploads/"));
-  },
-  filename: (req, file, callback) => {
-    callback(null, `${Date.now()}-${file.originalname}`);
-  },  
+// // initiates storage for photo uploads
+// const storage = multer.diskStorage({
+//   destination: (req, file, callback) => {
+//     callback(null, ("uploads/"));
+//   },
+//   filename: (req, file, callback) => {
+//     callback(null, `${Date.now()}-${file.originalname}`);
+//   },  
+// });
+// const upload = multer({storage})
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
-const upload = multer({storage})
 
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'gamedex_avatars',
+    allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
+  },
+});
 
-// const JWT_SECRET = process.env.JWT_SECRET;
-// const gameID = 4200;
-// const gameURL = `https://api.rawg.io/${APIURL}/games/${gameID}?key=${rawgAPIkey}`;
+const upload = multer({ storage });
 
 
 // Database connection *************************************************** //
@@ -67,8 +81,9 @@ app.use(cors({
   origin: [
     'http://localhost:5173',
     'http://localhost:3000',
-    {RENDERURL}
-  ],
+    {FRONTENDURL},
+    'https://gamedex-gamma.vercel.app'
+  ].filter(Boolean),
   credentials: true
 }));
 app.use(express.json());
@@ -97,7 +112,7 @@ app.put(`/api/profile/update-profile`, verifyToken, upload.single('avatar'), asy
     }
 
     if (req.file) {
-      updateData.avatar = `/uploads/${req.file.filename}`;
+      updateData.avatar = req.file.path;
     }
 
     if (Object.keys(updateData).length === 0) {
@@ -455,7 +470,6 @@ app.get(`/api/fetch-entry`, async (req, res) => {
     const games = await UserGame.find({ user: userId });
     return res.status(200).json({ data: games });
 
-    res.status(200).json({data: games});
   } catch (err) {
     console.error("Server error in /fetch-entry:", err);
     res.status(500).json({ message: err.message });

@@ -80,9 +80,11 @@ function ProfileCard ( { token, user, onProfileUpdate }) {
 
   const avatarSrc = previewUrl 
     ? previewUrl
-    : user?.avatar?.startsWith("https")
+    : user?.avatar?.startsWith("http")
       ? user.avatar
-      : `${APIURL}${user?.avatar}`
+      : user?.avatar
+        ? `${APIURL}${user?.avatar}`
+        : '/default-avatar.png';
 
 
   return (

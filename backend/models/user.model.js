@@ -40,7 +40,7 @@ const userSchema = new mongoose.Schema ({
   avatar: {
     type: String,
     default: function() {
-      return `https://api.dicebear.com/10.x/pixel-art/svg?seed=${this.username}`;
+      return `https://api.dicebear.com/10.x/pixel-art/svg?seed=${this.username}&backgroundColor=ffffff,4b80ca,68c2d3,a2dcc7,ede19e,d3a068,b45252,83c5be`;
     }
   },
 
