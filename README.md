@@ -1,9 +1,9 @@
 # GameDex: A Game Logging Application
 
+🎮 [View Live App](https://gamedex-gamma.vercel.app/)
+
 ## About
 GameDex is a retro-inspired, full-stack application that allows gamers to organise and showcase their video game libraries. It features a pixelated style, dynamic profile stats and seamless exploration of over 500,000 games.
-
-🎮 [View Live App](https://gamedex-gamma.vercel.app/)
 
 
 ## Features
@@ -18,12 +18,20 @@ GameDex is a retro-inspired, full-stack application that allows gamers to organi
 | 🔒 Auth & Security | Secure user authentication powered by JWTs and encrypted passwords |
 
 
-## Technologies
-TODO
+## Tech Stack
+### Frontend
+| React.js | Component based UI library for building dynamic interfaces |
+| Tailwind CSS | Utility-first CSS framework styled for a pixel-art aesthetic |
 
+### Backend & Database
+| Node.js | JavaScript runtime environment |
+| Express.js | Web application framework for handling API routing and backend logic |
+| MongoDB | NoSQL database for storing user profiles, libraries, and activity logs |
 
-## Architecture
-TODO
+### Security & Services
+| JWT | Token-based user authentication |
+| CORS | Middleware for securing backend communication |
+| RAWG API | External API providing game data and assets for 500,000+ titles |
 
 
 ## Future Additions
