@@ -1,16 +1,41 @@
-# React + Vite
+# GameDex: A Game Tracking Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## About
+TODO + IMGs
 
-Currently, two official plugins are available:
+🎮 [View Live App](https://gamedex-gamma.vercel.app/)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-## React Compiler
+## Features
+TODO
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-## Expanding the ESLint configuration
+## Technologies
+TODO
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+
+## Architecture
+TODO
+
+
+## Future Additions
+### 1. Functionality when RAWG API is inaccessible
+Users will still be able to view games in their library alongside a limited selection of games within the discovery section of the app when game data cannot be fetched from RAWG during API downtime.
+
+### 2. Changing of details
+Currently, users are unable to reset their passwords or change their usernames. These features will be added in the future following integration with email alerts.
+
+### 3. An improved mobile experience
+GameDex is best suited for desktop and tablet view. Several in-app features such as the navigation and general page layout will be recomposed to allow for a better viewing experience on smaller screens, allowing for accessible tracking on the go.
+
+### 4. Social features
+Users will be able to search for and view the profiles of others, and track trending games among their friends. The activity feed on the home page will allow for users to distinctly view global activity logs and the logs of users they follow.
+
+### 5. More additions
+Further features include:
+- Improved filtering options
+- Game roulette feature that randomly chooses a game for the user to play
+- Streak and XP system
+- Dark and light themes
+- Animations using Framer Motion
+
