@@ -20,15 +20,19 @@ GameDex is a retro-inspired, full-stack application that allows gamers to organi
 
 ## Tech Stack
 ### Frontend
+| Technology | Description |
+|---------|-------------|
 | React.js | Component based UI library for building dynamic interfaces |
 | Tailwind CSS | Utility-first CSS framework styled for a pixel-art aesthetic |
 
 ### Backend & Database
+|---------|-------------|
 | Node.js | JavaScript runtime environment |
 | Express.js | Web application framework for handling API routing and backend logic |
 | MongoDB | NoSQL database for storing user profiles, libraries, and activity logs |
 
 ### Security & Services
+|---------|-------------|
 | JWT | Token-based user authentication |
 | CORS | Middleware for securing backend communication |
 | RAWG API | External API providing game data and assets for 500,000+ titles |
