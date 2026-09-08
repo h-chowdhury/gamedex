@@ -1,4 +1,9 @@
 # GameDex: A Game Logging Application
+ <br />
+ 
+<p align="center">
+  <a href="https://gamedex-gamma.vercel.app/">🎮 >> Visit GameDex << 🎮</a>
+</p>
 
 ## About
 GameDex is a retro-inspired, full-stack application that allows gamers to organise and showcase their video game libraries. It features a pixelated style, dynamic profile stats and seamless exploration of over 500,000 games.
