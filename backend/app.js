@@ -81,7 +81,7 @@ app.use(cors({
   origin: [
     'http://localhost:5173',
     'http://localhost:3000',
-    {FRONTENDURL},
+    FRONTENDURL,
     'https://gamedex-gamma.vercel.app'
   ].filter(Boolean),
   credentials: true
